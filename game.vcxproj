@@ -236,6 +236,7 @@
     <None Include="Resources\GAME.RC2" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Library\block.cpp" />
     <ClCompile Include="Source\Core\game.cpp" />
     <ClCompile Include="Source\Core\gameDoc.cpp" />
     <ClCompile Include="Source\Core\gameView.cpp" />
@@ -248,6 +249,7 @@
     <ClCompile Include="Source\Game\mygame_run.cpp" />
     <ClCompile Include="Source\Library\audio.cpp" />
     <ClCompile Include="Source\Library\gamecore.cpp" />
+    <ClCompile Include="Source\Library\gamemap.cpp" />
     <ClCompile Include="Source\Library\gameutil.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -260,7 +262,9 @@
     <ClInclude Include="Source\Game\config.h" />
     <ClInclude Include="Source\Game\mygame.h" />
     <ClInclude Include="Source\Library\audio.h" />
+    <ClInclude Include="Source\Library\block.h" />
     <ClInclude Include="Source\Library\gamecore.h" />
+    <ClInclude Include="Source\Library\gamemap.h" />
     <ClInclude Include="Source\Library\gameutil.h" />
   </ItemGroup>
   <ItemGroup>

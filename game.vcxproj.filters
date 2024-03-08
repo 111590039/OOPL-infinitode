@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{1a913106-0be0-4476-b0ce-2aa855072614}</UniqueIdentifier>
-      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;cnt;rtf;gif;jpg;jpeg;jpe</Extensions>
-    </Filter>
     <Filter Include="MFC">
       <UniqueIdentifier>{da904ee8-7f59-4a6c-b3ff-b91b6fb6d0ea}</UniqueIdentifier>
     </Filter>
@@ -14,13 +10,17 @@
     <Filter Include="MyGame">
       <UniqueIdentifier>{0c798913-b7d2-4e26-8241-0f83266cd626}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyGame\Resource Files">
+      <UniqueIdentifier>{1a913106-0be0-4476-b0ce-2aa855072614}</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;cnt;rtf;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\gamecurs.cur">
-      <Filter>Resource Files</Filter>
+      <Filter>MyGame\Resource Files</Filter>
     </None>
     <None Include="Resources\GAME.RC2">
-      <Filter>Resource Files</Filter>
+      <Filter>MyGame\Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +57,12 @@
     <ClCompile Include="Source\Game\mygame_run.cpp">
       <Filter>MyGame</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Library\block.cpp">
+      <Filter>GameLibrary</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Library\gamemap.cpp">
+      <Filter>GameLibrary</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Library\audio.h">
@@ -92,6 +98,12 @@
     <ClInclude Include="Source\Game\config.h">
       <Filter>MyGame</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Library\block.h">
+      <Filter>GameLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Library\gamemap.h">
+      <Filter>GameLibrary</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source\Core\game.rc">
@@ -100,26 +112,26 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Toolbar.bmp">
-      <Filter>Resource Files</Filter>
+      <Filter>MyGame\Resource Files</Filter>
     </Image>
     <Image Include="resources\game.ico">
-      <Filter>Resource Files</Filter>
+      <Filter>MyGame\Resource Files</Filter>
     </Image>
     <Image Include="resources\gameDoc.ico">
-      <Filter>Resource Files</Filter>
+      <Filter>MyGame\Resource Files</Filter>
     </Image>
     <Image Include="resources\icon1.ico">
-      <Filter>Resource Files</Filter>
+      <Filter>MyGame\Resource Files</Filter>
     </Image>
     <Image Include="Resources\Game Framework.png" />
     <Image Include="Resources\GAME_FRAMEWORK.ico">
-      <Filter>Resource Files</Filter>
+      <Filter>MyGame\Resource Files</Filter>
     </Image>
     <Image Include="resources\bitmap1.bmp">
-      <Filter>Resource Files</Filter>
+      <Filter>MyGame\Resource Files</Filter>
     </Image>
     <Image Include="Resources\GAME_FRAMEWORK.bmp">
-      <Filter>Resource Files</Filter>
+      <Filter>MyGame\Resource Files</Filter>
     </Image>
   </ItemGroup>
 </Project>
