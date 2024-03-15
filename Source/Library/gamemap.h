@@ -9,17 +9,25 @@ class gamemap {
 public:
 	gamemap();
 	gamemap(int size);
-	void setScale(double scale);
-	void newblocktest(block Block) {
-		testmap.push_back(Block);
-	}
-	void newblock(std::shared_ptr<block> block);
-	//讓整張地圖顯示
-	void drawmap();
 
+	void addScale(double scale);
+	void addMoveX(int delta);
+	void addMoveY(int delta);
+
+	double GetScale();
+
+	
+	void drawmap();           //讓整張地圖顯示
+	//void loadmap(std::string level);
+	void loadpic();           //初始化地圖
+	void resetshow();         //刷新並套用新位置大小
+	void TESTMAP1();
+protected:
+	void newblock(std::shared_ptr<block> block);
 private:
 	int size = 32;
-	std::vector<block> testmap;
 	std::vector<std::shared_ptr<block>> map;
 	double scale = 1.0;
+	int moveX = 0;
+	int moveY = 0;
 };
