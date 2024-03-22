@@ -9,11 +9,13 @@ class enemy : public game_framework::CMovingBitmap {
 public:
 
 protected:
+	
 
 private:
 	std::string type;
 	float count, health, speed, bounty, exp, probability;
 };
+
 
 
 
