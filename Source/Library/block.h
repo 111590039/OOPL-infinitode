@@ -4,12 +4,13 @@
 #include <vector>
 #include "stdafx.h"
 #include "gameutil.h"
+#include "tower.h"
 
 class block : public game_framework::CMovingBitmap {
 public:
 	block(int x, int y);
 
-	virtual void OnClick();
+	
 
 
 	int GetX();
@@ -20,6 +21,13 @@ public:
 	std::string GetPicPath();
 
 	void SetXY(int x,int y);
+
+	virtual void OnClick();
+
+	virtual void loadPic();       //讀取圖片
+	virtual void show(int scale); //被OnShow調用 持續顯示
+	virtual void resetShow(int TOP,int LEFT,int TILE_SIZE,double scale, int moveX, int moveY); // 重新設定bitmap 相關設定
+
 protected:
 	void SetType(std::string type);
 	void SetTitle(std::string title);
@@ -41,8 +49,11 @@ public:
 	void OnClick() override;
 	//void buildTower(Tower tower);
 	//void sellTower();
+	void loadPic() override;       //讀取圖片
+	void show(int scale) override; //被OnShow調用 持續顯示
+	void resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, int moveY) override; // 重新設定bitmap 相關設定
 private:
-	//Tower tower
+	tower tower;
 	//std::vector<extraEffect> Effects;
 };
 

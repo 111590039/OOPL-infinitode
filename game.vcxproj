@@ -236,6 +236,7 @@
     <None Include="Resources\GAME.RC2" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Library\barrel.cpp" />
     <ClCompile Include="Source\Library\block.cpp" />
     <ClCompile Include="Source\Core\game.cpp" />
     <ClCompile Include="Source\Core\gameDoc.cpp" />
@@ -252,6 +253,7 @@
     <ClCompile Include="Source\Library\gamecore.cpp" />
     <ClCompile Include="Source\Library\gamemap.cpp" />
     <ClCompile Include="Source\Library\gameutil.cpp" />
+    <ClCompile Include="Source\Library\tower.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\Game.h" />
@@ -263,11 +265,13 @@
     <ClInclude Include="Source\Game\config.h" />
     <ClInclude Include="Source\Game\mygame.h" />
     <ClInclude Include="Source\Library\audio.h" />
+    <ClInclude Include="Source\Library\barrel.h" />
     <ClInclude Include="Source\Library\block.h" />
     <ClInclude Include="Source\Library\enemy.h" />
     <ClInclude Include="Source\Library\gamecore.h" />
     <ClInclude Include="Source\Library\gamemap.h" />
     <ClInclude Include="Source\Library\gameutil.h" />
+    <ClInclude Include="Source\Library\tower.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source\Core\game.rc" />
