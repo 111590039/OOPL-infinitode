@@ -25,18 +25,18 @@ double gamemap::GetScale() {
 //讓整張地圖顯示
 void gamemap::drawmap() {
 	for (std::shared_ptr<block> b : map) {
-		b->ShowBitmap(scale);
+		b->show(scale);
 	}
 }
 void gamemap::loadpic() {
 	for (std::shared_ptr<block> b : map) {
-		b->LoadBitmapByString({ b->GetPicPath() },RGB(255,255,255));
-		b->SetTopLeft(LEFT + b->GetX()*TILE_SIZE, TOP + b->GetY()*TILE_SIZE);
+		b->loadPic();
+		b -> resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
 }
 void gamemap::resetshow() {
 	for (std::shared_ptr<block> b : map) {
-		b->SetTopLeft(int(LEFT + moveX + b->GetX()*TILE_SIZE*scale), int(TOP + moveY + b->GetY()*TILE_SIZE*scale));
+		b->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
 }
 void gamemap::newblock(std::shared_ptr<block> block) {
