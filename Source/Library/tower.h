@@ -24,7 +24,7 @@ protected:
 	void SetBasePicPath(std::string basepicpath);
 	void SetBarrelPicPath(std::string barrelpicpath);
 private:
-
+	//barrel barrel;
 	std::string type = "None";
 	std::string basepicpath = "";
 	std::string barrelpicpath = "";
