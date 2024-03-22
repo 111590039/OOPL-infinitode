@@ -11,6 +11,9 @@ public:
 
 	virtual void OnClick();
 
+
+	int GetX();
+	int GetY();
 	std::string GetType();
 	std::string GetTitle();
 	std::string GetDescribe();

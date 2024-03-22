@@ -10,6 +10,12 @@ void block::OnClick() {
 
 }
 
+int block::GetX() {
+	return x;
+}
+int block::GetY() {
+	return y;
+}
 std::string block::GetType() {
 	return type;
 }
@@ -45,10 +51,11 @@ tile::tile(int x, int y):block(x,y) {
 	SetTitle("空地");
 	SetDescribe("可以在上面建造塔");
 	SetType("tile");
-	SetPicPath("");
+	SetPicPath("resources/tile.bmp");
 }
 bool tile::haveTower() {
-
+	//
+	return false;
 }
 void tile::OnClick() {
 
@@ -58,7 +65,7 @@ road::road(int x, int y) :block(x, y) {
 	SetTitle("道路");
 	SetDescribe("敵人會沿著道路移動至基地");
 	SetType("road");
-	SetPicPath("");
+	SetPicPath("resources/road.bmp");
 }
 void road::OnClick(){
 
@@ -68,7 +75,7 @@ base::base(int x, int y) :block(x, y) {
 	SetTitle("基地");
 	SetDescribe("基地被敵人攻擊時會扣血，血量扣完時遊戲結束");
 	SetType("base");
-	SetPicPath("");
+	SetPicPath("resources/base.bmp");
 }
 void base::OnClick(){
 
@@ -78,7 +85,7 @@ portal::portal(int x, int y,double difficult) :block(x, y) {
 	SetTitle("傳送門");
 	SetDescribe("敵人會從傳送門出現");
 	SetType("portal");
-	SetPicPath("");
+	SetPicPath("resources/portal.bmp");
 }
 void portal::OnClick(){
 
