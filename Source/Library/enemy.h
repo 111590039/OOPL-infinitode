@@ -15,11 +15,13 @@ public:
 	float Getexp();
 protected:
 	void SetPicPath(std::string picPath);
+  
 private:
 	std::string type;
 	std::string picPath;
 	float health, speed, bounty, exp;
 };
+
 
 
 
@@ -70,3 +72,10 @@ else {
 	return prob;
 	}
 */
+
+
+/*int prob = 10 - (int)(value / 28);
+if (prob < 1) prob = 1;
+if (value > 300) prob = 0;
+return prob;*/
+

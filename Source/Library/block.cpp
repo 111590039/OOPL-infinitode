@@ -46,6 +46,16 @@ void block::SetDescribe(std::string describe) {
 void block::SetPicPath(std::string picPath) {
 	this -> picPath = picPath;
 }
+void block::loadPic() {
+	LoadBitmapByString({ picPath }, RGB(255, 255, 255));
+}
+void block::show(int scale) {
+	ShowBitmap(scale);
+}
+void block::resetShow(int TOP, int LEFT, int TILE_SIZE, double scale,int moveX,int moveY) {
+	SetTopLeft(int(LEFT + moveX + x *TILE_SIZE*scale), int(TOP + moveY + y *TILE_SIZE*scale));
+}
+
 ////////////////////////////////tile////////////////////////////
 tile::tile(int x, int y):block(x,y) {
 	SetTitle("ªÅ¦a");
@@ -54,10 +64,31 @@ tile::tile(int x, int y):block(x,y) {
 	SetPicPath("resources/tile.bmp");
 }
 bool tile::haveTower() {
-	//
+	if (tower.GetType != "None") {
+		return true;
+	}
 	return false;
 }
 void tile::OnClick() {
+
+}
+void tile::loadPic() {
+	LoadBitmapByString({ GetPicPath() }, RGB(255, 255, 255));
+	if (haveTower()) {
+		tower.loadPic();
+	}
+}
+void tile::show(int scale) {
+	ShowBitmap(scale);
+	if (haveTower()) {
+		tower.show(scale);
+	}
+}
+void tile::resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, int moveY) {
+	SetTopLeft(int(LEFT + moveX + GetX() * TILE_SIZE*scale), int(TOP + moveY + GetY() * TILE_SIZE*scale));
+	if (haveTower()) {
+		tower.resetShow(TOP,LEFT,TILE_SIZE,scale,moveX,moveY,GetX(),GetY());
+	}
 
 }
 ////////////////////////////////road////////////////////////////
