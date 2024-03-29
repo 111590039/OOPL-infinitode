@@ -1,6 +1,7 @@
 #pragma once
 
 #include "block.h"
+#include "enemy.h"
 #include <string>
 #include <vector>
 #include <memory>
@@ -24,9 +25,11 @@ public:
 	void TESTMAP1();
 protected:
 	void newblock(std::shared_ptr<block> block);
+	void newEnemy(std::shared_ptr<enemy> enemy);
 private:
 	int size = 32;
 	std::vector<std::shared_ptr<block>> map;
+	std::vector<std::shared_ptr<enemy>> Enemy;
 	double scale = 1.0;
 	int moveX = 0;
 	int moveY = 0;

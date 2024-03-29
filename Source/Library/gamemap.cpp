@@ -27,11 +27,17 @@ void gamemap::drawmap() {
 	for (std::shared_ptr<block> b : map) {
 		b->show(scale);
 	}
+	for (std::shared_ptr<enemy> e : Enemy) {
+		e->show(scale);
+	}
 }
 void gamemap::loadpic() {
 	for (std::shared_ptr<block> b : map) {
 		b->loadPic();
 		b -> resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
+	}
+	for (std::shared_ptr<enemy> e : Enemy) {
+		e->loadPic();
 	}
 }
 void gamemap::resetshow() {
@@ -41,6 +47,9 @@ void gamemap::resetshow() {
 }
 void gamemap::newblock(std::shared_ptr<block> block) {
 	map.push_back(block);
+}
+void gamemap::newEnemy(std::shared_ptr<enemy> enemy) {
+	Enemy.push_back(enemy);
 }
 void gamemap::TESTMAP1() {
 	newblock(std::make_shared<portal>(1,0,0.7));
@@ -55,4 +64,5 @@ void gamemap::TESTMAP1() {
 	newblock(std::make_shared<road>(4, 5));
 	newblock(std::make_shared<road>(5, 5));
 	newblock(std::make_shared<base>(6, 5));
+	newEnemy(std::make_shared<Regular>("Regular", 1.0, 1.0, 1.0, 1.0));
 }
