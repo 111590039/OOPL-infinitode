@@ -2,8 +2,10 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 #include "stdafx.h"
 #include "gameutil.h"
+#include "barrel.h"
 
 class tower : public game_framework::CMovingBitmap {
 public:
@@ -23,8 +25,9 @@ protected:
 	void SetType(std::string type);
 	void SetBasePicPath(std::string basepicpath);
 	void SetBarrelPicPath(std::string barrelpicpath);
+	std::shared_ptr <barrel> Barrel;
 private:
-	//barrel barrel;
+
 	std::string type = "None";
 	std::string basepicpath = "";
 	std::string barrelpicpath = "";

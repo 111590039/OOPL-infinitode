@@ -5,7 +5,8 @@
 barrel::barrel() {
 
 }
-barrel::barrel(std::string type):type(type) {
+
+barrel::barrel(std::string type, std::vector<std::string> barrelPicPaths) : type(type),barrelPicPaths(barrelPicPaths) {
 
 }
 void barrel::loadPic() {

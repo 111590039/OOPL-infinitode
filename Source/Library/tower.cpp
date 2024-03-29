@@ -47,4 +47,6 @@ void tower::SetBarrelPicPath(std::string barrelpicpath) {
 basictower::basictower() {
 	SetType("basictower");
 	SetBasePicPath("resources/Base_Basic.bmp");
+	std::vector<std::string>picpaths = { "resources/Barrel_Basic.bmp" };
+	Barrel = std::make_shared<barrel>("basictower",picpaths);
 }
