@@ -33,6 +33,11 @@ private:
 	std::string barrelpicpath = "";
 };
 
+class emptytower : public tower {
+public:
+	emptytower();
+};
+
 class basictower : public tower {
 public:
 	basictower();

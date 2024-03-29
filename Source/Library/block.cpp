@@ -61,9 +61,10 @@ tile::tile(int x, int y):block(x,y) {
 	SetDescribe("可以在上面建造塔");
 	SetType("tile");
 	SetPicPath("resources/tile.bmp");
+	Tower = make_shared<emptytower>();
 }
 bool tile::haveTower() {
-	if (Tower->GetType() != "None") {
+	if (Tower->GetType().compare("None")) {
 		return true;
 	}
 	return false;
@@ -73,6 +74,7 @@ void tile::OnClick() {
 }
 void tile::buildTower(std::shared_ptr<tower> Tower) {
 	this->Tower = Tower;
+	Tower->loadPic();
 }
 int tile::sellTower() {
 	return 0;

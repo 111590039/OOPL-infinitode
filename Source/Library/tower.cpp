@@ -2,7 +2,7 @@
 #include "tower.h"
 
 tower::tower() {
-
+	type = "None";
 }
 
 tower::tower(std::string type): type(type) {
@@ -41,6 +41,9 @@ void tower::SetBasePicPath(std::string basepicpath) {
 }
 void tower::SetBarrelPicPath(std::string barrelpicpath) {
 	this->barrelpicpath = barrelpicpath;
+}
+emptytower::emptytower() {
+
 }
 ////////////////////////////////basictower////////////////////////////
 

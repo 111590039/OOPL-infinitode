@@ -39,7 +39,7 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if (nChar == VK_UP) {
-
+		map.buildTower(2, 4, "basictower");
 		map.addMoveY(-50);
 		map.resetshow();
 	}

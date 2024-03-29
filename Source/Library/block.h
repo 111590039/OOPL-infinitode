@@ -36,10 +36,10 @@ protected:
 private:
 	int x;
 	int y;
-	std::string type = "";
-	std::string title = "";
-	std::string describe = "";
-	std::string picPath = "";
+	std::string type = " ";
+	std::string title = " ";
+	std::string describe = " ";
+	std::string picPath = " ";
 };
 
 class tile : public block {
