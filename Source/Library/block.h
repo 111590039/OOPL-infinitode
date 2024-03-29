@@ -47,13 +47,13 @@ public:
 	tile(int x, int y);
 	bool haveTower();
 	void OnClick() override;
-	//void buildTower(Tower tower);
-	//void sellTower();
+	void buildTower(std::shared_ptr<tower> Tower);
+	int sellTower();
 	void loadPic() override;       //讀取圖片
 	void show(double scale) override; //被OnShow調用 持續顯示
 	void resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, int moveY) override; // 重新設定bitmap 相關設定
 private:
-	tower tower;
+	std::shared_ptr<tower> Tower;
 	//std::vector<extraEffect> Effects;
 };
 

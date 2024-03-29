@@ -31,5 +31,8 @@ private:
 };
 
 class basictower : public tower {
+public:
+	basictower();
+private:
 
 };

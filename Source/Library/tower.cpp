@@ -42,3 +42,9 @@ void tower::SetBasePicPath(std::string basepicpath) {
 void tower::SetBarrelPicPath(std::string barrelpicpath) {
 	this->barrelpicpath = barrelpicpath;
 }
+////////////////////////////////basictower////////////////////////////
+
+basictower::basictower() {
+	SetType("basictower");
+	SetBasePicPath("resources/Base_Basic.bmp");
+}
