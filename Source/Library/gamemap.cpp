@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "gamemap.h"
-#include <iostream>
 
 #define TOP 0
 #define LEFT 0
