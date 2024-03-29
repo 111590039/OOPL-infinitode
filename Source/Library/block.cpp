@@ -49,7 +49,7 @@ void block::SetPicPath(std::string picPath) {
 void block::loadPic() {
 	LoadBitmapByString({ picPath }, RGB(255, 255, 255));
 }
-void block::show(int scale) {
+void block::show(double scale) {
 	ShowBitmap(scale);
 }
 void block::resetShow(int TOP, int LEFT, int TILE_SIZE, double scale,int moveX,int moveY) {
@@ -64,7 +64,7 @@ tile::tile(int x, int y):block(x,y) {
 	SetPicPath("resources/tile.bmp");
 }
 bool tile::haveTower() {
-	if (tower.GetType != "None") {
+	if (tower.GetType() != "None") {
 		return true;
 	}
 	return false;
@@ -78,7 +78,7 @@ void tile::loadPic() {
 		tower.loadPic();
 	}
 }
-void tile::show(int scale) {
+void tile::show(double scale) {
 	ShowBitmap(scale);
 	if (haveTower()) {
 		tower.show(scale);

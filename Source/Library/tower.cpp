@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "tower.h"
 
 tower::tower() {
@@ -25,7 +26,7 @@ std::string tower::GetBarrelPicPath() {
 void tower::loadPic() {
 	LoadBitmapByString({ basepicpath }, RGB(255, 255, 255));
 }
-void tower::show(int scale) {
+void tower::show(double scale) {
 	ShowBitmap(scale);
 }
 void tower::resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, int moveY,int x,int y) {

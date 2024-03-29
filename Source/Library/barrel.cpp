@@ -1,4 +1,6 @@
+#include "stdafx.h"
 #include "barrel.h"
+
 
 barrel::barrel() {
 
