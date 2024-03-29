@@ -34,12 +34,12 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 {
 	map.TESTMAP1();
 	map.loadpic();
-	
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if (nChar == VK_UP) {
+
 		map.addMoveY(-50);
 		map.resetshow();
 	}
@@ -89,6 +89,7 @@ void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 
 void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 {
+
 }
 
 void CGameStateRun::OnShow()

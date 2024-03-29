@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "block.h"
-
 ////////////////////////////////block////////////////////////////
 block::block(int x, int y):x(x),y(y) {
 
@@ -64,7 +63,7 @@ tile::tile(int x, int y):block(x,y) {
 	SetPicPath("resources/tile.bmp");
 }
 bool tile::haveTower() {
-	if (tower.GetType() != "None") {
+	if (Tower->GetType() != "None") {
 		return true;
 	}
 	return false;
@@ -72,22 +71,28 @@ bool tile::haveTower() {
 void tile::OnClick() {
 
 }
+void tile::buildTower(std::shared_ptr<tower> Tower) {
+	this->Tower = Tower;
+}
+int tile::sellTower() {
+	return 0;
+}
 void tile::loadPic() {
 	LoadBitmapByString({ GetPicPath() }, RGB(255, 255, 255));
 	if (haveTower()) {
-		tower.loadPic();
+		Tower->loadPic();
 	}
 }
 void tile::show(double scale) {
 	ShowBitmap(scale);
 	if (haveTower()) {
-		tower.show(scale);
+		Tower->show(scale);
 	}
 }
 void tile::resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, int moveY) {
 	SetTopLeft(int(LEFT + moveX + GetX() * TILE_SIZE*scale), int(TOP + moveY + GetY() * TILE_SIZE*scale));
 	if (haveTower()) {
-		tower.resetShow(TOP,LEFT,TILE_SIZE,scale,moveX,moveY,GetX(),GetY());
+		Tower->resetShow(TOP,LEFT,TILE_SIZE,scale,moveX,moveY,GetX(),GetY());
 	}
 
 }
