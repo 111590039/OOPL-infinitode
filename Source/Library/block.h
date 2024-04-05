@@ -27,7 +27,7 @@ public:
 	virtual void loadPic();       //讀取圖片
 	virtual void show(double scale); //被OnShow調用 持續顯示
 	virtual void resetShow(int TOP,int LEFT,int TILE_SIZE,double scale, int moveX, int moveY); // 重新設定bitmap 相關設定
-
+	bool ifClickOn(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, int moveY, int tarX , int tarY);
 protected:
 	void SetType(std::string type);
 	void SetTitle(std::string title);

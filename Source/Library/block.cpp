@@ -54,7 +54,14 @@ void block::show(double scale) {
 void block::resetShow(int TOP, int LEFT, int TILE_SIZE, double scale,int moveX,int moveY) {
 	SetTopLeft(int(LEFT + moveX + x *TILE_SIZE*scale), int(TOP + moveY + y *TILE_SIZE*scale));
 }
-
+bool block::ifClickOn(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, int moveY, int tarX, int tarY) {
+	if (int(LEFT + moveX + x * TILE_SIZE*scale) + TILE_SIZE * scale >= tarX && tarX >= int(LEFT + moveX + x * TILE_SIZE*scale)) {
+		if (int(TOP + moveY + y * TILE_SIZE*scale) + TILE_SIZE * scale >= tarY && tarY >= int(TOP + moveY + y * TILE_SIZE*scale)) {
+			return true;
+		}
+	}
+	return false;
+}
 ////////////////////////////////tile////////////////////////////
 tile::tile(int x, int y):block(x,y) {
 	SetTitle("ªÅ¦a");
