@@ -54,16 +54,24 @@ void block::show(double scale) {
 void block::resetShow(int TOP, int LEFT, int TILE_SIZE, double scale,int moveX,int moveY) {
 	SetTopLeft(int(LEFT + moveX + x *TILE_SIZE*scale), int(TOP + moveY + y *TILE_SIZE*scale));
 }
-
+bool block::ifClickOn(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, int moveY, int tarX, int tarY) {
+	if (int(LEFT + moveX + x * TILE_SIZE*scale) + TILE_SIZE * scale >= tarX && tarX >= int(LEFT + moveX + x * TILE_SIZE*scale)) {
+		if (int(TOP + moveY + y * TILE_SIZE*scale) + TILE_SIZE * scale >= tarY && tarY >= int(TOP + moveY + y * TILE_SIZE*scale)) {
+			return true;
+		}
+	}
+	return false;
+}
 ////////////////////////////////tile////////////////////////////
 tile::tile(int x, int y):block(x,y) {
 	SetTitle("空地");
 	SetDescribe("可以在上面建造塔");
 	SetType("tile");
 	SetPicPath("resources/tile.bmp");
+	Tower = make_shared<emptytower>();
 }
 bool tile::haveTower() {
-	if (Tower->GetType() != "None") {
+	if (Tower->GetType().compare("None")) {
 		return true;
 	}
 	return false;
@@ -73,6 +81,7 @@ void tile::OnClick() {
 }
 void tile::buildTower(std::shared_ptr<tower> Tower) {
 	this->Tower = Tower;
+	Tower->loadPic();
 }
 int tile::sellTower() {
 	return 0;
@@ -96,6 +105,9 @@ void tile::resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, 
 	}
 
 }
+std::shared_ptr<tower> tile::GetTower() {
+	return Tower;
+}
 ////////////////////////////////road////////////////////////////
 road::road(int x, int y) :block(x, y) {
 	SetTitle("道路");
@@ -109,7 +121,7 @@ void road::OnClick(){
 ////////////////////////////////base////////////////////////////
 base::base(int x, int y) :block(x, y) {
 	SetTitle("基地");
-	SetDescribe("基地被敵人攻擊時會扣血，血量扣完時遊戲結束");
+	SetDescribe("保護它免受敵人攻擊");
 	SetType("base");
 	SetPicPath("resources/base.bmp");
 }

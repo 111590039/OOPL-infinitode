@@ -16,6 +16,7 @@ public:
 	std::string GetType();
 	std::string GetBasePicPath();
 	std::string GetBarrelPicPath();
+	std::string GetTowerName();
 
 	virtual void loadPic();       //讀取圖片
 	virtual void show(double scale); //被OnShow調用 持續顯示
@@ -25,12 +26,19 @@ protected:
 	void SetType(std::string type);
 	void SetBasePicPath(std::string basepicpath);
 	void SetBarrelPicPath(std::string barrelpicpath);
+	void SetTowerName(std::string);
 	std::shared_ptr <barrel> Barrel;
 private:
 
 	std::string type = "None";
 	std::string basepicpath = "";
 	std::string barrelpicpath = "";
+	std::string towerName = "";
+};
+
+class emptytower : public tower {
+public:
+	emptytower();
 };
 
 class basictower : public tower {

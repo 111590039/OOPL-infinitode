@@ -2,7 +2,7 @@
 #include "tower.h"
 
 tower::tower() {
-
+	type = "None";
 }
 
 tower::tower(std::string type): type(type) {
@@ -22,15 +22,20 @@ std::string tower::GetBasePicPath() {
 std::string tower::GetBarrelPicPath() {
 	return barrelpicpath;
 }
-
+std::string tower::GetTowerName() {
+	return towerName;
+}
 void tower::loadPic() {
 	LoadBitmapByString({ basepicpath }, RGB(255, 255, 255));
+	Barrel->loadPic();
 }
 void tower::show(double scale) {
 	ShowBitmap(scale);
+	Barrel->show(scale);
 }
 void tower::resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, int moveY,int x,int y) {
 	SetTopLeft(int(LEFT + moveX + x * TILE_SIZE*scale), int(TOP + moveY + y * TILE_SIZE*scale));
+	Barrel->resetShow(TOP,LEFT,TILE_SIZE,scale,moveX,moveY, x,y);
 }
 
 void tower::SetType(std::string type) {
@@ -42,11 +47,17 @@ void tower::SetBasePicPath(std::string basepicpath) {
 void tower::SetBarrelPicPath(std::string barrelpicpath) {
 	this->barrelpicpath = barrelpicpath;
 }
+void tower::SetTowerName(std::string towerName) {
+	this->towerName = towerName;
+}
+emptytower::emptytower() {
+
+}
 ////////////////////////////////basictower////////////////////////////
 
 basictower::basictower() {
 	SetType("basictower");
 	SetBasePicPath("resources/Base_Basic.bmp");
-	std::vector<std::string>picpaths = { "resources/Barrel_Basic.bmp" };
-	Barrel = std::make_shared<barrel>("basictower",picpaths);
+	SetTowerName("°ò¥»");
+	Barrel = std::make_shared<basicBarrel>();
 }
