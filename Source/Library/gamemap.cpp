@@ -5,6 +5,7 @@
 #define LEFT 0
 #define PANEL_SPACE 100
 #define TILE_SIZE 65
+#define TOWER_BUTTON_SIZE 100
 
 gamemap::gamemap() {
 
@@ -35,13 +36,16 @@ void gamemap::drawmap() {
 	for (std::shared_ptr<enemy> e : Enemy) {
 		e->show(scale);
 	}
+	selected_block.ShowBitmap(scale);
 	controlPanel.ShowBitmap();
 	controlPanelButton.ShowBitmap();
 	if (controlPanelMode ==  1 && showing_control_panel && !is_control_panel_invisable) {
 		for (game_framework::CMovingBitmap b : towerButtons) {
 			b.ShowBitmap();
-		}
+		}	
+		selected_box.ShowBitmap();
 	}
+
 }
 void gamemap::loadpic() {
 	controlPanel.LoadBitmapByString({ "resources/control_panel.bmp" }, RGB(255, 255, 255));
@@ -51,12 +55,16 @@ void gamemap::loadpic() {
 											"resources/control_panel_button_tower.bmp"}, RGB(255, 255, 255));
 	controlPanel.SetTopLeft(-600, PANEL_SPACE);
 	controlPanelButton.SetTopLeft(-200, PANEL_SPACE + 400);
+	selected_box.LoadBitmapByString({ "resources/selected_box.bmp" }, RGB(255, 255, 255));
+	selected_box.SetTopLeft(-100, -100);
+	selected_block.LoadBitmapByString({ "resources/selected_block.bmp" }, RGB(255, 255, 255));
+	selected_block.SetTopLeft(-100, -100);
 	for (int i = 0; i < 1; i++) {
 		std::vector<string> towernames = { "Basic" };
-		std::vector<string> towerpics = {"resources/Base_Basic.bmp"};
+		std::vector<string> towerpics = {"resources/tower_button_basic.bmp"};
 		towerButtons.push_back(game_framework::CMovingBitmap());
 		towerButtons[i].LoadBitmapByString({ towerpics[i] } , RGB(255, 255, 255));
-		towerButtons[i].SetTopLeft(20 +((i % 4) * TILE_SIZE), PANEL_SPACE + 350 + (i/4) * TILE_SIZE); // 未驗證是否正確
+		towerButtons[i].SetTopLeft(((i % 4) * TOWER_BUTTON_SIZE), PANEL_SPACE + 300 + (i/4) * TOWER_BUTTON_SIZE);
 	}
 	for (std::shared_ptr<block> b : map) {
 		b->loadPic();
@@ -77,6 +85,8 @@ void gamemap::resetshow() {
 	for (std::shared_ptr<tile> t : tiles) {
 		t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
+	selected_block.SetTopLeft(int(LEFT + moveX + selected_tile.x * TILE_SIZE*scale - 2 * scale), int(TOP + moveY + selected_tile.y * TILE_SIZE*scale - 2 * scale));
+
 }
 void gamemap::buildTower(int x, int y, std::string type) {
 	for (std::shared_ptr<tile> t : tiles) {
@@ -91,33 +101,35 @@ void gamemap::buildTower(int x, int y, std::string type) {
 	}
 }
 void gamemap::clickOnMap(CPoint point) {
-	bool done = false;
+	bool done = false; //表示此次點擊是否已經處理完成
 	if (!is_control_panel_invisable) {
-		//選單開啟時的按鈕
+		//點到選單開啟時的按鈕
 		if (showing_control_panel && 470 >= point.x && point.x >= 400 && PANEL_SPACE+537 >= point.y && point.y >= PANEL_SPACE+400) {
 			showing_control_panel = false;
 			controlPanel.SetTopLeft(-400, PANEL_SPACE);
 			controlPanelButton.SetTopLeft(0, PANEL_SPACE + 400);
-			controlPanelButton.SetFrameIndexOfBitmap(lastControlPanelPic);
 			done = true;
 		}
-		//選單關閉時的按鈕
+		//點到選單關閉時的按鈕
 		else if (!showing_control_panel && 70 >= point.x && point.x >= 0 && PANEL_SPACE + 537 >= point.y && point.y >= PANEL_SPACE + 400){
 			showing_control_panel = true;
 			controlPanel.SetTopLeft(0, PANEL_SPACE);
 			controlPanelButton.SetTopLeft(400, PANEL_SPACE + 400);
-			controlPanelButton.SetFrameIndexOfBitmap(0);
 			done = true;
 		}
-		//蓋塔模式
-		if (controlPanelMode == 1 && showing_control_panel && 400 >= point.x && point.x >= 0 && PANEL_SPACE + 700 >= point.y && point.y >= PANEL_SPACE) {
-			//int x = point.x - 20 / TILE_SIZE; //(i % 4);
-			//int y = (point.y - PANEL_SPACE - 350) / TILE_SIZE;// (i / 4);
-			int selected = ((point.y - PANEL_SPACE - 350) / TILE_SIZE) * 4 + ((point.x - 20) / TILE_SIZE);
-			if (selected == 0) {
-				buildTower(selected_tile.x, selected_tile.y, "basictower");
+		//檢查是否點選在選單上
+		if (!done && showing_control_panel && 400 >= point.x && point.x >= 0 && PANEL_SPACE + 700 >= point.y && point.y >= PANEL_SPACE) {
+			//蓋塔模式
+			if (controlPanelMode == 1 && point.y >= PANEL_SPACE + 300) {
+				int selected = ((point.y - PANEL_SPACE - 300) / TOWER_BUTTON_SIZE) * 4 + (point.x / TOWER_BUTTON_SIZE);
+				if (selected != last_selected && selected >= 0 && selected <= 15) {
+					selected_box.SetTopLeft((selected % 4) * TOWER_BUTTON_SIZE, PANEL_SPACE + 300 + (selected / 4) * TOWER_BUTTON_SIZE);
+					last_selected = selected;
+				}
+				else if (selected == 0) {
+					buildTower(selected_tile.x, selected_tile.y, "basictower");
+				}
 			}
-
 			done = true;
 		}
 	}
@@ -128,20 +140,12 @@ void gamemap::clickOnMap(CPoint point) {
 				if (showing_control_panel) {
 					controlPanel.SetTopLeft(0, PANEL_SPACE);
 					controlPanelButton.SetTopLeft(400, PANEL_SPACE + 400);
-					controlPanelButton.SetFrameIndexOfBitmap(0);
 				}
 				else {
 					controlPanel.SetTopLeft(-400, PANEL_SPACE);
 					controlPanelButton.SetTopLeft(0, PANEL_SPACE + 400);
-					if (t->haveTower()) {
-						controlPanelButton.SetFrameIndexOfBitmap(3);
-						lastControlPanelPic = 3;
-					}
-					else {
-						controlPanelButton.SetFrameIndexOfBitmap(1);
-						lastControlPanelPic = 1;
-					}
 				}
+				selected_block.SetTopLeft(int(LEFT + moveX + t->GetX() * TILE_SIZE*scale - 2*scale), int(TOP + moveY + t->GetY() * TILE_SIZE*scale - 2 * scale));
 				//處理控制事件
 				if (t->haveTower()) {
 					controlPanelMode = 3;
@@ -162,25 +166,33 @@ void gamemap::clickOnMap(CPoint point) {
 				if (showing_control_panel) {
 					controlPanel.SetTopLeft(0, PANEL_SPACE);
 					controlPanelButton.SetTopLeft(400, PANEL_SPACE + 400);
-					controlPanelButton.SetFrameIndexOfBitmap(0);
 				}
 				else {
 					controlPanel.SetTopLeft(-400, PANEL_SPACE);
 					controlPanelButton.SetTopLeft(0, PANEL_SPACE + 400);
-					controlPanelButton.SetFrameIndexOfBitmap(2);
-					lastControlPanelPic = 2;
 				}
+				selected_block.SetTopLeft(int(LEFT + moveX + b->GetX() * (TILE_SIZE)*scale - 2 * scale), int(TOP + moveY + b->GetY() * (TILE_SIZE)*scale - 2 * scale));
 				controlPanelMode = 2;
+				selected_tile = CPoint(b->GetX(), b->GetY());
 				is_control_panel_invisable = false;
 				done = true;
 				break;
 			}
 		}
 	}
+	//處理控制面板按鈕圖片
+	if (showing_control_panel) {
+		controlPanelButton.SetFrameIndexOfBitmap(0);
+	}
+	else {
+		controlPanelButton.SetFrameIndexOfBitmap(controlPanelMode);
+	}
+	//點到沒有設定的地方
 	if (!done) {
 		controlPanel.SetTopLeft(-600, PANEL_SPACE);
 		controlPanelButton.SetTopLeft(-200, PANEL_SPACE + 400);
 		is_control_panel_invisable = true;
+		selected_block.SetTopLeft(-100, -100);
 	}
 }
 void gamemap::newblock(std::shared_ptr<block> block) {

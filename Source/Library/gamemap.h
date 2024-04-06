@@ -32,12 +32,14 @@ protected:
 private:
 	game_framework::CMovingBitmap controlPanel;
 	game_framework::CMovingBitmap controlPanelButton;
-	int lastControlPanelPic = 0;
+	game_framework::CMovingBitmap selected_box;
 	bool showing_control_panel = false;
 	bool is_control_panel_invisable = true;
 	int controlPanelMode = 1;  //1 = build, 2=info, 3 = tower
 	std::vector<game_framework::CMovingBitmap> towerButtons;
 	CPoint selected_tile;
+	int last_selected = -1;
+	game_framework::CMovingBitmap selected_block;
 	int size = 32;
 	std::vector<std::shared_ptr<block>> map;
 	std::vector<std::shared_ptr<tile>> tiles;
