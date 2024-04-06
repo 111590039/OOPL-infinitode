@@ -22,7 +22,9 @@ std::string tower::GetBasePicPath() {
 std::string tower::GetBarrelPicPath() {
 	return barrelpicpath;
 }
-
+std::string tower::GetTowerName() {
+	return towerName;
+}
 void tower::loadPic() {
 	LoadBitmapByString({ basepicpath }, RGB(255, 255, 255));
 	Barrel->loadPic();
@@ -45,6 +47,9 @@ void tower::SetBasePicPath(std::string basepicpath) {
 void tower::SetBarrelPicPath(std::string barrelpicpath) {
 	this->barrelpicpath = barrelpicpath;
 }
+void tower::SetTowerName(std::string towerName) {
+	this->towerName = towerName;
+}
 emptytower::emptytower() {
 
 }
@@ -53,5 +58,6 @@ emptytower::emptytower() {
 basictower::basictower() {
 	SetType("basictower");
 	SetBasePicPath("resources/Base_Basic.bmp");
+	SetTowerName("°ò¥»");
 	Barrel = std::make_shared<basicBarrel>();
 }

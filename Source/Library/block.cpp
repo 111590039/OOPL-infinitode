@@ -105,6 +105,9 @@ void tile::resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, 
 	}
 
 }
+std::shared_ptr<tower> tile::GetTower() {
+	return Tower;
+}
 ////////////////////////////////road////////////////////////////
 road::road(int x, int y) :block(x, y) {
 	SetTitle("道路");
@@ -118,7 +121,7 @@ void road::OnClick(){
 ////////////////////////////////base////////////////////////////
 base::base(int x, int y) :block(x, y) {
 	SetTitle("基地");
-	SetDescribe("基地被敵人攻擊時會扣血，血量扣完時遊戲結束");
+	SetDescribe("保護它免受敵人攻擊");
 	SetType("base");
 	SetPicPath("resources/base.bmp");
 }

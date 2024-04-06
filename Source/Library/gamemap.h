@@ -5,6 +5,9 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <mmsystem.h>
+#include <ddraw.h>
+#include "gamecore.h"
 
 class gamemap {
 public:
@@ -19,6 +22,7 @@ public:
 
 	
 	void drawmap();           //讓整張地圖顯示
+	void showtext();		//顯示文字
 	//void loadmap(std::string level);
 	void loadpic();           //初始化地圖
 	void resetshow();   //刷新並套用新位置大小
@@ -30,16 +34,17 @@ protected:
 	void newtile(std::shared_ptr<tile> tile);
 	void newEnemy(std::shared_ptr<enemy> enemy);
 private:
-	game_framework::CMovingBitmap controlPanel;
-	game_framework::CMovingBitmap controlPanelButton;
-	game_framework::CMovingBitmap selected_box;
-	bool showing_control_panel = false;
-	bool is_control_panel_invisable = true;
-	int controlPanelMode = 1;  //1 = build, 2=info, 3 = tower
-	std::vector<game_framework::CMovingBitmap> towerButtons;
-	CPoint selected_tile;
-	int last_selected = -1;
-	game_framework::CMovingBitmap selected_block;
+	game_framework::CMovingBitmap controlPanel; //控制面版底座
+	game_framework::CMovingBitmap controlPanelButton; //控制面板按鈕
+	game_framework::CMovingBitmap selected_box; //蓋塔選單的選擇框
+	bool showing_control_panel = false; //控制面板是否被最小化
+	bool is_control_panel_invisable = true; //控制面板是否隱藏
+	int controlPanelMode = 1;  //控制面板模式 1 = build, 2=info, 3 = tower
+	std::vector<string> towernames = {"基本","狙擊手","大炮","寒冰","毒液","噴灑","爆破","多重射擊","機關槍","航空","特斯拉","導彈"};
+	std::vector<game_framework::CMovingBitmap> towerButtons; //蓋塔模式的按鈕
+	CPoint selected_tile; //目前選擇的地圖格子位置
+	int last_selected = -1; //蓋塔模式中上一個選擇的塔
+	game_framework::CMovingBitmap selected_block; //地圖格子的選擇框
 	int size = 32;
 	std::vector<std::shared_ptr<block>> map;
 	std::vector<std::shared_ptr<tile>> tiles;

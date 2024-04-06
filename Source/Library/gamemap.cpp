@@ -40,12 +40,59 @@ void gamemap::drawmap() {
 	controlPanel.ShowBitmap();
 	controlPanelButton.ShowBitmap();
 	if (controlPanelMode ==  1 && showing_control_panel && !is_control_panel_invisable) {
+		//選單按鈕圖片
 		for (game_framework::CMovingBitmap b : towerButtons) {
 			b.ShowBitmap();
 		}	
 		selected_box.ShowBitmap();
 	}
 
+}
+void gamemap::showtext() {
+	CDC *pDC = game_framework::CDDraw::GetBackCDC();
+	//選單文字
+	if (showing_control_panel && !is_control_panel_invisable) {
+		if (controlPanelMode == 1) {
+			if (last_selected == -1) {
+				game_framework::CTextDraw::ChangeFontLog(pDC, 21, "微軟正黑體", RGB(255, 255, 255), 800);
+				game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, "點擊塔的圖案以打開描述");
+				game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 60, "單擊第二次來建造塔");
+			}
+			else {
+				game_framework::CTextDraw::ChangeFontLog(pDC, 42, "微軟正黑體", RGB(255, 255, 255), 1200);
+				game_framework::CTextDraw::Print(pDC, 20 ,PANEL_SPACE+20 , towernames[last_selected]);
+			}
+			//選單按鈕文字
+			game_framework::CTextDraw::ChangeFontLog(pDC, 21, "微軟正黑體", RGB(255, 255, 255), 800);
+			for (game_framework::CMovingBitmap b : towerButtons) {
+				game_framework::CTextDraw::Print(pDC, b.GetLeft()+70 , b.GetTop()+70 , "40");
+			}
+		}
+		else if (controlPanelMode == 2) {
+			for (std::shared_ptr<block> b : map) {
+				if (selected_tile.x == b->GetX() && selected_tile.y == b->GetY()) {
+					game_framework::CTextDraw::ChangeFontLog(pDC, 42, "微軟正黑體", RGB(255, 255, 255), 1200);
+					game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, b->GetTitle());
+					game_framework::CTextDraw::ChangeFontLog(pDC, 21, "微軟正黑體", RGB(255, 255, 255), 800);
+					game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 70, b->GetDescribe());
+					if (!b->GetType().compare("portal")) {
+						game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 100, "等級難度:"); //未完成
+					}
+					break;
+				}
+			}
+		}
+		else if (controlPanelMode == 3) {
+			for (std::shared_ptr<tile> t : tiles) {
+				if (selected_tile.x  == t->GetX() && selected_tile.y == t->GetY()) {
+					game_framework::CTextDraw::ChangeFontLog(pDC, 42, "微軟正黑體", RGB(255, 255, 255), 1200);
+					game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, t->GetTower()->GetTowerName());
+					break;
+				}
+			}
+		}
+	}
+	game_framework::CDDraw::ReleaseBackCDC();
 }
 void gamemap::loadpic() {
 	controlPanel.LoadBitmapByString({ "resources/control_panel.bmp" }, RGB(255, 255, 255));
@@ -60,7 +107,6 @@ void gamemap::loadpic() {
 	selected_block.LoadBitmapByString({ "resources/selected_block.bmp" }, RGB(255, 255, 255));
 	selected_block.SetTopLeft(-100, -100);
 	for (int i = 0; i < 1; i++) {
-		std::vector<string> towernames = { "Basic" };
 		std::vector<string> towerpics = {"resources/tower_button_basic.bmp"};
 		towerButtons.push_back(game_framework::CMovingBitmap());
 		towerButtons[i].LoadBitmapByString({ towerpics[i] } , RGB(255, 255, 255));
@@ -122,12 +168,16 @@ void gamemap::clickOnMap(CPoint point) {
 			//蓋塔模式
 			if (controlPanelMode == 1 && point.y >= PANEL_SPACE + 300) {
 				int selected = ((point.y - PANEL_SPACE - 300) / TOWER_BUTTON_SIZE) * 4 + (point.x / TOWER_BUTTON_SIZE);
-				if (selected != last_selected && selected >= 0 && selected <= 15) {
+				if (selected != last_selected && selected >= 0 && selected <= 11) {
 					selected_box.SetTopLeft((selected % 4) * TOWER_BUTTON_SIZE, PANEL_SPACE + 300 + (selected / 4) * TOWER_BUTTON_SIZE);
 					last_selected = selected;
 				}
-				else if (selected == 0) {
-					buildTower(selected_tile.x, selected_tile.y, "basictower");
+				else {
+					if (selected == 0) {
+						buildTower(selected_tile.x, selected_tile.y, "basictower");
+
+					}
+					controlPanelMode = 3; //蓋完塔之後跳到升級頁面(tower模式)
 				}
 			}
 			done = true;
