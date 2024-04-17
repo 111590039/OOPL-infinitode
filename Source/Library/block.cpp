@@ -129,7 +129,7 @@ void base::OnClick(){
 
 }
 ////////////////////////////////portal////////////////////////////
-portal::portal(int x, int y,double difficult) :block(x, y) {
+portal::portal(int x, int y) :block(x, y) {
 	SetTitle("傳送門");
 	SetDescribe("敵人會從傳送門出現");
 	SetType("portal");
@@ -137,7 +137,4 @@ portal::portal(int x, int y,double difficult) :block(x, y) {
 }
 void portal::OnClick(){
 
-}
-double portal::GetDifficult() {
-	return difficult;
 }

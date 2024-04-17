@@ -26,7 +26,29 @@ void gamemap::addMoveY(int delta) {
 double gamemap::GetScale() {
 	return scale;
 }
-//Åı¾ã±i¦a¹ÏÅã¥Ü
+double gamemap::GetElapsedTime() {
+	auto time = std::chrono::duration<double>(lastTime.time_since_epoch());
+	auto now = std::chrono::duration<double>(chrono::steady_clock::now().time_since_epoch());
+	time = now - time;
+	if (double(time.count()) >= 0.1) {
+		return 0;
+	}
+	return time.count();
+}
+void gamemap::Setdifficulty(double difficulty) {
+	this->difficulty = difficulty;
+}
+void gamemap::refreshTime() {
+	lastTime = chrono::steady_clock::now();
+}
+void gamemap::processMove() {
+	for (std::shared_ptr<bullet> b : Bullet) {
+		b->move(GetElapsedTime());
+		b->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
+	}
+	refreshTime();
+}
+//è®“æ•´å¼µåœ°åœ–é¡¯ç¤º
 void gamemap::drawmap() {
 	for (std::shared_ptr<block> b : map) {
 		b->show(scale);
@@ -37,34 +59,36 @@ void gamemap::drawmap() {
 	for (std::shared_ptr<enemy> e : Enemy) {
 		e->show(scale);
 	}
+	for (std::shared_ptr<bullet> b : Bullet) {
+		b->show(scale);
+	}
 	selected_block.ShowBitmap(scale);
 	controlPanel.ShowBitmap();
 	controlPanelButton.ShowBitmap();
 	if (controlPanelMode ==  1 && showing_control_panel && !is_control_panel_invisable) {
-		//¿ï³æ«ö¶s¹Ï¤ù
+		//é¸å–®æŒ‰éˆ•åœ–ç‰‡
 		for (game_framework::CMovingBitmap b : towerButtons) {
 			b.ShowBitmap();
 		}	
 		selected_box.ShowBitmap();
 	}
-
 }
 void gamemap::showtext() {
 	CDC *pDC = game_framework::CDDraw::GetBackCDC();
-	//¿ï³æ¤å¦r
+	//é¸å–®æ–‡å­—
 	if (showing_control_panel && !is_control_panel_invisable) {
 		if (controlPanelMode == 1) {
 			if (last_selected == -1) {
-				game_framework::CTextDraw::ChangeFontLog(pDC, 21, "·L³n¥¿¶ÂÅé", RGB(255, 255, 255), 800);
-				game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, "ÂIÀ»¶ğªº¹Ï®×¥H¥´¶}´y­z");
-				game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 60, "³æÀ»²Ä¤G¦¸¨Ó«Ø³y¶ğ");
+				game_framework::CTextDraw::ChangeFontLog(pDC, 21, "å¾®è»Ÿæ­£é»‘é«”", RGB(255, 255, 255), 800);
+				game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, "é»æ“Šå¡”çš„åœ–æ¡ˆä»¥æ‰“é–‹æè¿°");
+				game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 60, "å–®æ“Šç¬¬äºŒæ¬¡ä¾†å»ºé€ å¡”");
 			}
 			else {
-				game_framework::CTextDraw::ChangeFontLog(pDC, 42, "·L³n¥¿¶ÂÅé", RGB(255, 255, 255), 1200);
+				game_framework::CTextDraw::ChangeFontLog(pDC, 42, "å¾®è»Ÿæ­£é»‘é«”", RGB(255, 255, 255), 1200);
 				game_framework::CTextDraw::Print(pDC, 20 ,PANEL_SPACE+20 , towernames[last_selected]);
 			}
-			//¿ï³æ«ö¶s¤å¦r
-			game_framework::CTextDraw::ChangeFontLog(pDC, 21, "·L³n¥¿¶ÂÅé", RGB(255, 255, 255), 800);
+			//é¸å–®æŒ‰éˆ•æ–‡å­—
+			game_framework::CTextDraw::ChangeFontLog(pDC, 21, "å¾®è»Ÿæ­£é»‘é«”", RGB(255, 255, 255), 800);
 			for (game_framework::CMovingBitmap b : towerButtons) {
 				game_framework::CTextDraw::Print(pDC, b.GetLeft()+70 , b.GetTop()+70 , "40");
 			}
@@ -72,12 +96,13 @@ void gamemap::showtext() {
 		else if (controlPanelMode == 2) {
 			for (std::shared_ptr<block> b : map) {
 				if (selected_tile.x == b->GetX() && selected_tile.y == b->GetY()) {
-					game_framework::CTextDraw::ChangeFontLog(pDC, 42, "·L³n¥¿¶ÂÅé", RGB(255, 255, 255), 1200);
+					game_framework::CTextDraw::ChangeFontLog(pDC, 42, "å¾®è»Ÿæ­£é»‘é«”", RGB(255, 255, 255), 1200);
 					game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, b->GetTitle());
-					game_framework::CTextDraw::ChangeFontLog(pDC, 21, "·L³n¥¿¶ÂÅé", RGB(255, 255, 255), 800);
+					game_framework::CTextDraw::ChangeFontLog(pDC, 21, "å¾®è»Ÿæ­£é»‘é«”", RGB(255, 255, 255), 800);
 					game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 70, b->GetDescribe());
 					if (!b->GetType().compare("portal")) {
-						game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 100, "µ¥¯ÅÃø«×:"); //¥¼§¹¦¨
+						std::string D = std::to_string(int(difficulty *100)) + "%";
+						game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 100, "ç­‰ç´šé›£åº¦:" + D);
 					}
 					break;
 				}
@@ -86,7 +111,7 @@ void gamemap::showtext() {
 		else if (controlPanelMode == 3) {
 			for (std::shared_ptr<tile> t : tiles) {
 				if (selected_tile.x  == t->GetX() && selected_tile.y == t->GetY()) {
-					game_framework::CTextDraw::ChangeFontLog(pDC, 42, "·L³n¥¿¶ÂÅé", RGB(255, 255, 255), 1200);
+					game_framework::CTextDraw::ChangeFontLog(pDC, 42, "å¾®è»Ÿæ­£é»‘é«”", RGB(255, 255, 255), 1200);
 					game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, t->GetTower()->GetTowerName());
 					break;
 				}
@@ -130,6 +155,9 @@ void gamemap::enemyMove(double x, double y) {
 	for (std::shared_ptr<enemy> e : Enemy) {
 		e->SetTopLeft(int(e->GetX() + x), int(e->GetY() + y));
 	}
+	for (std::shared_ptr<bullet> b : Bullet) {
+		b->loadPic();
+	}
 }
 void gamemap::resetshow() {
 	for (std::shared_ptr<block> b : map) {
@@ -138,6 +166,8 @@ void gamemap::resetshow() {
 	for (std::shared_ptr<tile> t : tiles) {
 		t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
+	for (std::shared_ptr<bullet> b : Bullet) {
+		b->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	for (std::shared_ptr<enemy> e : Enemy) {
 		e->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
@@ -157,25 +187,25 @@ void gamemap::buildTower(int x, int y, std::string type) {
 	}
 }
 void gamemap::clickOnMap(CPoint point) {
-	bool done = false; //ªí¥Ü¦¹¦¸ÂIÀ»¬O§_¤w¸g³B²z§¹¦¨
+	bool done = false; //è¡¨ç¤ºæ­¤æ¬¡é»æ“Šæ˜¯å¦å·²ç¶“è™•ç†å®Œæˆ
 	if (!is_control_panel_invisable) {
-		//ÂI¨ì¿ï³æ¶}±Ò®Éªº«ö¶s
+		//é»åˆ°é¸å–®é–‹å•Ÿæ™‚çš„æŒ‰éˆ•
 		if (showing_control_panel && 470 >= point.x && point.x >= 400 && PANEL_SPACE+537 >= point.y && point.y >= PANEL_SPACE+400) {
 			showing_control_panel = false;
 			controlPanel.SetTopLeft(-400, PANEL_SPACE);
 			controlPanelButton.SetTopLeft(0, PANEL_SPACE + 400);
 			done = true;
 		}
-		//ÂI¨ì¿ï³æÃö³¬®Éªº«ö¶s
+		//é»åˆ°é¸å–®é—œé–‰æ™‚çš„æŒ‰éˆ•
 		else if (!showing_control_panel && 70 >= point.x && point.x >= 0 && PANEL_SPACE + 537 >= point.y && point.y >= PANEL_SPACE + 400){
 			showing_control_panel = true;
 			controlPanel.SetTopLeft(0, PANEL_SPACE);
 			controlPanelButton.SetTopLeft(400, PANEL_SPACE + 400);
 			done = true;
 		}
-		//ÀË¬d¬O§_ÂI¿ï¦b¿ï³æ¤W
+		//æª¢æŸ¥æ˜¯å¦é»é¸åœ¨é¸å–®ä¸Š
 		if (!done && showing_control_panel && 400 >= point.x && point.x >= 0 && PANEL_SPACE + 700 >= point.y && point.y >= PANEL_SPACE) {
-			//»\¶ğ¼Ò¦¡
+			//è“‹å¡”æ¨¡å¼
 			if (controlPanelMode == 1 && point.y >= PANEL_SPACE + 300) {
 				int selected = ((point.y - PANEL_SPACE - 300) / TOWER_BUTTON_SIZE) * 4 + (point.x / TOWER_BUTTON_SIZE);
 				if (selected != last_selected && selected >= 0 && selected <= 11) {
@@ -187,7 +217,7 @@ void gamemap::clickOnMap(CPoint point) {
 						buildTower(selected_tile.x, selected_tile.y, "basictower");
 
 					}
-					controlPanelMode = 3; //»\§¹¶ğ¤§«á¸õ¨ì¤É¯Å­¶­±(tower¼Ò¦¡)
+					controlPanelMode = 3; //è“‹å®Œå¡”ä¹‹å¾Œè·³åˆ°å‡ç´šé é¢(toweræ¨¡å¼)
 				}
 			}
 			done = true;
@@ -196,7 +226,7 @@ void gamemap::clickOnMap(CPoint point) {
 	if (!done) {
 		for (std::shared_ptr<tile> t : tiles) {
 			if (t->ifClickOn(TOP, LEFT, TILE_SIZE, scale, moveX, moveY, point.x, point.y)) {
-				//³B²z±±¨î­±ªO¤Î«ö¶s
+				//è™•ç†æ§åˆ¶é¢æ¿åŠæŒ‰éˆ•
 				if (showing_control_panel) {
 					controlPanel.SetTopLeft(0, PANEL_SPACE);
 					controlPanelButton.SetTopLeft(400, PANEL_SPACE + 400);
@@ -206,7 +236,7 @@ void gamemap::clickOnMap(CPoint point) {
 					controlPanelButton.SetTopLeft(0, PANEL_SPACE + 400);
 				}
 				selected_block.SetTopLeft(int(LEFT + moveX + t->GetX() * TILE_SIZE*scale - 2*scale), int(TOP + moveY + t->GetY() * TILE_SIZE*scale - 2 * scale));
-				//³B²z±±¨î¨Æ¥ó
+				//è™•ç†æ§åˆ¶äº‹ä»¶
 				if (t->haveTower()) {
 					controlPanelMode = 3;
 				}
@@ -240,14 +270,14 @@ void gamemap::clickOnMap(CPoint point) {
 			}
 		}
 	}
-	//³B²z±±¨î­±ªO«ö¶s¹Ï¤ù
+	//è™•ç†æ§åˆ¶é¢æ¿æŒ‰éˆ•åœ–ç‰‡
 	if (showing_control_panel) {
 		controlPanelButton.SetFrameIndexOfBitmap(0);
 	}
 	else {
 		controlPanelButton.SetFrameIndexOfBitmap(controlPanelMode);
 	}
-	//ÂI¨ì¨S¦³³]©wªº¦a¤è
+	//é»åˆ°æ²’æœ‰è¨­å®šçš„åœ°æ–¹
 	if (!done) {
 		controlPanel.SetTopLeft(-600, PANEL_SPACE);
 		controlPanelButton.SetTopLeft(-200, PANEL_SPACE + 400);
@@ -264,8 +294,11 @@ void gamemap::newtile(std::shared_ptr<tile> tile) {
 void gamemap::newEnemy(std::shared_ptr<enemy> enemy) {
 	Enemy.push_back(enemy);
 }
+void gamemap::newBullet(std::shared_ptr<bullet> bullet) {
+	Bullet.push_back(bullet);
+}
 void gamemap::TESTMAP1() {
-	newblock(std::make_shared<portal>(1,0,0.7));
+	newblock(std::make_shared<portal>(1,0));
 	newblock(std::make_shared<road>(1, 1));
 	newblock(std::make_shared<road>(1, 2));
 	newblock(std::make_shared<road>(1, 3));
@@ -296,5 +329,7 @@ void gamemap::TESTMAP1() {
 	newtile(std::make_shared<tile>(2, 4));
 	newtile(std::make_shared<tile>(3, 4));
 	newtile(std::make_shared<tile>(4, 4));
+	Setdifficulty(0.7);
+  //newBullet(std::make_shared<basicbullet>());
 	newEnemy(std::make_shared<Regular>(0.7, 1));
 }

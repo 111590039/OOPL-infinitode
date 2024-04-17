@@ -27,7 +27,13 @@ void CGameStateRun::OnBeginState()
 
 void CGameStateRun::OnMove()							// 移動遊戲元素
 {
-	
+	/* 
+	CDC *pDC = game_framework::CDDraw::GetBackCDC();
+	game_framework::CTextDraw::ChangeFontLog(pDC, 21, "微軟正黑體", RGB(255, 255, 255), 800);
+	game_framework::CTextDraw::Print(pDC, 200, 20, std::to_string((map.GetElapsedTime())));
+	game_framework::CDDraw::ReleaseBackCDC();
+	*/
+	map.processMove();
 }
 
 void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
