@@ -10,9 +10,6 @@ class block : public game_framework::CMovingBitmap {
 public:
 	block(int x, int y);
 
-	
-
-
 	int GetX();
 	int GetY();
 	std::string GetType();
@@ -76,11 +73,9 @@ private:
 
 class portal : public block {
 public:
-	portal(int x, int y,double difficult);
+	portal(int x, int y);
 	void OnClick() override;
-	double GetDifficult();
 private:
-	double difficult;
 
 };
 

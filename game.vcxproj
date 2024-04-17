@@ -249,6 +249,7 @@
     <ClCompile Include="Source\Game\mygame_over.cpp" />
     <ClCompile Include="Source\Game\mygame_run.cpp" />
     <ClCompile Include="Source\Library\audio.cpp" />
+    <ClCompile Include="Source\Library\bullet.cpp" />
     <ClCompile Include="Source\Library\enemy.cpp" />
     <ClCompile Include="Source\Library\gamecore.cpp" />
     <ClCompile Include="Source\Library\gamemap.cpp" />
@@ -267,6 +268,7 @@
     <ClInclude Include="Source\Library\audio.h" />
     <ClInclude Include="Source\Library\barrel.h" />
     <ClInclude Include="Source\Library\block.h" />
+    <ClInclude Include="Source\Library\bullet.h" />
     <ClInclude Include="Source\Library\enemy.h" />
     <ClInclude Include="Source\Library\gamecore.h" />
     <ClInclude Include="Source\Library\gamemap.h" />

@@ -25,6 +25,28 @@ void gamemap::addMoveY(int delta) {
 double gamemap::GetScale() {
 	return scale;
 }
+double gamemap::GetElapsedTime() {
+	auto time = std::chrono::duration<double>(lastTime.time_since_epoch());
+	auto now = std::chrono::duration<double>(chrono::steady_clock::now().time_since_epoch());
+	time = now - time;
+	if (double(time.count()) >= 0.1) {
+		return 0;
+	}
+	return time.count();
+}
+void gamemap::Setdifficulty(double difficulty) {
+	this->difficulty = difficulty;
+}
+void gamemap::refreshTime() {
+	lastTime = chrono::steady_clock::now();
+}
+void gamemap::processMove() {
+	for (std::shared_ptr<bullet> b : Bullet) {
+		b->move(GetElapsedTime());
+		b->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
+	}
+	refreshTime();
+}
 //讓整張地圖顯示
 void gamemap::drawmap() {
 	for (std::shared_ptr<block> b : map) {
@@ -36,6 +58,9 @@ void gamemap::drawmap() {
 	for (std::shared_ptr<enemy> e : Enemy) {
 		e->show(scale);
 	}
+	for (std::shared_ptr<bullet> b : Bullet) {
+		b->show(scale);
+	}
 	selected_block.ShowBitmap(scale);
 	controlPanel.ShowBitmap();
 	controlPanelButton.ShowBitmap();
@@ -46,7 +71,6 @@ void gamemap::drawmap() {
 		}	
 		selected_box.ShowBitmap();
 	}
-
 }
 void gamemap::showtext() {
 	CDC *pDC = game_framework::CDDraw::GetBackCDC();
@@ -76,7 +100,8 @@ void gamemap::showtext() {
 					game_framework::CTextDraw::ChangeFontLog(pDC, 21, "微軟正黑體", RGB(255, 255, 255), 800);
 					game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 70, b->GetDescribe());
 					if (!b->GetType().compare("portal")) {
-						game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 100, "等級難度:"); //未完成
+						std::string D = std::to_string(int(difficulty *100)) + "%";
+						game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 100, "等級難度:" + D);
 					}
 					break;
 				}
@@ -123,6 +148,9 @@ void gamemap::loadpic() {
 	for (std::shared_ptr<enemy> e : Enemy) {
 		e->loadPic();
 	}
+	for (std::shared_ptr<bullet> b : Bullet) {
+		b->loadPic();
+	}
 }
 void gamemap::resetshow() {
 	for (std::shared_ptr<block> b : map) {
@@ -130,6 +158,9 @@ void gamemap::resetshow() {
 	}
 	for (std::shared_ptr<tile> t : tiles) {
 		t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
+	}
+	for (std::shared_ptr<bullet> b : Bullet) {
+		b->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
 	selected_block.SetTopLeft(int(LEFT + moveX + selected_tile.x * TILE_SIZE*scale - 2 * scale), int(TOP + moveY + selected_tile.y * TILE_SIZE*scale - 2 * scale));
 
@@ -254,8 +285,11 @@ void gamemap::newtile(std::shared_ptr<tile> tile) {
 void gamemap::newEnemy(std::shared_ptr<enemy> enemy) {
 	Enemy.push_back(enemy);
 }
+void gamemap::newBullet(std::shared_ptr<bullet> bullet) {
+	Bullet.push_back(bullet);
+}
 void gamemap::TESTMAP1() {
-	newblock(std::make_shared<portal>(1,0,0.7));
+	newblock(std::make_shared<portal>(1,0));
 	newblock(std::make_shared<road>(1, 1));
 	newblock(std::make_shared<road>(1, 2));
 	newblock(std::make_shared<road>(1, 3));
@@ -287,4 +321,6 @@ void gamemap::TESTMAP1() {
 	newtile(std::make_shared<tile>(3, 4));
 	newtile(std::make_shared<tile>(4, 4));
 	newEnemy(std::make_shared<Regular>("Regular", 1.0, 1.0, 1.0, 1.0));
+	newBullet(std::make_shared<basicbullet>());
+	Setdifficulty(0.7);
 }

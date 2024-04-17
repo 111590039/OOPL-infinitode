@@ -2,9 +2,11 @@
 
 #include "block.h"
 #include "enemy.h"
+#include "bullet.h"
 #include <string>
 #include <vector>
 #include <memory>
+#include <chrono>
 #include <mmsystem.h>
 #include <ddraw.h>
 #include "gamecore.h"
@@ -19,8 +21,11 @@ public:
 	void addMoveY(int delta);
 
 	double GetScale();
+	double GetElapsedTime();
+	void Setdifficulty(double difficulty);
 
-	
+	void refreshTime();     //更新時鐘時間
+	void processMove();     //計算物體
 	void drawmap();           //讓整張地圖顯示
 	void showtext();		//顯示文字
 	//void loadmap(std::string level);
@@ -33,6 +38,7 @@ protected:
 	void newblock(std::shared_ptr<block> block);
 	void newtile(std::shared_ptr<tile> tile);
 	void newEnemy(std::shared_ptr<enemy> enemy);
+	void newBullet(std::shared_ptr<bullet> bullet);
 private:
 	game_framework::CMovingBitmap controlPanel; //控制面版底座
 	game_framework::CMovingBitmap controlPanelButton; //控制面板按鈕
@@ -46,10 +52,13 @@ private:
 	int last_selected = -1; //蓋塔模式中上一個選擇的塔
 	game_framework::CMovingBitmap selected_block; //地圖格子的選擇框
 	int size = 32;
+	double difficulty;
 	std::vector<std::shared_ptr<block>> map;
 	std::vector<std::shared_ptr<tile>> tiles;
 	std::vector<std::shared_ptr<enemy>> Enemy;
+	std::vector<std::shared_ptr<bullet>> Bullet;
 	double scale = 1.0;
 	int moveX = 350;
 	int moveY = 200;
+	chrono::steady_clock::time_point lastTime = chrono::steady_clock::now();
 };
