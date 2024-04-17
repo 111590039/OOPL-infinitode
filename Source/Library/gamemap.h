@@ -29,6 +29,8 @@ public:
 	void buildTower(int x,int y,std::string type);
 	void clickOnMap(CPoint point);
 	void TESTMAP1();
+
+	void enemyMove(double x, double y);
 protected:
 	void newblock(std::shared_ptr<block> block);
 	void newtile(std::shared_ptr<tile> tile);
