@@ -5,6 +5,7 @@
 #define LEFT 0
 #define PANEL_SPACE 100
 #define TILE_SIZE 65
+#define ENEMY_SIZE 13
 #define TOWER_BUTTON_SIZE 100
 
 gamemap::gamemap() {
@@ -122,6 +123,12 @@ void gamemap::loadpic() {
 	}
 	for (std::shared_ptr<enemy> e : Enemy) {
 		e->loadPic();
+		e->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
+	}
+}
+void gamemap::enemyMove(double x, double y) {
+	for (std::shared_ptr<enemy> e : Enemy) {
+		e->SetTopLeft(int(e->GetX() + x), int(e->GetY() + y));
 	}
 }
 void gamemap::resetshow() {
@@ -130,6 +137,9 @@ void gamemap::resetshow() {
 	}
 	for (std::shared_ptr<tile> t : tiles) {
 		t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
+	}
+	for (std::shared_ptr<enemy> e : Enemy) {
+		e->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
 	selected_block.SetTopLeft(int(LEFT + moveX + selected_tile.x * TILE_SIZE*scale - 2 * scale), int(TOP + moveY + selected_tile.y * TILE_SIZE*scale - 2 * scale));
 
@@ -286,5 +296,5 @@ void gamemap::TESTMAP1() {
 	newtile(std::make_shared<tile>(2, 4));
 	newtile(std::make_shared<tile>(3, 4));
 	newtile(std::make_shared<tile>(4, 4));
-	newEnemy(std::make_shared<Regular>("Regular", 1.0, 1.0, 1.0, 1.0));
+	newEnemy(std::make_shared<Regular>(0.7, 1));
 }

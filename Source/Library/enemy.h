@@ -7,33 +7,42 @@
 
 class enemy : public game_framework::CMovingBitmap {
 public:
-	enemy(std::string type, double health, double speed, double bounty, double exp);
+	enemy(double difficulty, int wave);
 	std::string GetType();
 	double Gethealth();
 	double Getspeed();
 	double Getbounty();
 	double Getexp();
+	double GetX();
+	double GetY();
 
 	std::string GetPicPath();
 	void show(double scale);
 	virtual void loadPic() = 0;       //讀取圖片
+	void resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, int moveY);
 	//virtual void show(double scale); //被OnShow調用 持續顯示
 
 protected:
+	void Sethealth(double health);
+	void Setspeed(double speed);
+	void Setbounty(double bounty);
+	void Setexp(double exp);
+	void SetX(double x);
+	void SetY(double y);
 	void SetType(std::string type);
-	void SetXY(int x, int y);
 	void SetPicPath(std::string picPath);
 
 private:
-	int x, y;
+	int wave = 1;
+	double x=0, y=0;
 	std::string type;
 	std::string picPath;
-	double health, speed, bounty, exp;
+	double difficulty = 1, health, speed, bounty, exp;
 };
 
 class Regular : public enemy {
 public:
-	Regular(std::string type, double health, double speed, double bounty, double exp);
+	Regular(double difficulty, int wave);
 	void loadPic() override;       //讀取圖片
 };
 
