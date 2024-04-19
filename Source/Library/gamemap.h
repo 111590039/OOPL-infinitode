@@ -35,7 +35,6 @@ public:
 	void clickOnMap(CPoint point);
 	void TESTMAP1();
 
-	void enemyMove(double x, double y);
 protected:
 	void newblock(std::shared_ptr<block> block);
 	void newtile(std::shared_ptr<tile> tile);
@@ -63,4 +62,5 @@ private:
 	int moveX = 350;
 	int moveY = 200;
 	chrono::steady_clock::time_point lastTime = chrono::steady_clock::now();
+	std::vector<CPoint> enemyPath;
 };
