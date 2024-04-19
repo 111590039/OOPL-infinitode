@@ -119,13 +119,13 @@
     <ClInclude Include="Source\Library\enemy.h">
       <Filter>GameLibrary</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Library\tower.h">
-      <Filter>GameLibrary</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Library\barrel.h">
       <Filter>GameLibrary</Filter>
     </ClInclude>
     <ClInclude Include="Source\Library\bullet.h">
+      <Filter>GameLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Library\tower.h">
       <Filter>GameLibrary</Filter>
     </ClInclude>
   </ItemGroup>

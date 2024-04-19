@@ -6,6 +6,8 @@
 #include "stdafx.h"
 #include "gameutil.h"
 #include "barrel.h"
+#include "bullet.h"
+#include "enemy.h"
 
 class tower : public game_framework::CMovingBitmap {
 public:
@@ -17,23 +19,28 @@ public:
 	std::string GetBasePicPath();
 	std::string GetBarrelPicPath();
 	std::string GetTowerName();
-
+	virtual void move(double time, double x, double y);	//被OnMove持續調用 處理砲塔工作
 	virtual void loadPic();       //讀取圖片
 	virtual void show(double scale); //被OnShow調用 持續顯示
 	virtual void resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, int moveY,int x ,int y); // 重新設定bitmap 相關設定
-
+	void SetTarget(std::shared_ptr<enemy>* target);
+	void newBullet(std::shared_ptr<bullet> bullet);
 protected:
 	void SetType(std::string type);
 	void SetBasePicPath(std::string basepicpath);
 	void SetBarrelPicPath(std::string barrelpicpath);
 	void SetTowerName(std::string);
-	std::shared_ptr <barrel> Barrel;
-private:
 
+	std::shared_ptr <barrel> Barrel;
+	std::shared_ptr<enemy>* GetTarget();
+	std::vector<std::shared_ptr<bullet>> Bullets;
+	std::shared_ptr<enemy>* target;
+private:
 	std::string type = "None";
 	std::string basepicpath = "";
 	std::string barrelpicpath = "";
 	std::string towerName = "";
+
 };
 
 class emptytower : public tower {
@@ -44,6 +51,13 @@ public:
 class basictower : public tower {
 public:
 	basictower();
+	void move(double time, double x, double y) override;
 private:
-
+	double coolDown;
+	//double range;
+	//double damage;
+	double attackSpeed = 1.1; //攻擊次數/每秒
+	//double rotataionSpeed;
+	double projectileSpeed = 3.0;
+	//double damageMultiplier;
 };

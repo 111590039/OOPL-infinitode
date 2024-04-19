@@ -42,11 +42,13 @@ void gamemap::refreshTime() {
 	lastTime = chrono::steady_clock::now();
 }
 void gamemap::processMove() {
-	for (std::shared_ptr<bullet> b : Bullet) {
-		b->move(GetElapsedTime());
-		b->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
+	//砲塔工作 (未完成)
+	for (std::shared_ptr<tile> t : tiles) {
+		(*(t->GetTower()))->SetTarget(&Enemy[0]);
+		(*(t->GetTower()))->move(GetElapsedTime(),t->GetX(),t->GetY());
+		t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
-	refreshTime();
+	refreshTime();//一定要在最下面
 }
 //讓整張地圖顯示
 void gamemap::drawmap() {
@@ -59,12 +61,13 @@ void gamemap::drawmap() {
 	for (std::shared_ptr<enemy> e : Enemy) {
 		e->show(scale);
 	}
-	for (std::shared_ptr<bullet> b : Bullet) {
-		b->show(scale);
-	}
 	selected_block.ShowBitmap(scale);
 	controlPanel.ShowBitmap();
 	controlPanelButton.ShowBitmap();
+	if (showing_control_panel && !is_control_panel_invisable) {
+		greenCircle.ShowBitmap(greenScale * 0.5* scale);
+	}
+	blueCircle.ShowBitmap(blueScale * 0.5* scale);
 	if (controlPanelMode ==  1 && showing_control_panel && !is_control_panel_invisable) {
 		//選單按鈕圖片
 		for (game_framework::CMovingBitmap b : towerButtons) {
@@ -112,7 +115,7 @@ void gamemap::showtext() {
 			for (std::shared_ptr<tile> t : tiles) {
 				if (selected_tile.x  == t->GetX() && selected_tile.y == t->GetY()) {
 					game_framework::CTextDraw::ChangeFontLog(pDC, 42, "微軟正黑體", RGB(255, 255, 255), 1200);
-					game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, t->GetTower()->GetTowerName());
+					game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, (*(t->GetTower()))->GetTowerName());
 					break;
 				}
 			}
@@ -132,6 +135,10 @@ void gamemap::loadpic() {
 	selected_box.SetTopLeft(-100, -100);
 	selected_block.LoadBitmapByString({ "resources/selected_block.bmp" }, RGB(255, 255, 255));
 	selected_block.SetTopLeft(-100, -100);
+	greenCircle.LoadBitmapByString({ "resources/green_circle.bmp" }, RGB(255, 255, 255));
+	greenCircle.SetTopLeft(-200, -200);
+	blueCircle.LoadBitmapByString({ "resources/blue_circle.bmp" }, RGB(255, 255, 255));
+	blueCircle.SetTopLeft(-200, -200);
 	for (int i = 0; i < 1; i++) {
 		std::vector<string> towerpics = {"resources/tower_button_basic.bmp"};
 		towerButtons.push_back(game_framework::CMovingBitmap());
@@ -142,7 +149,7 @@ void gamemap::loadpic() {
 		b->loadPic();
 		b -> resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
-	for (std::shared_ptr<block> t : tiles) {
+	for (std::shared_ptr<tile> t : tiles) {
 		t->loadPic();
 		t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
@@ -155,9 +162,6 @@ void gamemap::enemyMove(double x, double y) {
 	for (std::shared_ptr<enemy> e : Enemy) {
 		e->SetTopLeft(int(e->GetX() + x), int(e->GetY() + y));
 	}
-	for (std::shared_ptr<bullet> b : Bullet) {
-		b->loadPic();
-	}
 }
 void gamemap::resetshow() {
 	for (std::shared_ptr<block> b : map) {
@@ -166,14 +170,14 @@ void gamemap::resetshow() {
 	for (std::shared_ptr<tile> t : tiles) {
 		t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
-	for (std::shared_ptr<bullet> b : Bullet) {
-		b->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
-	}
 	for (std::shared_ptr<enemy> e : Enemy) {
 		e->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
 	selected_block.SetTopLeft(int(LEFT + moveX + selected_tile.x * TILE_SIZE*scale - 2 * scale), int(TOP + moveY + selected_tile.y * TILE_SIZE*scale - 2 * scale));
-
+	greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale)
+		, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale));
+	blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale)
+		, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale));
 }
 void gamemap::buildTower(int x, int y, std::string type) {
 	for (std::shared_ptr<tile> t : tiles) {
@@ -211,8 +215,11 @@ void gamemap::clickOnMap(CPoint point) {
 				int selected = ((point.y - PANEL_SPACE - 300) / TOWER_BUTTON_SIZE) * 4 + (point.x / TOWER_BUTTON_SIZE);
 				if (selected != last_selected && selected >= 0 && selected <= 11) {
 					selected_box.SetTopLeft((selected % 4) * TOWER_BUTTON_SIZE, PANEL_SPACE + 300 + (selected / 4) * TOWER_BUTTON_SIZE);
+					greenScale = origin_range[selected];
+					greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale)
+										, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale) );
 					last_selected = selected;
-				}
+				} 
 				else {
 					if (selected == 0) {
 						buildTower(selected_tile.x, selected_tile.y, "basictower");
@@ -236,7 +243,18 @@ void gamemap::clickOnMap(CPoint point) {
 					controlPanel.SetTopLeft(-400, PANEL_SPACE);
 					controlPanelButton.SetTopLeft(0, PANEL_SPACE + 400);
 				}
+				selected_tile = CPoint(t->GetX(), t->GetY());
 				selected_block.SetTopLeft(int(LEFT + moveX + t->GetX() * TILE_SIZE*scale - 2*scale), int(TOP + moveY + t->GetY() * TILE_SIZE*scale - 2 * scale));
+				greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale)
+					, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale));
+				if (t->haveTower()) {
+					blueScale = origin_range[0]; // test 測試
+				}
+				else {
+					blueScale = 0.1;
+				}
+				blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale)
+					, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale));
 				//處理控制事件
 				if (t->haveTower()) {
 					controlPanelMode = 3;
@@ -244,7 +262,6 @@ void gamemap::clickOnMap(CPoint point) {
 				else {
 					controlPanelMode = 1;
 				}
-				selected_tile = CPoint(t->GetX(), t->GetY());
 				is_control_panel_invisable = false;
 				done = true;
 				break;
@@ -284,6 +301,8 @@ void gamemap::clickOnMap(CPoint point) {
 		controlPanelButton.SetTopLeft(-200, PANEL_SPACE + 400);
 		is_control_panel_invisable = true;
 		selected_block.SetTopLeft(-100, -100);
+		greenCircle.SetTopLeft(-300, -300);
+		blueCircle.SetTopLeft(-300, -300);
 	}
 }
 void gamemap::newblock(std::shared_ptr<block> block) {
@@ -294,9 +313,6 @@ void gamemap::newtile(std::shared_ptr<tile> tile) {
 }
 void gamemap::newEnemy(std::shared_ptr<enemy> enemy) {
 	Enemy.push_back(enemy);
-}
-void gamemap::newBullet(std::shared_ptr<bullet> bullet) {
-	Bullet.push_back(bullet);
 }
 void gamemap::TESTMAP1() {
 	newblock(std::make_shared<portal>(1,0));
@@ -331,6 +347,5 @@ void gamemap::TESTMAP1() {
 	newtile(std::make_shared<tile>(3, 4));
 	newtile(std::make_shared<tile>(4, 4));
 	Setdifficulty(0.7);
-  //newBullet(std::make_shared<basicbullet>());
 	newEnemy(std::make_shared<Regular>(0.7, 1));
 }
