@@ -54,7 +54,7 @@ public:
 	void move(double time, double x, double y) override;
 private:
 	double coolDown;
-	//double range;
+	double range = 2;
 	//double damage;
 	double attackSpeed = 1.1; //§ðÀ»¦¸¼Æ/¨C¬í
 	//double rotataionSpeed;

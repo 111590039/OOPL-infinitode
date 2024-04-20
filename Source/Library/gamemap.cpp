@@ -46,16 +46,24 @@ void gamemap::processMove() {
 	//砲塔工作 (未完成)
 	double time = GetElapsedTime();
 	for (std::shared_ptr<tile> t : tiles) {
-		(*(t->GetTower()))->SetTarget(&Enemy[0]);
+		if (Enemy.size() != 0){
+			for (std::shared_ptr<enemy> e : Enemy) {
+				(*(t->GetTower()))-> SetTarget(&e) ;
+				break;
+			}
+		}
+		else {
+			(*(t->GetTower()))->SetTarget(nullptr);
+		}
 		(*(t->GetTower()))->move(time, t->GetX(), t->GetY());
 		t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
-		for (size_t i = 0; i < Enemy.size(); i++) {
-			bool del;
-			del = Enemy[i]->enemyMove(time);
-			Enemy[i]->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
-			if (del) {
-				Enemy.erase(Enemy.begin() + i);
-			}
+	}
+	for (size_t i = 0; i < Enemy.size(); i++) {
+		bool del;
+		del = Enemy[i]->enemyMove(time);
+		Enemy[i]->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
+		if (del) {
+			Enemy.erase(Enemy.begin() + i);
 		}
 	}
 	refreshTime();//一定要在最下面
@@ -318,6 +326,7 @@ void gamemap::newtile(std::shared_ptr<tile> tile) {
 }
 void gamemap::newEnemy(std::shared_ptr<enemy> enemy) {
 	Enemy.push_back(enemy);
+	enemy->loadPic();
 }
 void gamemap::TESTMAP1() {
 	newblock(std::make_shared<portal>(1,0));
@@ -354,4 +363,10 @@ void gamemap::TESTMAP1() {
 	Setdifficulty(0.7);
 	enemyPath = { CPoint(1, 0), CPoint(1, 5), CPoint(6, 5), CPoint(6, 1), CPoint(9, 2), CPoint(9, 6) };
 	newEnemy(std::make_shared<Regular>(0.7, 1, enemyPath));
+}
+void gamemap::SummonTestEnemy() {
+	std::shared_ptr<Regular> enemy = std::make_shared<Regular>(0.7, 1, enemyPath);
+	if (enemy) {
+		newEnemy(enemy);
+	}
 }

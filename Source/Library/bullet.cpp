@@ -33,8 +33,12 @@ void bullet::resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX
 }
 void bullet::move(double time) {
 	if (target != nullptr) {
-		tarX = (*target)->GetX();
-		tarY = (*target)->GetY();
+		double enemyX = (*target)->GetX();
+		double enemyY = (*target)->GetY();
+		if (enemyX >= -1 && enemyY >= -1) {
+			tarX = enemyX;
+			tarY = enemyY;
+		}
 	}
 	double r = sqrt(pow(tarX-x,2)+ pow(tarY-y,2));
 	double angleX = (tarX - x) / r;

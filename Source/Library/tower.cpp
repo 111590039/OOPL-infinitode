@@ -90,6 +90,7 @@ basictower::basictower() {
 	SetTowerName("°ò¥»");
 	Barrel = std::make_shared<basicBarrel>();
 	coolDown = 1 / attackSpeed;
+	range = 2.0;
 }
 void basictower::move(double time,double x, double y) {
 	if (coolDown == 0) {
@@ -97,8 +98,10 @@ void basictower::move(double time,double x, double y) {
 		Bullet->SetTarget(GetTarget());
 		Bullet->SetXY(x+0.5, y+0.5);
 		Bullet->SetSpeed(projectileSpeed);
-		newBullet(Bullet);
-		coolDown = 1 / attackSpeed;
+		if (target != nullptr) {
+			newBullet(Bullet);
+			coolDown = 1 / attackSpeed;
+		}
 	}
 	else {
 		coolDown = max(0, coolDown - time);
