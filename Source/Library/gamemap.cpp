@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "gamemap.h"
+#include <algorithm>
 
 #define TOP 0
 #define LEFT 0
@@ -42,6 +43,14 @@ void gamemap::refreshTime() {
 	lastTime = chrono::steady_clock::now();
 }
 void gamemap::processMove() {
+	for (size_t i = 0; i < Enemy.size(); i++) {
+		bool del;
+		del = Enemy[i]->enemyMove(GetElapsedTime());
+		Enemy[i]->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
+		if (del) {
+			Enemy.erase(Enemy.begin()+i);
+		}
+	}
 	for (std::shared_ptr<bullet> b : Bullet) {
 		b->move(GetElapsedTime());
 		b->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
@@ -149,14 +158,6 @@ void gamemap::loadpic() {
 	for (std::shared_ptr<enemy> e : Enemy) {
 		e->loadPic();
 		e->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
-	}
-}
-void gamemap::enemyMove(double x, double y) {
-	for (std::shared_ptr<enemy> e : Enemy) {
-		e->SetTopLeft(int(e->GetX() + x), int(e->GetY() + y));
-	}
-	for (std::shared_ptr<bullet> b : Bullet) {
-		b->loadPic();
 	}
 }
 void gamemap::resetshow() {
@@ -332,5 +333,6 @@ void gamemap::TESTMAP1() {
 	newtile(std::make_shared<tile>(4, 4));
 	Setdifficulty(0.7);
   //newBullet(std::make_shared<basicbullet>());
-	newEnemy(std::make_shared<Regular>(0.7, 1));
+	enemyPath = { CPoint(1, 0), CPoint(1, 5), CPoint(6, 5), CPoint(6, 1), CPoint(9, 2), CPoint(9, 6) };
+	newEnemy(std::make_shared<Regular>(0.7, 1, enemyPath));
 }

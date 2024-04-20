@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "enemy.h"
-enemy::enemy(double difficulty, int wave) {
-	
+enemy::enemy(double difficulty, int wave, std::vector<CPoint> enemyPath):enemyPath(enemyPath){
+	SetX(1.5);
+	SetY(0.5);
 }
 std::string enemy::GetType() {
 	return type;
@@ -54,8 +55,28 @@ void enemy::SetPicPath(std::string picPath) {
 std::string enemy::GetPicPath() {
 	return picPath;
 }
-
-Regular::Regular(double difficulty, int wave) : enemy(difficulty, wave) {
+bool enemy::enemyMove(double time) {
+	if (abs(y) < abs(enemyPath[targetPos].y)){
+		y += time * speed;
+	}
+	else if (abs(y) > abs(enemyPath[targetPos].y)) {
+		y -= time * speed;
+	}
+	else if (abs(x) < abs(enemyPath[targetPos].x)) {
+		x += time * speed;
+	}
+	else if (abs(x) > abs(enemyPath[targetPos].x)) {
+		x -= time * speed;
+	}
+	else {
+		if (targetPos == (int)enemyPath.size() - 1) {
+			return true;
+		}
+		targetPos++;
+	}
+	return false;
+}
+Regular::Regular(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
 	Sethealth(100.0);
 	Setspeed(1.0);
 	Setbounty(1.0);
