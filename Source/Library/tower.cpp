@@ -43,7 +43,7 @@ void tower::resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX,
 		b->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
 }
-void tower::SetTarget(std::shared_ptr<enemy>* target) {
+void tower::SetTarget(std::shared_ptr<enemy> target) {
 	this->target = target;
 }
 void tower::newBullet(std::shared_ptr<bullet> bullet) {
@@ -62,7 +62,7 @@ void tower::SetBarrelPicPath(std::string barrelpicpath) {
 void tower::SetTowerName(std::string towerName) {
 	this->towerName = towerName;
 }
-std::shared_ptr<enemy>* tower::GetTarget() {
+std::shared_ptr<enemy> tower::GetTarget() {
 	return target;
 }
 void tower::move(double time, double x, double y) {

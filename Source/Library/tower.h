@@ -23,7 +23,7 @@ public:
 	virtual void loadPic();       //讀取圖片
 	virtual void show(double scale); //被OnShow調用 持續顯示
 	virtual void resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, int moveY,int x ,int y); // 重新設定bitmap 相關設定
-	void SetTarget(std::shared_ptr<enemy>* target);
+	void SetTarget(std::shared_ptr<enemy> target);
 	void newBullet(std::shared_ptr<bullet> bullet);
 protected:
 	void SetType(std::string type);
@@ -32,9 +32,9 @@ protected:
 	void SetTowerName(std::string);
 
 	std::shared_ptr <barrel> Barrel;
-	std::shared_ptr<enemy>* GetTarget();
+	std::shared_ptr<enemy> GetTarget();
 	std::vector<std::shared_ptr<bullet>> Bullets;
-	std::shared_ptr<enemy>* target;
+	std::shared_ptr<enemy> target;
 private:
 	std::string type = "None";
 	std::string basepicpath = "";

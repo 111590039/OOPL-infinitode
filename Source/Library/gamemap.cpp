@@ -48,7 +48,7 @@ void gamemap::processMove() {
 	for (std::shared_ptr<tile> t : tiles) {
 		if (Enemy.size() != 0){
 			for (std::shared_ptr<enemy> e : Enemy) {
-				(*(t->GetTower()))-> SetTarget(&e) ;
+				(*(t->GetTower()))-> SetTarget(e) ;
 				break;
 			}
 		}
