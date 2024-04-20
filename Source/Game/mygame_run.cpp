@@ -68,6 +68,9 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		map.addScale(-0.1);
 		map.resetshow();
 	}
+	else if (nChar == 0x50) {
+		map.SummonTestEnemy();
+	}
 }
 
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)

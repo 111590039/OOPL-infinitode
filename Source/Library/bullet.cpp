@@ -19,7 +19,7 @@ void bullet::SetPicPath(std::string picPath) {
 void bullet::SetSpeed(double speed) {
 	this->speed = speed;
 }
-void bullet::SetTarget(std::shared_ptr<enemy> *target) {
+void bullet::SetTarget(std::shared_ptr<enemy> target) {
 	this->target = target;
 }
 void bullet::loadPic() {
@@ -33,8 +33,8 @@ void bullet::resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX
 }
 void bullet::move(double time) {
 	if (target != nullptr) {
-		tarX = (*target)->GetX();
-		tarY = (*target)->GetY();
+		tarX = target->GetX();
+		tarY = target->GetY();
 	}
 	double r = sqrt(pow(tarX-x,2)+ pow(tarY-y,2));
 	double angleX = (tarX - x) / r;

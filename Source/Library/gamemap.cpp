@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "gamemap.h"
 #include <algorithm>
+#include <cmath>
 
 #define TOP 0
 #define LEFT 0
@@ -46,16 +47,32 @@ void gamemap::processMove() {
 	//砲塔工作 (未完成)
 	double time = GetElapsedTime();
 	for (std::shared_ptr<tile> t : tiles) {
-		(*(t->GetTower()))->SetTarget(&Enemy[0]);
-		(*(t->GetTower()))->move(time, t->GetX(), t->GetY());
-		t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
-		for (size_t i = 0; i < Enemy.size(); i++) {
-			bool del;
-			del = Enemy[i]->enemyMove(time);
-			Enemy[i]->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
-			if (del) {
-				Enemy.erase(Enemy.begin() + i);
+		if (Enemy.size() != 0){
+			bool findTarget = false;
+			for (std::shared_ptr<enemy> e : Enemy) {
+				if (sqrt(pow(t->GetX()+0.5 - e->GetX(), 2) + pow(t->GetY()+0.5 - e->GetY(), 2)) <= t->GetTower()->GetRange()) {
+					t->GetTower()-> SetTarget(e) ;
+					findTarget = true;
+					break;
+				}
 			}
+			if (!findTarget) {
+				t->GetTower()->SetTarget(nullptr);
+			}
+		}
+		else {
+			t->GetTower()->SetTarget(nullptr);
+		}
+		t->GetTower()->move(time, t->GetX(), t->GetY());
+		t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
+	}
+	//敵人移動
+	for (size_t i = 0; i < Enemy.size(); i++) {
+		bool del;
+		del = Enemy[i]->enemyMove(time);
+		Enemy[i]->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
+		if (del) {
+			Enemy.erase(Enemy.begin() + i);
 		}
 	}
 	refreshTime();//一定要在最下面
@@ -68,6 +85,11 @@ void gamemap::drawmap() {
 	for (std::shared_ptr<tile> t : tiles) {
 		t->show(scale);
 	}
+	for (std::shared_ptr<tile> t : tiles) {
+		if (t->haveTower()) {
+			t->GetTower()->showBullets(scale);
+		}
+	}
 	for (std::shared_ptr<enemy> e : Enemy) {
 		e->show(scale);
 	}
@@ -77,7 +99,9 @@ void gamemap::drawmap() {
 	if (showing_control_panel && !is_control_panel_invisable) {
 		greenCircle.ShowBitmap(greenScale * 0.5* scale);
 	}
-	blueCircle.ShowBitmap(blueScale * 0.5* scale);
+	if (controlPanelMode == 3 && !is_control_panel_invisable) {
+		blueCircle.ShowBitmap(blueScale * 0.5* scale);
+	}
 	if (controlPanelMode ==  1 && showing_control_panel && !is_control_panel_invisable) {
 		//選單按鈕圖片
 		for (game_framework::CMovingBitmap b : towerButtons) {
@@ -125,7 +149,7 @@ void gamemap::showtext() {
 			for (std::shared_ptr<tile> t : tiles) {
 				if (selected_tile.x  == t->GetX() && selected_tile.y == t->GetY()) {
 					game_framework::CTextDraw::ChangeFontLog(pDC, 42, "微軟正黑體", RGB(255, 255, 255), 1200);
-					game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, (*(t->GetTower()))->GetTowerName());
+					game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, t->GetTower()->GetTowerName());
 					break;
 				}
 			}
@@ -231,6 +255,9 @@ void gamemap::clickOnMap(CPoint point) {
 
 					}
 					controlPanelMode = 3; //蓋完塔之後跳到升級頁面(tower模式)
+					blueScale = origin_range[selected];
+					blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale)
+						, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale));
 				}
 			}
 			done = true;
@@ -253,7 +280,7 @@ void gamemap::clickOnMap(CPoint point) {
 				greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale)
 					, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale));
 				if (t->haveTower()) {
-					blueScale = origin_range[0]; // test 測試
+					blueScale = t->GetTower()->GetRange();
 				}
 				else {
 					blueScale = 0.1;
@@ -307,7 +334,9 @@ void gamemap::clickOnMap(CPoint point) {
 		is_control_panel_invisable = true;
 		selected_block.SetTopLeft(-100, -100);
 		greenCircle.SetTopLeft(-200, -200);
+		greenScale = 0.1;
 		blueCircle.SetTopLeft(-200, -200);
+		blueScale = 0.1;
 	}
 }
 void gamemap::newblock(std::shared_ptr<block> block) {
@@ -318,6 +347,7 @@ void gamemap::newtile(std::shared_ptr<tile> tile) {
 }
 void gamemap::newEnemy(std::shared_ptr<enemy> enemy) {
 	Enemy.push_back(enemy);
+	enemy->loadPic();
 }
 void gamemap::TESTMAP1() {
 	newblock(std::make_shared<portal>(1,0));
@@ -354,4 +384,10 @@ void gamemap::TESTMAP1() {
 	Setdifficulty(0.7);
 	enemyPath = { CPoint(1, 0), CPoint(1, 5), CPoint(6, 5), CPoint(6, 1), CPoint(9, 2), CPoint(9, 6) };
 	newEnemy(std::make_shared<Regular>(0.7, 1, enemyPath));
+}
+void gamemap::SummonTestEnemy() {
+	std::shared_ptr<Regular> enemy = std::make_shared<Regular>(0.7, 1, enemyPath);
+	if (enemy) {
+		newEnemy(enemy);
+	}
 }

@@ -32,6 +32,9 @@ void tower::loadPic() {
 void tower::show(double scale) {
 	ShowBitmap(scale);
 	Barrel->show(scale);
+
+}
+void tower::showBullets(double scale) {
 	for (std::shared_ptr<bullet> b : Bullets) {
 		b->show(scale);
 	}
@@ -43,7 +46,7 @@ void tower::resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX,
 		b->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
 }
-void tower::SetTarget(std::shared_ptr<enemy>* target) {
+void tower::SetTarget(std::shared_ptr<enemy> target) {
 	this->target = target;
 }
 void tower::newBullet(std::shared_ptr<bullet> bullet) {
@@ -62,7 +65,7 @@ void tower::SetBarrelPicPath(std::string barrelpicpath) {
 void tower::SetTowerName(std::string towerName) {
 	this->towerName = towerName;
 }
-std::shared_ptr<enemy>* tower::GetTarget() {
+std::shared_ptr<enemy> tower::GetTarget() {
 	return target;
 }
 void tower::move(double time, double x, double y) {
@@ -79,8 +82,12 @@ void tower::move(double time, double x, double y) {
 	}
 	*/
 }
+////////////////////////////////emptytower////////////////////////////
 emptytower::emptytower() {
 
+}
+double emptytower::GetRange() {
+	return 0;
 }
 ////////////////////////////////basictower////////////////////////////
 
@@ -90,6 +97,7 @@ basictower::basictower() {
 	SetTowerName("°ò¥»");
 	Barrel = std::make_shared<basicBarrel>();
 	coolDown = 1 / attackSpeed;
+	range = 2.0;
 }
 void basictower::move(double time,double x, double y) {
 	if (coolDown == 0) {
@@ -97,8 +105,10 @@ void basictower::move(double time,double x, double y) {
 		Bullet->SetTarget(GetTarget());
 		Bullet->SetXY(x+0.5, y+0.5);
 		Bullet->SetSpeed(projectileSpeed);
-		newBullet(Bullet);
-		coolDown = 1 / attackSpeed;
+		if (target != nullptr) {
+			newBullet(Bullet);
+			coolDown = 1 / attackSpeed;
+		}
 	}
 	else {
 		coolDown = max(0, coolDown - time);
@@ -113,4 +123,7 @@ void basictower::move(double time,double x, double y) {
 			Bullets.erase(Bullets.begin() + i);
 		}
 	}
+}
+double basictower::GetRange(){
+	return range;
 }

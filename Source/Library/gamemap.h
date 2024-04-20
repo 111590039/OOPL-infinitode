@@ -34,6 +34,7 @@ public:
 	void buildTower(int x,int y,std::string type);
 	void clickOnMap(CPoint point);
 	void TESTMAP1();
+	void SummonTestEnemy(); //´ú¸Õ¥Î
 
 protected:
 	void newblock(std::shared_ptr<block> block);

@@ -105,8 +105,8 @@ void tile::resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, 
 	}
 
 }
-std::shared_ptr<tower>* tile::GetTower() {
-	return &Tower;
+std::shared_ptr<tower> tile::GetTower() {
+	return Tower;
 }
 ////////////////////////////////road////////////////////////////
 road::road(int x, int y) :block(x, y) {

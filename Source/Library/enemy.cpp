@@ -56,16 +56,16 @@ std::string enemy::GetPicPath() {
 	return picPath;
 }
 bool enemy::enemyMove(double time) {
-	if (abs(y) < abs(enemyPath[targetPos].y)){
+	if (int(y) < abs(enemyPath[targetPos].y)){
 		y += time * speed;
 	}
-	else if (abs(y) > abs(enemyPath[targetPos].y)) {
+	else if (int(y) > abs(enemyPath[targetPos].y)) {
 		y -= time * speed;
 	}
-	else if (abs(x) < abs(enemyPath[targetPos].x)) {
+	else if (int(x) < abs(enemyPath[targetPos].x)) {
 		x += time * speed;
 	}
-	else if (abs(x) > abs(enemyPath[targetPos].x)) {
+	else if (int(x) > abs(enemyPath[targetPos].x)) {
 		x -= time * speed;
 	}
 	else {
