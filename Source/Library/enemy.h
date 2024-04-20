@@ -7,7 +7,7 @@
 
 class enemy : public game_framework::CMovingBitmap {
 public:
-	enemy(double difficulty, int wave);
+	enemy(double difficulty, int wave, std::vector<CPoint> enemyPath);
 	std::string GetType();
 	double Gethealth();
 	double Getspeed();
@@ -20,7 +20,8 @@ public:
 	void show(double scale);
 	virtual void loadPic() = 0;       //讀取圖片
 	void resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, int moveY);
-	//virtual void show(double scale); //被OnShow調用 持續顯示
+	int targetPos = 1;
+	bool enemyMove(double time);
 
 protected:
 	void Sethealth(double health);
@@ -34,15 +35,16 @@ protected:
 
 private:
 	int wave = 1;
-	double x=0, y=0;
+	double x, y;
 	std::string type;
 	std::string picPath;
 	double difficulty = 1, health, speed, bounty, exp;
+	std::vector<CPoint> enemyPath;
 };
 
 class Regular : public enemy {
 public:
-	Regular(double difficulty, int wave);
+	Regular(double difficulty, int wave, std::vector<CPoint> enemyPath);
 	void loadPic() override;       //讀取圖片
 };
 
