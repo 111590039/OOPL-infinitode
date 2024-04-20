@@ -82,8 +82,12 @@ void tower::move(double time, double x, double y) {
 	}
 	*/
 }
+////////////////////////////////emptytower////////////////////////////
 emptytower::emptytower() {
 
+}
+double emptytower::GetRange() {
+	return 0;
 }
 ////////////////////////////////basictower////////////////////////////
 
@@ -119,4 +123,7 @@ void basictower::move(double time,double x, double y) {
 			Bullets.erase(Bullets.begin() + i);
 		}
 	}
+}
+double basictower::GetRange(){
+	return range;
 }

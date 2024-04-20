@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "gamemap.h"
 #include <algorithm>
+#include <cmath>
 
 #define TOP 0
 #define LEFT 0
@@ -47,9 +48,16 @@ void gamemap::processMove() {
 	double time = GetElapsedTime();
 	for (std::shared_ptr<tile> t : tiles) {
 		if (Enemy.size() != 0){
+			bool findTarget = false;
 			for (std::shared_ptr<enemy> e : Enemy) {
-				t->GetTower()-> SetTarget(e) ;
-				break;
+				if (sqrt(pow(t->GetX()+0.5 - e->GetX(), 2) + pow(t->GetY()+0.5 - e->GetY(), 2)) <= t->GetTower()->GetRange()) {
+					t->GetTower()-> SetTarget(e) ;
+					findTarget = true;
+					break;
+				}
+			}
+			if (!findTarget) {
+				t->GetTower()->SetTarget(nullptr);
 			}
 		}
 		else {
@@ -58,6 +66,7 @@ void gamemap::processMove() {
 		t->GetTower()->move(time, t->GetX(), t->GetY());
 		t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
+	//敵人移動
 	for (size_t i = 0; i < Enemy.size(); i++) {
 		bool del;
 		del = Enemy[i]->enemyMove(time);
@@ -90,7 +99,9 @@ void gamemap::drawmap() {
 	if (showing_control_panel && !is_control_panel_invisable) {
 		greenCircle.ShowBitmap(greenScale * 0.5* scale);
 	}
-	blueCircle.ShowBitmap(blueScale * 0.5* scale);
+	if (controlPanelMode == 3 && !is_control_panel_invisable) {
+		blueCircle.ShowBitmap(blueScale * 0.5* scale);
+	}
 	if (controlPanelMode ==  1 && showing_control_panel && !is_control_panel_invisable) {
 		//選單按鈕圖片
 		for (game_framework::CMovingBitmap b : towerButtons) {
@@ -244,6 +255,9 @@ void gamemap::clickOnMap(CPoint point) {
 
 					}
 					controlPanelMode = 3; //蓋完塔之後跳到升級頁面(tower模式)
+					blueScale = origin_range[selected];
+					blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale)
+						, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale));
 				}
 			}
 			done = true;
@@ -266,7 +280,7 @@ void gamemap::clickOnMap(CPoint point) {
 				greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale)
 					, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale));
 				if (t->haveTower()) {
-					blueScale = origin_range[0]; // test 測試
+					blueScale = t->GetTower()->GetRange();
 				}
 				else {
 					blueScale = 0.1;
@@ -320,7 +334,9 @@ void gamemap::clickOnMap(CPoint point) {
 		is_control_panel_invisable = true;
 		selected_block.SetTopLeft(-100, -100);
 		greenCircle.SetTopLeft(-200, -200);
+		greenScale = 0.1;
 		blueCircle.SetTopLeft(-200, -200);
+		blueScale = 0.1;
 	}
 }
 void gamemap::newblock(std::shared_ptr<block> block) {

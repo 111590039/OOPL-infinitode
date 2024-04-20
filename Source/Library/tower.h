@@ -19,6 +19,7 @@ public:
 	std::string GetBasePicPath();
 	std::string GetBarrelPicPath();
 	std::string GetTowerName();
+
 	virtual void move(double time, double x, double y);	//被OnMove持續調用 處理砲塔工作
 	virtual void loadPic();       //讀取圖片
 	virtual void show(double scale); //被OnShow調用 持續顯示
@@ -26,6 +27,8 @@ public:
 	virtual void resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, int moveY,int x ,int y); // 重新設定bitmap 相關設定
 	void SetTarget(std::shared_ptr<enemy> target);
 	void newBullet(std::shared_ptr<bullet> bullet);
+
+	virtual double GetRange() = 0;
 protected:
 	void SetType(std::string type);
 	void SetBasePicPath(std::string basepicpath);
@@ -47,12 +50,14 @@ private:
 class emptytower : public tower {
 public:
 	emptytower();
+	double GetRange() override;
 };
 
 class basictower : public tower {
 public:
 	basictower();
 	void move(double time, double x, double y) override;
+	double GetRange() override;
 private:
 	double coolDown;
 	double range = 2;
