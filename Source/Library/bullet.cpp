@@ -2,7 +2,6 @@
 #include "bullet.h"
 #include <cmath>
 
-#define PI 3.1415926
 bullet::bullet() {
 
 }
@@ -20,6 +19,9 @@ void bullet::SetPicPath(std::string picPath) {
 void bullet::SetSpeed(double speed) {
 	this->speed = speed;
 }
+void bullet::SetTarget(std::shared_ptr<enemy> *target) {
+	this->target = target;
+}
 void bullet::loadPic() {
 	LoadBitmapByString({ picPath }, RGB(255, 255, 255));
 }
@@ -30,6 +32,10 @@ void bullet::resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX
 	SetTopLeft(int(LEFT + moveX + x * TILE_SIZE*scale), int(TOP + moveY + y * TILE_SIZE*scale));
 }
 void bullet::move(double time) {
+	if (target != nullptr) {
+		tarX = (*target)->GetX();
+		tarY = (*target)->GetY();
+	}
 	double r = sqrt(pow(tarX-x,2)+ pow(tarY-y,2));
 	double angleX = (tarX - x) / r;
 	double angleY = (tarY - y) / r;
@@ -47,9 +53,15 @@ void bullet::move(double time) {
 	}
 
 }
+bool bullet::IsPathOver() {
+	if (x == tarX && y == tarY) {
+		return true;
+	}
+	return false;
+}
 ////////////////////////////////basicbullet////////////////////////////
 basicbullet::basicbullet() {
-	SetPicPath("resources/enemy_Air.bmp");
+	SetPicPath("resources/basic_bullet.bmp");
 	SetSpeed(1.0);
-	SetTarXY(5, 10);
+	
 }

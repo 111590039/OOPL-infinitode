@@ -49,7 +49,7 @@ public:
 	void loadPic() override;       //讀取圖片
 	void show(double scale) override; //被OnShow調用 持續顯示
 	void resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, int moveY) override; // 重新設定bitmap 相關設定
-	std::shared_ptr<tower> GetTower();
+	std::shared_ptr<tower>* GetTower();
 private:
 	std::shared_ptr<tower> Tower;
 	//std::vector<extraEffect> Effects;
