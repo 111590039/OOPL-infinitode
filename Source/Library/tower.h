@@ -22,6 +22,7 @@ public:
 	virtual void move(double time, double x, double y);	//被OnMove持續調用 處理砲塔工作
 	virtual void loadPic();       //讀取圖片
 	virtual void show(double scale); //被OnShow調用 持續顯示
+	virtual void showBullets(double scale); //顯示子彈
 	virtual void resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, int moveY,int x ,int y); // 重新設定bitmap 相關設定
 	void SetTarget(std::shared_ptr<enemy> target);
 	void newBullet(std::shared_ptr<bullet> bullet);

@@ -48,14 +48,14 @@ void gamemap::processMove() {
 	for (std::shared_ptr<tile> t : tiles) {
 		if (Enemy.size() != 0){
 			for (std::shared_ptr<enemy> e : Enemy) {
-				(*(t->GetTower()))-> SetTarget(e) ;
+				t->GetTower()-> SetTarget(e) ;
 				break;
 			}
 		}
 		else {
-			(*(t->GetTower()))->SetTarget(nullptr);
+			t->GetTower()->SetTarget(nullptr);
 		}
-		(*(t->GetTower()))->move(time, t->GetX(), t->GetY());
+		t->GetTower()->move(time, t->GetX(), t->GetY());
 		t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
 	for (size_t i = 0; i < Enemy.size(); i++) {
@@ -75,6 +75,11 @@ void gamemap::drawmap() {
 	}
 	for (std::shared_ptr<tile> t : tiles) {
 		t->show(scale);
+	}
+	for (std::shared_ptr<tile> t : tiles) {
+		if (t->haveTower()) {
+			t->GetTower()->showBullets(scale);
+		}
 	}
 	for (std::shared_ptr<enemy> e : Enemy) {
 		e->show(scale);
@@ -133,7 +138,7 @@ void gamemap::showtext() {
 			for (std::shared_ptr<tile> t : tiles) {
 				if (selected_tile.x  == t->GetX() && selected_tile.y == t->GetY()) {
 					game_framework::CTextDraw::ChangeFontLog(pDC, 42, "·L³n¥¿¶ÂÅé", RGB(255, 255, 255), 1200);
-					game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, (*(t->GetTower()))->GetTowerName());
+					game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, t->GetTower()->GetTowerName());
 					break;
 				}
 			}

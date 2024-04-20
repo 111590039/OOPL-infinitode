@@ -32,6 +32,9 @@ void tower::loadPic() {
 void tower::show(double scale) {
 	ShowBitmap(scale);
 	Barrel->show(scale);
+
+}
+void tower::showBullets(double scale) {
 	for (std::shared_ptr<bullet> b : Bullets) {
 		b->show(scale);
 	}
