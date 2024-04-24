@@ -61,7 +61,7 @@ public:
 private:
 	double coolDown;
 	double range = 2;
-	//double damage;
+	double damage = 2.3;
 	double attackSpeed = 1.1; //§ðÀ»¦¸¼Æ/¨C¬í
 	//double rotataionSpeed;
 	double projectileSpeed = 3.0;

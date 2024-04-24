@@ -101,11 +101,11 @@ basictower::basictower() {
 }
 void basictower::move(double time,double x, double y) {
 	if (coolDown == 0) {
-		std::shared_ptr<basicbullet> Bullet = std::make_shared<basicbullet>();
-		Bullet->SetTarget(GetTarget());
-		Bullet->SetXY(x+0.5, y+0.5);
-		Bullet->SetSpeed(projectileSpeed);
 		if (target != nullptr) {
+			std::shared_ptr<basicbullet> Bullet = std::make_shared<basicbullet>();
+			Bullet->SetTarget(GetTarget());
+			Bullet->SetXY(x + 0.5, y + 0.5);
+			Bullet->SetSpeed(projectileSpeed);
 			newBullet(Bullet);
 			coolDown = 1 / attackSpeed;
 		}
@@ -120,6 +120,9 @@ void basictower::move(double time,double x, double y) {
 	//刪除已用完的子彈
 	for (size_t i = 0; i < Bullets.size(); i++) {
 		if (Bullets[i]->IsPathOver()) {
+			if (GetTarget() != nullptr) {
+				GetTarget()->GetDamage(damage);
+			}
 			Bullets.erase(Bullets.begin() + i);
 		}
 	}

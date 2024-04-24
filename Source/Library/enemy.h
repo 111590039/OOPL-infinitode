@@ -18,10 +18,13 @@ public:
 
 	std::string GetPicPath();
 	void show(double scale);
-	virtual void loadPic() = 0;       //讀取圖片
+	void loadPic();       //讀取圖片
 	void resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, int moveY);
 	int targetPos = 1;
 	bool enemyMove(double time);
+	void GetDamage(double damage);
+	bool IsDied();
+	bool IsSurvive = true;
 
 protected:
 	void Sethealth(double health);
@@ -30,6 +33,7 @@ protected:
 	void Setexp(double exp);
 	void SetX(double x);
 	void SetY(double y);
+	void SetMaxHealth(double health);
 	void SetType(std::string type);
 	void SetPicPath(std::string picPath);
 
@@ -38,14 +42,14 @@ private:
 	double x, y;
 	std::string type;
 	std::string picPath;
-	double difficulty = 1, health, speed, bounty, exp;
+	double difficulty = 1, health, speed, bounty, exp, maxHealth;
 	std::vector<CPoint> enemyPath;
+	game_framework::CMovingBitmap HealthBar;
 };
 
 class Regular : public enemy {
 public:
 	Regular(double difficulty, int wave, std::vector<CPoint> enemyPath);
-	void loadPic() override;       //讀取圖片
 };
 
 
