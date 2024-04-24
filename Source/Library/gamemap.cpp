@@ -68,11 +68,18 @@ void gamemap::processMove() {
 	}
 	//敵人移動
 	for (size_t i = 0; i < Enemy.size(); i++) {
-		bool del;
-		del = Enemy[i]->enemyMove(time);
-		Enemy[i]->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
-		if (del) {
+		if (Enemy[i] -> IsDied() && Enemy[i] -> IsSurvive) {
+			Enemy[i]->IsSurvive = false;
 			Enemy.erase(Enemy.begin() + i);
+			continue;
+		}
+		bool del;
+		Enemy[i]->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
+		del = Enemy[i]->enemyMove(time);
+		if (del&& Enemy[i]->IsSurvive) {
+			Enemy[i]->IsSurvive = false;
+			Enemy.erase(Enemy.begin() + i);
+			continue;
 		}
 	}
 	refreshTime();//一定要在最下面
@@ -348,6 +355,7 @@ void gamemap::newtile(std::shared_ptr<tile> tile) {
 void gamemap::newEnemy(std::shared_ptr<enemy> enemy) {
 	Enemy.push_back(enemy);
 	enemy->loadPic();
+	//enemy->HealthBar.SetTopLeft(int(enemy->GetX()), int(enemy->GetY()));
 }
 void gamemap::TESTMAP1() {
 	newblock(std::make_shared<portal>(1,0));
@@ -382,7 +390,7 @@ void gamemap::TESTMAP1() {
 	newtile(std::make_shared<tile>(3, 4));
 	newtile(std::make_shared<tile>(4, 4));
 	Setdifficulty(0.7);
-	enemyPath = { CPoint(1, 0), CPoint(1, 5), CPoint(6, 5), CPoint(6, 1), CPoint(9, 2), CPoint(9, 6) };
+	enemyPath = { CPoint(1, 0), CPoint(1, 5), CPoint(6, 5), CPoint(6, 2), CPoint(9, 2), CPoint(9, 6) };
 	newEnemy(std::make_shared<Regular>(0.7, 1, enemyPath));
 }
 void gamemap::SummonTestEnemy() {

@@ -22,6 +22,9 @@ void bullet::SetSpeed(double speed) {
 void bullet::SetTarget(std::shared_ptr<enemy> target) {
 	this->target = target;
 }
+void bullet::SetDamage(double damage) {
+	this->damage = damage;
+}
 void bullet::loadPic() {
 	LoadBitmapByString({ picPath }, RGB(255, 255, 255));
 }
@@ -63,5 +66,5 @@ bool bullet::IsPathOver() {
 basicbullet::basicbullet() {
 	SetPicPath("resources/basic_bullet.bmp");
 	SetSpeed(1.0);
-	
+	SetDamage(2.3);
 }
