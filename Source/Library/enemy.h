@@ -15,6 +15,7 @@ public:
 	double Getexp();
 	double GetX();
 	double GetY();
+	int GetDamage();
 
 	std::string GetPicPath();
 	void show(double scale);
@@ -42,6 +43,7 @@ private:
 	double x, y;
 	std::string type;
 	std::string picPath;
+	int damage = 1;
 	double difficulty = 1, health, speed, bounty, exp, maxHealth;
 	std::vector<CPoint> enemyPath;
 	game_framework::CMovingBitmap HealthBar;

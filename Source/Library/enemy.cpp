@@ -25,6 +25,9 @@ double enemy::GetX() {
 double enemy::GetY() {
 	return y;
 }
+int enemy::GetDamage() {
+	return damage;
+}
 void enemy::SetType(std::string type) {
 	this->type = type;
 }
@@ -115,7 +118,7 @@ Regular::Regular(double difficulty, int wave, std::vector<CPoint> enemyPath) : e
 	Sethealth(23.0);
 	SetMaxHealth(Gethealth());
 	Setspeed(1.0);
-	Setbounty(1.0);
+	Setbounty(3.0);
 	Setexp(1.0);
 	SetPicPath("resources/enemy_Regular.bmp");
 }
