@@ -41,6 +41,10 @@ protected:
 	void newtile(std::shared_ptr<tile> tile);
 	void newEnemy(std::shared_ptr<enemy> enemy);
 private:
+	game_framework::CMovingBitmap coinIcon;
+	game_framework::CMovingBitmap healthIcon;
+	int coins = 200;
+	int health = 100;
 	game_framework::CMovingBitmap controlPanel; //控制面版底座
 	game_framework::CMovingBitmap controlPanelButton; //控制面板按鈕
 	game_framework::CMovingBitmap selected_box; //蓋塔選單的選擇框

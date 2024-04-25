@@ -44,7 +44,7 @@ void gamemap::refreshTime() {
 	lastTime = chrono::steady_clock::now();
 }
 void gamemap::processMove() {
-	//砲塔工作 (未完成)
+	//砲塔工作
 	double time = GetElapsedTime();
 	for (std::shared_ptr<tile> t : tiles) {
 		if (Enemy.size() != 0){
@@ -70,6 +70,7 @@ void gamemap::processMove() {
 	for (size_t i = 0; i < Enemy.size(); i++) {
 		if (Enemy[i] -> IsDied() && Enemy[i] -> IsSurvive) {
 			Enemy[i]->IsSurvive = false;
+			coins += int(Enemy[i]->Getbounty());
 			Enemy.erase(Enemy.begin() + i);
 			continue;
 		}
@@ -78,6 +79,7 @@ void gamemap::processMove() {
 		del = Enemy[i]->enemyMove(time);
 		if (del&& Enemy[i]->IsSurvive) {
 			Enemy[i]->IsSurvive = false;
+			health -= Enemy[i]->GetDamage();
 			Enemy.erase(Enemy.begin() + i);
 			continue;
 		}
@@ -101,14 +103,14 @@ void gamemap::drawmap() {
 		e->show(scale);
 	}
 	selected_block.ShowBitmap(scale);
-	controlPanel.ShowBitmap();
-	controlPanelButton.ShowBitmap();
 	if (showing_control_panel && !is_control_panel_invisable) {
 		greenCircle.ShowBitmap(greenScale * 0.5* scale);
 	}
 	if (controlPanelMode == 3 && !is_control_panel_invisable) {
 		blueCircle.ShowBitmap(blueScale * 0.5* scale);
 	}
+	controlPanel.ShowBitmap();
+	controlPanelButton.ShowBitmap();
 	if (controlPanelMode ==  1 && showing_control_panel && !is_control_panel_invisable) {
 		//選單按鈕圖片
 		for (game_framework::CMovingBitmap b : towerButtons) {
@@ -116,10 +118,15 @@ void gamemap::drawmap() {
 		}	
 		selected_box.ShowBitmap();
 	}
+	coinIcon.ShowBitmap(0.9);
+	healthIcon.ShowBitmap(0.9);
 }
 void gamemap::showtext() {
 	CDC *pDC = game_framework::CDDraw::GetBackCDC();
 	//選單文字
+	game_framework::CTextDraw::ChangeFontLog(pDC, 40, "微軟正黑體", RGB(255, 255, 255), 1200);
+	game_framework::CTextDraw::Print(pDC, 100, 20,std::to_string(coins));
+	game_framework::CTextDraw::Print(pDC, 440, 20, std::to_string(health));
 	if (showing_control_panel && !is_control_panel_invisable) {
 		if (controlPanelMode == 1) {
 			if (last_selected == -1) {
@@ -165,6 +172,10 @@ void gamemap::showtext() {
 	game_framework::CDDraw::ReleaseBackCDC();
 }
 void gamemap::loadpic() {
+	coinIcon.LoadBitmapByString({ "resources/coins.bmp" }, RGB(255, 255, 255));
+	coinIcon.SetTopLeft(10,10);
+	healthIcon.LoadBitmapByString({ "resources/heart.bmp" }, RGB(255, 255, 255));
+	healthIcon.SetTopLeft(350, 10);
 	controlPanel.LoadBitmapByString({ "resources/control_panel.bmp" }, RGB(255, 255, 255));
 	controlPanelButton.LoadBitmapByString({ "resources/control_panel_button_minimize.bmp",
 											"resources/control_panel_button_build.bmp",
@@ -257,14 +268,19 @@ void gamemap::clickOnMap(CPoint point) {
 					last_selected = selected;
 				} 
 				else {
-					if (selected == 0) {
+					bool is_build_success = false;
+					if (selected == 0 && coins >= 40) {
 						buildTower(selected_tile.x, selected_tile.y, "basictower");
-
+						coins -= 40;
+						is_build_success = true;
 					}
-					controlPanelMode = 3; //蓋完塔之後跳到升級頁面(tower模式)
-					blueScale = origin_range[selected];
-					blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale)
-						, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale));
+					//蓋完塔之後跳到升級頁面(tower模式)
+					if (is_build_success) {
+						controlPanelMode = 3; 
+						blueScale = origin_range[selected];
+						blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale)
+							, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale));
+					}
 				}
 			}
 			done = true;
@@ -340,8 +356,8 @@ void gamemap::clickOnMap(CPoint point) {
 		controlPanelButton.SetTopLeft(-200, PANEL_SPACE + 400);
 		is_control_panel_invisable = true;
 		selected_block.SetTopLeft(-100, -100);
-		greenCircle.SetTopLeft(-200, -200);
-		greenScale = 0.1;
+		//greenCircle.SetTopLeft(-200, -200);
+		//greenScale = 0.1;
 		blueCircle.SetTopLeft(-200, -200);
 		blueScale = 0.1;
 	}
