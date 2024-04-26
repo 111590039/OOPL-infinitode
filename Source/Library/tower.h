@@ -19,12 +19,19 @@ public:
 	std::string GetBasePicPath();
 	std::string GetBarrelPicPath();
 	std::string GetTowerName();
+	std::vector<int> GetUpgradeLevel();
+	std::vector<int> GetUpgradeIcon();
+	virtual std::vector<int> GetUpgradeCost();
 
 	virtual void move(double time, double x, double y);	//被OnMove持續調用 處理砲塔工作
 	virtual void loadPic();       //讀取圖片
 	virtual void show(double scale); //被OnShow調用 持續顯示
 	virtual void showBullets(double scale); //顯示子彈
 	virtual void resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, int moveY,int x ,int y); // 重新設定bitmap 相關設定
+	virtual void upgrade1();
+	virtual void upgrade2();
+	virtual void upgrade3();
+	virtual void upgrade4();
 	void SetTarget(std::shared_ptr<enemy> target);
 	void newBullet(std::shared_ptr<bullet> bullet);
 
@@ -39,6 +46,8 @@ protected:
 	std::shared_ptr<enemy> GetTarget();
 	std::vector<std::shared_ptr<bullet>> Bullets;
 	std::shared_ptr<enemy> target;
+	std::vector<int> upgradeIcons = { 0,0,0,0 };
+	std::vector<int> upgradeLevel = { 0,0,0,0 };
 private:
 	std::string type = "None";
 	std::string basepicpath = "";
@@ -58,7 +67,16 @@ public:
 	basictower();
 	void move(double time, double x, double y) override;
 	double GetRange() override;
+	std::vector<int> GetUpgradeCost() override;
+	void upgrade1() override;
+	void upgrade2() override;
+	void upgrade3() override;
+	void upgrade4() override;
 private:
+	std::vector<std::vector<int>> upgradeCost = { {13,16,20,26,34,46,64,91,133,200},
+		{22,29,38,50,66,87,115,152,202,269},
+		{10,13,17,23,31,42,57,78,108,152},
+		{7,8,10,12,15,19,24,30,38,48}, };
 	double coolDown;
 	double range = 2;
 	double damage = 2.3;

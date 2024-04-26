@@ -25,6 +25,15 @@ std::string tower::GetBarrelPicPath() {
 std::string tower::GetTowerName() {
 	return towerName;
 }
+std::vector<int> tower::GetUpgradeLevel() {
+	return upgradeLevel;
+}
+std::vector<int> tower::GetUpgradeIcon() {
+	return upgradeIcons;
+}
+std::vector<int> tower::GetUpgradeCost() {
+	return { 0,0,0,0 };
+}
 void tower::loadPic() {
 	LoadBitmapByString({ basepicpath }, RGB(255, 255, 255));
 	Barrel->loadPic();
@@ -45,6 +54,18 @@ void tower::resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX,
 	for (std::shared_ptr<bullet> b : Bullets) {
 		b->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
+}
+void tower::upgrade1() {
+	return;
+}
+void tower::upgrade2() {
+	return;
+}
+void tower::upgrade3() {
+	return;
+}
+void tower::upgrade4() {
+	return;
 }
 void tower::SetTarget(std::shared_ptr<enemy> target) {
 	this->target = target;
@@ -95,6 +116,7 @@ basictower::basictower() {
 	SetType("basictower");
 	SetBasePicPath("resources/Base_Basic.bmp");
 	SetTowerName("°ò¥»");
+	upgradeIcons = { 0,1,2,3 };
 	Barrel = std::make_shared<basicBarrel>();
 	coolDown = 1 / attackSpeed;
 	range = 2.0;
@@ -129,4 +151,28 @@ void basictower::move(double time,double x, double y) {
 }
 double basictower::GetRange(){
 	return range;
+}
+std::vector<int> basictower::GetUpgradeCost() {
+	std::vector<int> result;
+	for (int i = 0; i < 4; i++) {
+		if (upgradeLevel[i] != 10) {
+			result.push_back(upgradeCost[i][upgradeLevel[i]]);
+		}
+		else {
+			result.push_back(99999999);
+		}
+	}
+	return result;
+}
+void basictower::upgrade1() {
+	upgradeLevel[0] += 1;
+}
+void basictower::upgrade2() {
+	upgradeLevel[1] += 1;
+}
+void basictower::upgrade3() {
+	upgradeLevel[2] += 1;
+}
+void basictower::upgrade4() {
+	upgradeLevel[3] += 1;
 }
