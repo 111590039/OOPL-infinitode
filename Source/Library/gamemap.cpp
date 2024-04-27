@@ -177,39 +177,80 @@ void gamemap::showtext() {
 		else if (controlPanelMode == 3) {
 			for (std::shared_ptr<tile> t : tiles) {
 				if (selected_tile.x  == t->GetX() && selected_tile.y == t->GetY()) {
+					std::shared_ptr<tower> T = t->GetTower();
+					std::vector<int> cost = T->GetUpgradeCost();
+					std::vector<string> names = T->GetAttributeName();
+					std::vector<string> values = T->GetAttributeValue();
 					game_framework::CTextDraw::ChangeFontLog(pDC, 42, "微軟正黑體", RGB(255, 255, 255), 1200);
-					game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, t->GetTower()->GetTowerName());
+					game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, T->GetTowerName());
+					//印出屬性名
+					for (size_t i = 0; i < names.size(); i++) {
+						game_framework::CTextDraw::ChangeFontLog(pDC, 19, "微軟正黑體", RGB(255, 255, 255), 600);
+						if (names[i].at(0) == '#') {
+							game_framework::CTextDraw::ChangeFontLog(pDC, 19, "微軟正黑體", RGB(255, 192, 0), 600);
+							names[i] = names[i].substr(1);
+						}
+						game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 120 + 25*i, names[i]);
+					}
+					//印出屬性值
+					std::vector<std::vector<double>> affected = T->GetAffected(last_selected_upgrade);
+
+					for (size_t i = 0; i < values.size(); i++) {
+						std::string D = ""; //升級影響的綠字
+						int pos = values[i].find('.');
+						if (pos != std::string::npos) {
+							values[i] = values[i].substr(0, pos+3);
+						}
+						for (std::vector<double> j : affected) {
+							if (i == size_t(j[0])) {
+								D = std::to_string(j[1]);
+								int pos = D.find('.');
+								if (pos != std::string::npos) {
+									D = D.substr(0, pos + 4);
+								}
+								D = " +" + D;
+								for (size_t k = 0; k < D.size(); k++) {
+									values[i] = values[i] + " ";
+								}
+							}
+						}
+						game_framework::CTextDraw::ChangeFontLog(pDC, 19, "微軟正黑體", RGB(0, 255, 0), 600);
+						game_framework::CTextDraw::Print(pDC, 370 - D.size() * 10, PANEL_SPACE + 120 + 25 * i, D);
+						game_framework::CTextDraw::ChangeFontLog(pDC, 19, "微軟正黑體", RGB(255, 255, 255), 600);
+						game_framework::CTextDraw::Print(pDC, 370 - values[i].size() * 10, PANEL_SPACE + 120 + 25 * i, values[i]);
+
+					}
 					game_framework::CTextDraw::ChangeFontLog(pDC, 17, "微軟正黑體", RGB(255, 255, 255), 600);
 					//升級費用
-					if (t->GetTower()->GetUpgradeCost()[0] < 9999999) {
-						game_framework::CTextDraw::Print(pDC, 101, PANEL_SPACE + 458, std::to_string(t->GetTower()->GetUpgradeCost()[0]));
+					if (cost[0] < 9999999) {
+						game_framework::CTextDraw::Print(pDC, 101, PANEL_SPACE + 458, std::to_string(cost[0]));
 					}
 					else {
 						game_framework::CTextDraw::Print(pDC, 101, PANEL_SPACE + 458, "MAX");
 					}
-					if (t->GetTower()->GetUpgradeCost()[1] < 9999999) {
-						game_framework::CTextDraw::Print(pDC, 285, PANEL_SPACE + 458, std::to_string(t->GetTower()->GetUpgradeCost()[1]));
+					if (cost[1] < 9999999) {
+						game_framework::CTextDraw::Print(pDC, 285, PANEL_SPACE + 458, std::to_string(cost[1]));
 					}
 					else {
 						game_framework::CTextDraw::Print(pDC, 285, PANEL_SPACE + 458, "MAX");
 					}
-					if (t->GetTower()->GetUpgradeCost()[2] < 9999999) {
-						game_framework::CTextDraw::Print(pDC, 101, PANEL_SPACE + 550, std::to_string(t->GetTower()->GetUpgradeCost()[2]));
+					if (cost[2] < 9999999) {
+						game_framework::CTextDraw::Print(pDC, 101, PANEL_SPACE + 550, std::to_string(cost[2]));
 					}
 					else {
 						game_framework::CTextDraw::Print(pDC, 101, PANEL_SPACE + 550, "MAX");
 					}
-					if (t->GetTower()->GetUpgradeCost()[3] < 9999999) {
-						game_framework::CTextDraw::Print(pDC, 285, PANEL_SPACE + 550, std::to_string(t->GetTower()->GetUpgradeCost()[3]));
+					if (cost[3] < 9999999) {
+						game_framework::CTextDraw::Print(pDC, 285, PANEL_SPACE + 550, std::to_string(cost[3]));
 					}
 					else {
 						game_framework::CTextDraw::Print(pDC, 285, PANEL_SPACE + 550, "MAX");
 					}
 					//升級等級
-					game_framework::CTextDraw::Print(pDC, 141, PANEL_SPACE + 428, std::to_string(t->GetTower()->GetUpgradeLevel()[0]) + " lvl");
-					game_framework::CTextDraw::Print(pDC, 325, PANEL_SPACE + 428, std::to_string(t->GetTower()->GetUpgradeLevel()[1]) + " lvl");
-					game_framework::CTextDraw::Print(pDC, 141, PANEL_SPACE + 520, std::to_string(t->GetTower()->GetUpgradeLevel()[2]) + " lvl");
-					game_framework::CTextDraw::Print(pDC, 325, PANEL_SPACE + 520, std::to_string(t->GetTower()->GetUpgradeLevel()[3]) + " lvl");
+					game_framework::CTextDraw::Print(pDC, 141, PANEL_SPACE + 428, std::to_string(T->GetUpgradeLevel()[0]) + " lvl");
+					game_framework::CTextDraw::Print(pDC, 325, PANEL_SPACE + 428, std::to_string(T->GetUpgradeLevel()[1]) + " lvl");
+					game_framework::CTextDraw::Print(pDC, 141, PANEL_SPACE + 520, std::to_string(T->GetUpgradeLevel()[2]) + " lvl");
+					game_framework::CTextDraw::Print(pDC, 325, PANEL_SPACE + 520, std::to_string(T->GetUpgradeLevel()[3]) + " lvl");
 					break;
 				}
 			}
@@ -360,14 +401,15 @@ void gamemap::clickOnMap(CPoint point) {
 						break;
 					}
 				}
-				if (T == nullptr) {
-					//return;
-				}
 				//左上
 				if (188 >= point.x && point.x >= 26 && 493 + PANEL_SPACE >= point.y && point.y >= 415 + PANEL_SPACE) {
 					if (last_selected_upgrade == 1 && coins >= T->GetUpgradeCost()[0]) {
 						coins -= T->GetUpgradeCost()[0];
 						T->upgrade1();
+						//由於左上一定是範圍升級 所以只在這裡重製藍圈
+						blueScale = T->GetRange();
+						blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale)
+							, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale));
 						if ( T->GetUpgradeLevel()[0] >= 10 || coins < T->GetUpgradeCost()[0]) {
 							last_selected_upgrade = -1;
 							confirmUpgrade.SetTopLeft(-200, -200 + PANEL_SPACE);
@@ -423,6 +465,9 @@ void gamemap::clickOnMap(CPoint point) {
 						confirmUpgrade.SetTopLeft(210, 507 + PANEL_SPACE);
 					}
 				}
+				blueScale = T->GetRange();
+				blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale)
+					, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale));
 			}
 			done = true;
 		}
@@ -442,13 +487,19 @@ void gamemap::clickOnMap(CPoint point) {
 				}
 				selected_tile = CPoint(t->GetX(), t->GetY());
 				selected_block.SetTopLeft(int(LEFT + moveX + t->GetX() * TILE_SIZE*scale - 2*scale), int(TOP + moveY + t->GetY() * TILE_SIZE*scale - 2 * scale));
-				greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale)
-					, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale));
+
 				if (t->haveTower()) {
 					blueScale = t->GetTower()->GetRange();
+					greenCircle.SetTopLeft(-100, 100);
+					greenScale = 0.1;
 				}
 				else {
 					blueScale = 0.1;
+					if (last_selected != -1) {
+						greenScale = origin_range[last_selected];
+					}
+					greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale)
+						, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale));
 				}
 				blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale)
 					, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale));

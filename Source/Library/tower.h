@@ -22,6 +22,9 @@ public:
 	std::vector<int> GetUpgradeLevel();
 	std::vector<int> GetUpgradeIcon();
 	virtual std::vector<int> GetUpgradeCost();
+	virtual std::vector<std::string> GetAttributeName();
+	virtual std::vector<std::string> GetAttributeValue();
+	virtual std::vector<std::vector<double>> GetAffected(int type);
 
 	virtual void move(double time, double x, double y);	//被OnMove持續調用 處理砲塔工作
 	virtual void loadPic();       //讀取圖片
@@ -68,6 +71,9 @@ public:
 	void move(double time, double x, double y) override;
 	double GetRange() override;
 	std::vector<int> GetUpgradeCost() override;
+	std::vector<std::string> GetAttributeName() override;
+	std::vector<std::string> GetAttributeValue() override;
+	std::vector<std::vector<double>> GetAffected(int type) override;
 	void upgrade1() override;
 	void upgrade2() override;
 	void upgrade3() override;
@@ -77,6 +83,7 @@ private:
 		{22,29,38,50,66,87,115,152,202,269},
 		{10,13,17,23,31,42,57,78,108,152},
 		{7,8,10,12,15,19,24,30,38,48}, };
+	std::vector<double> rangeUpgrade = { 0.14,0.17,0.188,0.208,0.216,0.220,0.230,0.244,0.252,0.270 };
 	double coolDown;
 	double range = 2;
 	double damage = 2.3;

@@ -34,6 +34,15 @@ std::vector<int> tower::GetUpgradeIcon() {
 std::vector<int> tower::GetUpgradeCost() {
 	return { 0,0,0,0 };
 }
+std::vector<std::string>  tower::GetAttributeName() {
+	return {};
+}
+std::vector<std::string>  tower::GetAttributeValue() {
+	return {};
+}
+std::vector<std::vector<double>> tower::GetAffected(int type) {
+	return {};
+}
 void tower::loadPic() {
 	LoadBitmapByString({ basepicpath }, RGB(255, 255, 255));
 	Barrel->loadPic();
@@ -164,15 +173,44 @@ std::vector<int> basictower::GetUpgradeCost() {
 	}
 	return result;
 }
+std::vector<std::string> basictower::GetAttributeName() {
+	return { "範圍" ,"傷害","攻擊速度","旋轉速度","彈丸速度","#傷害倍數"};
+}
+std::vector<std::string> basictower::GetAttributeValue() {
+	std::vector<std::string> result = {};
+	result.push_back(std::to_string(this->range));
+	result.push_back(std::to_string(this->damage));
+	result.push_back(std::to_string(this->attackSpeed) + "/s");
+	result.push_back(std::to_string(90.0) + "/s");
+	result.push_back(std::to_string(this->projectileSpeed));
+	result.push_back("x1.00");
+	return result;
+}
+std::vector<std::vector<double>> basictower::GetAffected(int type) {
+	if (type == 1) {
+		return { {0,rangeUpgrade[upgradeLevel[0]]} };
+	}
+	else if (type == 2) { //未完成
+		return { {1,1.0} };
+	}
+	else if (type == 3) { //未完成
+		return { {2,1.0} };
+	}
+	else if (type == 4) { //未完成
+		return { {3,1.0},{4,1.0} };
+	}
+	return {};
+}
 void basictower::upgrade1() {
+	range += rangeUpgrade[upgradeLevel[0]];
 	upgradeLevel[0] += 1;
 }
 void basictower::upgrade2() {
-	upgradeLevel[1] += 1;
+	upgradeLevel[1] += 1;//未完成
 }
 void basictower::upgrade3() {
-	upgradeLevel[2] += 1;
+	upgradeLevel[2] += 1;//未完成
 }
 void basictower::upgrade4() {
-	upgradeLevel[3] += 1;
+	upgradeLevel[3] += 1;//未完成
 }
