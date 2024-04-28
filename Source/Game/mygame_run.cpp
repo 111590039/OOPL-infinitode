@@ -28,6 +28,7 @@ void CGameStateRun::OnBeginState()
 void CGameStateRun::OnMove()							// 移動遊戲元素
 {
 	
+	//測試用 顯示兩幀之間的間隔時間(秒)
 	CDC *pDC = game_framework::CDDraw::GetBackCDC();
 	game_framework::CTextDraw::ChangeFontLog(pDC, 21, "微軟正黑體", RGB(255, 255, 255), 800);
 	game_framework::CTextDraw::Print(pDC, 1200, 20, std::to_string((map.GetElapsedTime())));
@@ -68,8 +69,12 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		map.addScale(-0.1);
 		map.resetshow();
 	}
+	//測試用功能
 	else if (nChar == 0x50) {
 		map.SummonTestEnemy();
+	}
+	else if (nChar == VK_OEM_4) {
+		map.CheatCoin();
 	}
 }
 

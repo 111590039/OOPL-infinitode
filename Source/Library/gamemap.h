@@ -34,7 +34,8 @@ public:
 	void buildTower(int x,int y,std::string type);
 	void clickOnMap(CPoint point);
 	void TESTMAP1();
-	void SummonTestEnemy(); //測試用
+	void SummonTestEnemy(); //測試用 生成測試用敵人
+	void CheatCoin(); //測試用 設定金錢為99999
 
 protected:
 	void newblock(std::shared_ptr<block> block);
@@ -48,6 +49,7 @@ private:
 	game_framework::CMovingBitmap controlPanel; //控制面版底座
 	game_framework::CMovingBitmap controlPanelButton; //控制面板按鈕
 	game_framework::CMovingBitmap selected_box; //蓋塔選單的選擇框
+	game_framework::CMovingBitmap upgradeButton[4]; //升級模式的升級方塊
 	game_framework::CMovingBitmap confirmUpgrade; //升級模式的確認升級綠方塊
 	game_framework::CMovingBitmap upgradeIcon[4]; //升級模式的升級圖案
 	bool showing_control_panel = false; //控制面板是否被最小化

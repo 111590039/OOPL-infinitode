@@ -181,36 +181,41 @@ std::vector<std::string> basictower::GetAttributeValue() {
 	result.push_back(std::to_string(this->range));
 	result.push_back(std::to_string(this->damage));
 	result.push_back(std::to_string(this->attackSpeed) + "/s");
-	result.push_back(std::to_string(90.0) + "/s");
+	result.push_back(std::to_string(this->rotataionSpeed) + "/s");
 	result.push_back(std::to_string(this->projectileSpeed));
 	result.push_back("x1.00");
 	return result;
 }
 std::vector<std::vector<double>> basictower::GetAffected(int type) {
+	//type是升級選項 1/2/3/4 回傳{影響第幾項屬性,影響值}
 	if (type == 1) {
-		return { {0,rangeUpgrade[upgradeLevel[0]]} };
+		return { {0,rangeUpgrade.at(upgradeLevel[0])} };
 	}
 	else if (type == 2) { //未完成
-		return { {1,1.0} };
+		return { {1,damageUpgrade.at(upgradeLevel[1])} };
 	}
 	else if (type == 3) { //未完成
-		return { {2,1.0} };
+		return { {2,attackSpeedUpgrade.at(upgradeLevel[2])} };
 	}
 	else if (type == 4) { //未完成
-		return { {3,1.0},{4,1.0} };
+		return { {3,rotataionSpeedUpgrade.at(upgradeLevel[3])},{4,projectileSpeedUpgrade.at(upgradeLevel[3])} };
 	}
 	return {};
 }
 void basictower::upgrade1() {
-	range += rangeUpgrade[upgradeLevel[0]];
+	range += rangeUpgrade.at(upgradeLevel[0]);
 	upgradeLevel[0] += 1;
 }
 void basictower::upgrade2() {
-	upgradeLevel[1] += 1;//未完成
+	damage += damageUpgrade.at(upgradeLevel[1]);
+	upgradeLevel[1] += 1;
 }
 void basictower::upgrade3() {
-	upgradeLevel[2] += 1;//未完成
+	attackSpeed += attackSpeedUpgrade.at(upgradeLevel[2]);
+	upgradeLevel[2] += 1;
 }
 void basictower::upgrade4() {
-	upgradeLevel[3] += 1;//未完成
+	rotataionSpeed += rotataionSpeedUpgrade.at(upgradeLevel[3]);
+	projectileSpeed += projectileSpeedUpgrade.at(upgradeLevel[3]);
+	upgradeLevel[3] += 1;
 }

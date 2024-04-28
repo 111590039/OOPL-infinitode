@@ -83,12 +83,16 @@ private:
 		{22,29,38,50,66,87,115,152,202,269},
 		{10,13,17,23,31,42,57,78,108,152},
 		{7,8,10,12,15,19,24,30,38,48}, };
-	std::vector<double> rangeUpgrade = { 0.14,0.17,0.188,0.208,0.216,0.220,0.230,0.244,0.252,0.270 };
+	std::vector<double> rangeUpgrade = { 0.14, 0.17, 0.188, 0.208, 0.216, 0.220, 0.230, 0.244, 0.252, 0.270 };
+	std::vector<double> damageUpgrade = { 1.26, 1.16, 1.11, 1.06, 1.01, 0.961, 0.911, 0.860, 0.810, 0.759 };
+	std::vector<double> attackSpeedUpgrade = { 0.165, 0.185, 0.198, 0.214, 0.230, 0.242, 0.257, 0.245, 0.281, 0.264 };
+	std::vector<double> rotataionSpeedUpgrade = { 15.3, 19.3, 19.2, 19.6, 21.5, 22.8, 24.3, 31.2, 35.1, 35.6};
+	std::vector<double> projectileSpeedUpgrade = { 0.39, 0.483, 0.486, 0.609, 0.555, 0.723, 0.657, 0.831, 0.882 ,0.969 };
 	double coolDown;
 	double range = 2;
 	double damage = 2.3;
 	double attackSpeed = 1.1; //攻擊次數/每秒
-	//double rotataionSpeed;
+	double rotataionSpeed = 90; //旋轉速度/每秒 (還沒實作)
 	double projectileSpeed = 3.0;
 	//double damageMultiplier;
 };
