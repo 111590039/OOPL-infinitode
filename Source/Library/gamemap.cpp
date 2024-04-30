@@ -104,10 +104,10 @@ void gamemap::drawmap() {
 	}
 	selected_block.ShowBitmap(scale);
 	if (controlPanelMode == 1  || (controlPanelMode == 3 && last_selected_upgrade == 1) && showing_control_panel && !is_control_panel_invisable) {
-		greenCircle.ShowBitmap(greenScale * 0.5* scale);
+		greenCircle.ShowBitmap(greenScale * 0.5* scale *(65.0/60.0));
 	}
 	if (controlPanelMode == 3 && !is_control_panel_invisable) {
-		blueCircle.ShowBitmap(blueScale * 0.5* scale);
+		blueCircle.ShowBitmap(blueScale * 0.5* scale * (65.0 / 60.0));
 	}
 	controlPanel.ShowBitmap();
 	controlPanelButton.ShowBitmap();
@@ -336,10 +336,10 @@ void gamemap::resetshow() {
 		e->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
 	selected_block.SetTopLeft(int(LEFT + moveX + selected_tile.x * TILE_SIZE*scale - 2 * scale), int(TOP + moveY + selected_tile.y * TILE_SIZE*scale - 2 * scale));
-	greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale)
-		, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale));
-	blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale)
-		, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale));
+	greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale)
+		, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale));
+	blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale)
+		, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale));
 }
 void gamemap::buildTower(int x, int y, std::string type) {
 	for (std::shared_ptr<tile> t : tiles) {
@@ -378,8 +378,8 @@ void gamemap::clickOnMap(CPoint point) {
 				if (selected != last_selected && selected >= 0 && selected <= 11) {
 					selected_box.SetTopLeft((selected % 4) * TOWER_BUTTON_SIZE, PANEL_SPACE + 300 + (selected / 4) * TOWER_BUTTON_SIZE);
 					greenScale = origin_range[selected];
-					greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale)
-										, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale) );
+					greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale)
+										, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale) );
 					last_selected = selected;
 				} 
 				else {
@@ -393,8 +393,8 @@ void gamemap::clickOnMap(CPoint point) {
 					if (is_build_success) {
 						controlPanelMode = 3; 
 						blueScale = origin_range[selected];
-						blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale)
-							, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale));
+						blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale)
+							, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale));
 						for (std::shared_ptr<tile> t : tiles) {
 							if (t->GetX() == selected_tile.x && t->GetY() == selected_tile.y) {
 								for (int i = 0; i < 4; i++) {
@@ -422,8 +422,8 @@ void gamemap::clickOnMap(CPoint point) {
 						T->upgrade1();
 						//由於左上一定是範圍升級 所以只在這裡重置藍圈
 						blueScale = T->GetRange();
-						blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale)
-							, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale));
+						blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale)
+							, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale));
 						if ( T->GetUpgradeLevel()[0] >= 10 || coins < T->GetUpgradeCost()[0]) {
 							last_selected_upgrade = -1;
 							confirmUpgrade.SetTopLeft(-200, -200 + PANEL_SPACE);
@@ -431,14 +431,14 @@ void gamemap::clickOnMap(CPoint point) {
 						else {
 							//由於左上一定是範圍升級 所以只在這裡重置綠圈
 							greenScale = T->GetRange() + T->GetAffected(1)[0][1];
-							greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale)
-								, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale));
+							greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale)
+								, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale));
 						}
 					}
 					else if (coins >= T->GetUpgradeCost()[0] && T->GetUpgradeLevel()[0] <= 10){
 						greenScale = T->GetRange() + T->GetAffected(1)[0][1];
-						greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale)
-							, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale));
+						greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale)
+							, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale));
 						last_selected_upgrade = 1;
 						confirmUpgrade.SetTopLeft(26, 415 + PANEL_SPACE);
 					}
@@ -489,8 +489,8 @@ void gamemap::clickOnMap(CPoint point) {
 					}
 				}
 				blueScale = T->GetRange();
-				blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale)
-					, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale));
+				blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale)
+					, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale));
 			}
 			done = true;
 		}
@@ -521,11 +521,11 @@ void gamemap::clickOnMap(CPoint point) {
 					if (last_selected != -1) {
 						greenScale = origin_range[last_selected];
 					}
-					greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale)
-						, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale));
+					greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale)
+						, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale));
 				}
-				blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale)
-					, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale));
+				blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale)
+					, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale));
 				//處理控制事件
 				if (t->haveTower()) {
 					controlPanelMode = 3;
