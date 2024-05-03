@@ -103,20 +103,50 @@ void gamemap::drawmap() {
 		e->show(scale);
 	}
 	selected_block.ShowBitmap(scale);
-	if (showing_control_panel && !is_control_panel_invisable) {
-		greenCircle.ShowBitmap(greenScale * 0.5* scale);
+	if (controlPanelMode == 1  || (controlPanelMode == 3 && last_selected_upgrade == 1) && showing_control_panel && !is_control_panel_invisable) {
+		greenCircle.ShowBitmap(greenScale * 0.5* scale *(65.0/60.0));
 	}
 	if (controlPanelMode == 3 && !is_control_panel_invisable) {
-		blueCircle.ShowBitmap(blueScale * 0.5* scale);
+		blueCircle.ShowBitmap(blueScale * 0.5* scale * (65.0 / 60.0));
 	}
 	controlPanel.ShowBitmap();
 	controlPanelButton.ShowBitmap();
-	if (controlPanelMode ==  1 && showing_control_panel && !is_control_panel_invisable) {
-		//選單按鈕圖片
-		for (game_framework::CMovingBitmap b : towerButtons) {
-			b.ShowBitmap();
-		}	
-		selected_box.ShowBitmap();
+	if (controlPanelMode == 1) {
+		controlPanel.SetFrameIndexOfBitmap(0);
+		if (showing_control_panel && !is_control_panel_invisable){
+			//選單按鈕圖片
+			for (game_framework::CMovingBitmap b : towerButtons) {
+				b.ShowBitmap();
+			}	
+			selected_box.ShowBitmap();
+			}
+	}
+	else if (controlPanelMode == 2) {
+		controlPanel.SetFrameIndexOfBitmap(1);
+	}
+	else if (controlPanelMode == 3) {
+		controlPanel.SetFrameIndexOfBitmap(2);
+		if (!is_control_panel_invisable && showing_control_panel) {
+			for (std::shared_ptr<tile> t : tiles) {
+				if (selected_tile.x == t->GetX() && selected_tile.y == t->GetY()) {
+					std::vector<int> cost = t->GetTower()->GetUpgradeCost();
+					for (int i = 0; i < 4; i++) {
+						if (cost[i] > coins) {
+							upgradeButton[i].SetFrameIndexOfBitmap(1);
+						}
+						else {
+							upgradeButton[i].SetFrameIndexOfBitmap(0);
+						}
+						upgradeButton[i].ShowBitmap();
+					}
+					break;
+				}
+			}
+			confirmUpgrade.ShowBitmap();
+			for (int i = 0; i < 4; i++) {
+				upgradeIcon[i].ShowBitmap();
+			}
+		}
 	}
 	coinIcon.ShowBitmap(0.9);
 	healthIcon.ShowBitmap(0.9);
@@ -162,8 +192,72 @@ void gamemap::showtext() {
 		else if (controlPanelMode == 3) {
 			for (std::shared_ptr<tile> t : tiles) {
 				if (selected_tile.x  == t->GetX() && selected_tile.y == t->GetY()) {
+					std::shared_ptr<tower> T = t->GetTower();
+					std::vector<int> cost = T->GetUpgradeCost();
+					std::vector<string> names = T->GetAttributeName();
+					std::vector<string> values = T->GetAttributeValue();
 					game_framework::CTextDraw::ChangeFontLog(pDC, 42, "微軟正黑體", RGB(255, 255, 255), 1200);
-					game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, t->GetTower()->GetTowerName());
+					game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, T->GetTowerName());
+					//印出屬性名
+					for (size_t i = 0; i < names.size(); i++) {
+						game_framework::CTextDraw::ChangeFontLog(pDC, 19, "微軟正黑體", RGB(255, 255, 255), 600);
+						if (names[i].at(0) == '#') {
+							game_framework::CTextDraw::ChangeFontLog(pDC, 19, "微軟正黑體", RGB(255, 192, 0), 600);
+							names[i] = names[i].substr(1);
+						}
+						game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 120 + 25*i, names[i]);
+					}
+					//印出屬性值
+					std::vector<std::vector<double>> affected = T->GetAffected(last_selected_upgrade);
+
+					for (size_t i = 0; i < values.size(); i++) {
+						std::string D = ""; //升級影響的綠字
+						int pos = values[i].find('.');
+						if (pos != std::string::npos) {
+							values[i] = values[i].substr(0, pos+3);
+						}
+						for (std::vector<double> j : affected) {
+							if (i == size_t(j[0])) {
+								D = std::to_string(j[1]);
+								int pos = D.find('.');
+								if (pos != std::string::npos) {
+									D = D.substr(0, pos + 4);
+								}
+								D = " +" + D;
+								for (size_t k = 0; k < D.size(); k++) {
+									values[i] = values[i] + " ";
+								}
+							}
+						}
+						game_framework::CTextDraw::ChangeFontLog(pDC, 19, "微軟正黑體", RGB(0, 255, 0), 600);
+						game_framework::CTextDraw::Print(pDC, 370 - D.size() * 10, PANEL_SPACE + 120 + 25 * i, D);
+						game_framework::CTextDraw::ChangeFontLog(pDC, 19, "微軟正黑體", RGB(255, 255, 255), 600);
+						game_framework::CTextDraw::Print(pDC, 370 - values[i].size() * 10, PANEL_SPACE + 120 + 25 * i, values[i]);
+
+					}
+					//升級費用
+					std::vector<CPoint> p;
+					p = { CPoint(101,458), CPoint(285,458), CPoint(101,550), CPoint(285,550) };
+					for (int i = 0; i < 4; i++) {
+						if (cost[i] < 9999999) {
+
+							game_framework::CTextDraw::ChangeFontLog(pDC, 17, "微軟正黑體", RGB(255, 255, 255), 600);
+							if (cost[i] > coins) {
+								game_framework::CTextDraw::ChangeFontLog(pDC, 17, "微軟正黑體", RGB(255, 0, 0), 600);
+							}
+							game_framework::CTextDraw::Print(pDC, p[i].x, PANEL_SPACE + p[i].y, std::to_string(cost[i]));
+						}
+						else {
+							game_framework::CTextDraw::ChangeFontLog(pDC, 17, "微軟正黑體", RGB(255, 0, 0), 600);
+							game_framework::CTextDraw::Print(pDC, p[i].x, PANEL_SPACE + p[i].y, "MAX");
+						}
+					}
+					//升級等級
+					game_framework::CTextDraw::ChangeFontLog(pDC, 17, "微軟正黑體", RGB(255, 255, 255), 600);
+					game_framework::CTextDraw::Print(pDC, 141, PANEL_SPACE + 428, std::to_string(T->GetUpgradeLevel()[0]) + " lvl");
+					game_framework::CTextDraw::Print(pDC, 325, PANEL_SPACE + 428, std::to_string(T->GetUpgradeLevel()[1]) + " lvl");
+					game_framework::CTextDraw::Print(pDC, 141, PANEL_SPACE + 520, std::to_string(T->GetUpgradeLevel()[2]) + " lvl");
+					game_framework::CTextDraw::Print(pDC, 325, PANEL_SPACE + 520, std::to_string(T->GetUpgradeLevel()[3]) + " lvl");
 					break;
 				}
 			}
@@ -176,7 +270,9 @@ void gamemap::loadpic() {
 	coinIcon.SetTopLeft(10,10);
 	healthIcon.LoadBitmapByString({ "resources/heart.bmp" }, RGB(255, 255, 255));
 	healthIcon.SetTopLeft(350, 10);
-	controlPanel.LoadBitmapByString({ "resources/control_panel.bmp" }, RGB(255, 255, 255));
+	controlPanel.LoadBitmapByString({ "resources/control_panel_1.bmp",
+									"resources/control_panel_2.bmp", 
+									"resources/control_panel_3.bmp", }, RGB(255, 255, 255));
 	controlPanelButton.LoadBitmapByString({ "resources/control_panel_button_minimize.bmp",
 											"resources/control_panel_button_build.bmp",
 											"resources/control_panel_button_info.bmp",
@@ -187,6 +283,25 @@ void gamemap::loadpic() {
 	selected_box.SetTopLeft(-100, -100);
 	selected_block.LoadBitmapByString({ "resources/selected_block.bmp" }, RGB(255, 255, 255));
 	selected_block.SetTopLeft(-100, -100);
+	for (int i = 0; i < 4; i++) {
+		upgradeButton[i].LoadBitmapByString({ "resources/upgrade_yes.bmp", "resources/upgrade_no.bmp" }, RGB(255, 255, 255));
+	}
+	upgradeButton[0].SetTopLeft(26, 415 + PANEL_SPACE);
+	upgradeButton[1].SetTopLeft(210, 415 + PANEL_SPACE);
+	upgradeButton[2].SetTopLeft(26, 507 + PANEL_SPACE);
+	upgradeButton[3].SetTopLeft(210, 507 + PANEL_SPACE);
+	confirmUpgrade.LoadBitmapByString({ "resources/confirm_upgrade.bmp" }, RGB(255, 255, 255));
+	confirmUpgrade.SetTopLeft(-100, -100);
+	for (int i = 0; i < 4; i++) {
+		upgradeIcon[i].LoadBitmapByString({ "resources/upgrade_range.bmp",
+			"resources/upgrade_power.bmp",
+			"resources/upgrade_attack_speed.bmp",
+			"resources/upgrade_spin_and_projectile_speed.bmp"}, RGB(0, 0, 0));
+	}
+	upgradeIcon[0].SetTopLeft(36, 425 + PANEL_SPACE);
+	upgradeIcon[1].SetTopLeft(220, 425 + PANEL_SPACE);
+	upgradeIcon[2].SetTopLeft(36, 517 + PANEL_SPACE);
+	upgradeIcon[3].SetTopLeft(220, 517 + PANEL_SPACE);
 	greenCircle.LoadBitmapByString({ "resources/green_circle.bmp" }, RGB(255, 255, 255));
 	greenCircle.SetTopLeft(-200, -200);
 	blueCircle.LoadBitmapByString({ "resources/blue_circle.bmp" }, RGB(255, 255, 255));
@@ -221,10 +336,10 @@ void gamemap::resetshow() {
 		e->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
 	selected_block.SetTopLeft(int(LEFT + moveX + selected_tile.x * TILE_SIZE*scale - 2 * scale), int(TOP + moveY + selected_tile.y * TILE_SIZE*scale - 2 * scale));
-	greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale)
-		, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale));
-	blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale)
-		, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale));
+	greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale)
+		, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale));
+	blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale)
+		, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale));
 }
 void gamemap::buildTower(int x, int y, std::string type) {
 	for (std::shared_ptr<tile> t : tiles) {
@@ -263,8 +378,8 @@ void gamemap::clickOnMap(CPoint point) {
 				if (selected != last_selected && selected >= 0 && selected <= 11) {
 					selected_box.SetTopLeft((selected % 4) * TOWER_BUTTON_SIZE, PANEL_SPACE + 300 + (selected / 4) * TOWER_BUTTON_SIZE);
 					greenScale = origin_range[selected];
-					greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale)
-										, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale) );
+					greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale)
+										, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale) );
 					last_selected = selected;
 				} 
 				else {
@@ -278,16 +393,111 @@ void gamemap::clickOnMap(CPoint point) {
 					if (is_build_success) {
 						controlPanelMode = 3; 
 						blueScale = origin_range[selected];
-						blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale)
-							, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale));
+						blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale)
+							, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale));
+						for (std::shared_ptr<tile> t : tiles) {
+							if (t->GetX() == selected_tile.x && t->GetY() == selected_tile.y) {
+								for (int i = 0; i < 4; i++) {
+									upgradeIcon[i].SetFrameIndexOfBitmap(t->GetTower()->GetUpgradeIcon()[i]);
+								}
+								confirmUpgrade.SetTopLeft(-100, -100);
+								break;
+							}
+						}
 					}
 				}
+			}
+			else if (controlPanelMode == 3) {
+				std::shared_ptr<tower> T = nullptr;
+				for (std::shared_ptr<tile> t : tiles) {
+					if (t->GetX() == selected_tile.x && t->GetY() == selected_tile.y) {
+						T = t->GetTower();
+						break;
+					}
+				}
+				//左上
+				if (188 >= point.x && point.x >= 26 && 493 + PANEL_SPACE >= point.y && point.y >= 415 + PANEL_SPACE) {
+					if (last_selected_upgrade == 1 && coins >= T->GetUpgradeCost()[0]) {
+						coins -= T->GetUpgradeCost()[0];
+						T->upgrade1();
+						//由於左上一定是範圍升級 所以只在這裡重置藍圈
+						blueScale = T->GetRange();
+						blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale)
+							, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale));
+						if ( T->GetUpgradeLevel()[0] >= 10 || coins < T->GetUpgradeCost()[0]) {
+							last_selected_upgrade = -1;
+							confirmUpgrade.SetTopLeft(-200, -200 + PANEL_SPACE);
+						}
+						else {
+							//由於左上一定是範圍升級 所以只在這裡重置綠圈
+							greenScale = T->GetRange() + T->GetAffected(1)[0][1];
+							greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale)
+								, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale));
+						}
+					}
+					else if (coins >= T->GetUpgradeCost()[0] && T->GetUpgradeLevel()[0] <= 10){
+						greenScale = T->GetRange() + T->GetAffected(1)[0][1];
+						greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale)
+							, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale));
+						last_selected_upgrade = 1;
+						confirmUpgrade.SetTopLeft(26, 415 + PANEL_SPACE);
+					}
+				}
+				//右上
+				else if (372 >= point.x && point.x >= 210 && 493 + PANEL_SPACE >= point.y && point.y >= 415 + PANEL_SPACE) {
+					if (last_selected_upgrade == 2 && coins >= T->GetUpgradeCost()[1]) {
+						coins -= T->GetUpgradeCost()[1];
+						T->upgrade2();
+						if (T->GetUpgradeLevel()[1] >= 10 || coins < T->GetUpgradeCost()[1]) {
+							last_selected_upgrade = -1;
+							confirmUpgrade.SetTopLeft(-200, -200 + PANEL_SPACE);
+						}
+					}
+					else if (coins >= T->GetUpgradeCost()[1] && T->GetUpgradeLevel()[1] <= 10) {
+						last_selected_upgrade = 2;
+						confirmUpgrade.SetTopLeft(210, 415 + PANEL_SPACE);
+					}
+				}
+				//左下
+				else if (188 >= point.x && point.x >= 26 && 586 + PANEL_SPACE >= point.y && point.y >= 507 + PANEL_SPACE) {
+					if (last_selected_upgrade == 3 && coins >= T->GetUpgradeCost()[2]) {
+						coins -= T->GetUpgradeCost()[2];
+						T->upgrade3();
+						if (T->GetUpgradeLevel()[2] >= 10 || coins < T->GetUpgradeCost()[2]) {
+							last_selected_upgrade = -1;
+							confirmUpgrade.SetTopLeft(-200, -200 + PANEL_SPACE);
+						}
+					}
+					else if (coins >= T->GetUpgradeCost()[2] && T->GetUpgradeLevel()[2] <= 10) {
+						last_selected_upgrade = 3;
+						confirmUpgrade.SetTopLeft(26, 507 + PANEL_SPACE);
+					}
+				}
+				//右下
+				else if (372 >= point.x && point.x >= 210 && 586 + PANEL_SPACE >= point.y && point.y >= 507 + PANEL_SPACE) {
+					if (last_selected_upgrade == 4 && coins >= T->GetUpgradeCost()[3]) {
+						coins -= T->GetUpgradeCost()[3];
+						T->upgrade4();
+						if (T->GetUpgradeLevel()[3] >= 10 || coins < T->GetUpgradeCost()[3]) {
+							last_selected_upgrade = -1;
+							confirmUpgrade.SetTopLeft(-200, -200 + PANEL_SPACE);
+						}
+					}
+					else if (coins >= T->GetUpgradeCost()[3] && T->GetUpgradeLevel()[3] <= 10) {
+						last_selected_upgrade = 4;
+						confirmUpgrade.SetTopLeft(210, 507 + PANEL_SPACE);
+					}
+				}
+				blueScale = T->GetRange();
+				blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale)
+					, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale));
 			}
 			done = true;
 		}
 	}
 	if (!done) {
 		for (std::shared_ptr<tile> t : tiles) {
+			//點在tiles上
 			if (t->ifClickOn(TOP, LEFT, TILE_SIZE, scale, moveX, moveY, point.x, point.y)) {
 				//處理控制面板及按鈕
 				if (showing_control_panel) {
@@ -300,19 +510,30 @@ void gamemap::clickOnMap(CPoint point) {
 				}
 				selected_tile = CPoint(t->GetX(), t->GetY());
 				selected_block.SetTopLeft(int(LEFT + moveX + t->GetX() * TILE_SIZE*scale - 2*scale), int(TOP + moveY + t->GetY() * TILE_SIZE*scale - 2 * scale));
-				greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale)
-					, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale + 5 * greenScale * scale));
+
 				if (t->haveTower()) {
 					blueScale = t->GetTower()->GetRange();
+					greenCircle.SetTopLeft(-100, 100);
+					greenScale = 0.1;
 				}
 				else {
 					blueScale = 0.1;
+					if (last_selected != -1) {
+						greenScale = origin_range[last_selected];
+					}
+					greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale)
+						, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale));
 				}
-				blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale)
-					, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale + 5 * blueScale * scale));
+				blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale)
+					, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale));
 				//處理控制事件
 				if (t->haveTower()) {
 					controlPanelMode = 3;
+					for (int i = 0; i < 4; i++) {
+						upgradeIcon[i].SetFrameIndexOfBitmap(t->GetTower()->GetUpgradeIcon()[i]);
+					}
+					last_selected_upgrade = -1;
+					confirmUpgrade.SetTopLeft(-100, -100);
 				}
 				else {
 					controlPanelMode = 1;
@@ -414,4 +635,7 @@ void gamemap::SummonTestEnemy() {
 	if (enemy) {
 		newEnemy(enemy);
 	}
+}
+void gamemap::CheatCoin() {
+	coins = 99999;
 }
