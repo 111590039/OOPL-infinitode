@@ -14,6 +14,9 @@
       <UniqueIdentifier>{1a913106-0be0-4476-b0ce-2aa855072614}</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;cnt;rtf;gif;jpg;jpeg;jpe</Extensions>
     </Filter>
+    <Filter Include="GameLibrary\tower">
+      <UniqueIdentifier>{599adee9-0d21-4c2f-89af-6e9872a170b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\gamecurs.cur">
@@ -66,14 +69,23 @@
     <ClCompile Include="Source\Library\enemy.cpp">
       <Filter>GameLibrary</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Library\tower.cpp">
-      <Filter>GameLibrary</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Library\barrel.cpp">
       <Filter>GameLibrary</Filter>
     </ClCompile>
     <ClCompile Include="Source\Library\bullet.cpp">
       <Filter>GameLibrary</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Library\tower\tower.cpp">
+      <Filter>GameLibrary\tower</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Library\tower\sniper.cpp">
+      <Filter>GameLibrary\tower</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Library\tower\cannon.cpp">
+      <Filter>GameLibrary\tower</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Library\tower\freezing.cpp">
+      <Filter>GameLibrary\tower</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -125,8 +137,17 @@
     <ClInclude Include="Source\Library\bullet.h">
       <Filter>GameLibrary</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Library\tower.h">
-      <Filter>GameLibrary</Filter>
+    <ClInclude Include="Source\Library\tower\tower.h">
+      <Filter>GameLibrary\tower</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Library\tower\sniper.h">
+      <Filter>GameLibrary\tower</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Library\tower\cannon.h">
+      <Filter>GameLibrary\tower</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Library\tower\freezing.h">
+      <Filter>GameLibrary\tower</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

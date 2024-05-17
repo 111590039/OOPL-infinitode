@@ -43,6 +43,9 @@ std::vector<std::string>  tower::GetAttributeValue() {
 std::vector<std::vector<double>> tower::GetAffected(int type) {
 	return {};
 }
+int tower::GetTotalCost() {
+	return totalCost;
+}
 void tower::loadPic() {
 	LoadBitmapByString({ basepicpath }, RGB(255, 255, 255));
 	Barrel->loadPic();
@@ -98,7 +101,7 @@ void tower::SetTowerName(std::string towerName) {
 std::shared_ptr<enemy> tower::GetTarget() {
 	return target;
 }
-void tower::move(double time, double x, double y) {
+void tower::move(double time, double x, double y, std::vector<std::shared_ptr<enemy>> Enemy) {
 	/*
 	//子彈移動
 	for (std::shared_ptr<bullet> b : Bullets) {
@@ -127,16 +130,22 @@ basictower::basictower() {
 	SetTowerName("基本");
 	upgradeIcons = { 0,1,2,3 };
 	Barrel = std::make_shared<basicBarrel>();
-	coolDown = 1 / attackSpeed;
 	range = 2.0;
+	damage = 2.3;
+	attackSpeed = 1.1; //攻擊次數/每秒
+	rotataionSpeed = 90; //旋轉速度/每秒 (還沒實作)
+	projectileSpeed = 3.0;
+	coolDown = 1 / attackSpeed;
+	totalCost = 40;
 }
-void basictower::move(double time,double x, double y) {
+void basictower::move(double time,double x, double y, std::vector<std::shared_ptr<enemy>> Enemy) {
 	if (coolDown == 0) {
 		if (target != nullptr) {
 			std::shared_ptr<basicbullet> Bullet = std::make_shared<basicbullet>();
 			Bullet->SetTarget(GetTarget());
 			Bullet->SetXY(x + 0.5, y + 0.5);
 			Bullet->SetSpeed(projectileSpeed);
+			Bullet->SetDamage(damage);
 			newBullet(Bullet);
 			coolDown = 1 / attackSpeed;
 		}
@@ -152,7 +161,7 @@ void basictower::move(double time,double x, double y) {
 	for (size_t i = 0; i < Bullets.size(); i++) {
 		if (Bullets[i]->IsPathOver()) {
 			if (GetTarget() != nullptr) {
-				GetTarget()->GetDamage(damage);
+				GetTarget()->GetDamage(Bullets[i]->GetDamage());
 			}
 			Bullets.erase(Bullets.begin() + i);
 		}
@@ -191,31 +200,35 @@ std::vector<std::vector<double>> basictower::GetAffected(int type) {
 	if (type == 1) {
 		return { {0,rangeUpgrade.at(upgradeLevel[0])} };
 	}
-	else if (type == 2) { //未完成
+	else if (type == 2) {
 		return { {1,damageUpgrade.at(upgradeLevel[1])} };
 	}
-	else if (type == 3) { //未完成
+	else if (type == 3) {
 		return { {2,attackSpeedUpgrade.at(upgradeLevel[2])} };
 	}
-	else if (type == 4) { //未完成
+	else if (type == 4) {
 		return { {3,rotataionSpeedUpgrade.at(upgradeLevel[3])},{4,projectileSpeedUpgrade.at(upgradeLevel[3])} };
 	}
 	return {};
 }
 void basictower::upgrade1() {
 	range += rangeUpgrade.at(upgradeLevel[0]);
+	totalCost += upgradeCost[0].at(upgradeLevel[0]);
 	upgradeLevel[0] += 1;
 }
 void basictower::upgrade2() {
 	damage += damageUpgrade.at(upgradeLevel[1]);
+	totalCost += upgradeCost[1].at(upgradeLevel[1]);
 	upgradeLevel[1] += 1;
 }
 void basictower::upgrade3() {
 	attackSpeed += attackSpeedUpgrade.at(upgradeLevel[2]);
+	totalCost += upgradeCost[2].at(upgradeLevel[2]);
 	upgradeLevel[2] += 1;
 }
 void basictower::upgrade4() {
 	rotataionSpeed += rotataionSpeedUpgrade.at(upgradeLevel[3]);
 	projectileSpeed += projectileSpeedUpgrade.at(upgradeLevel[3]);
+	totalCost += upgradeCost[3].at(upgradeLevel[3]);
 	upgradeLevel[3] += 1;
 }

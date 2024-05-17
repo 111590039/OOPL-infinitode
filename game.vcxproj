@@ -254,7 +254,10 @@
     <ClCompile Include="Source\Library\gamecore.cpp" />
     <ClCompile Include="Source\Library\gamemap.cpp" />
     <ClCompile Include="Source\Library\gameutil.cpp" />
-    <ClCompile Include="Source\Library\tower.cpp" />
+    <ClCompile Include="Source\Library\tower\cannon.cpp" />
+    <ClCompile Include="Source\Library\tower\freezing.cpp" />
+    <ClCompile Include="Source\Library\tower\sniper.cpp" />
+    <ClCompile Include="Source\Library\tower\tower.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\Game.h" />
@@ -273,7 +276,10 @@
     <ClInclude Include="Source\Library\gamecore.h" />
     <ClInclude Include="Source\Library\gamemap.h" />
     <ClInclude Include="Source\Library\gameutil.h" />
-    <ClInclude Include="Source\Library\tower.h" />
+    <ClInclude Include="Source\Library\tower\cannon.h" />
+    <ClInclude Include="Source\Library\tower\freezing.h" />
+    <ClInclude Include="Source\Library\tower\sniper.h" />
+    <ClInclude Include="Source\Library\tower\tower.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source\Core\game.rc" />

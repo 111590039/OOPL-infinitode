@@ -4,7 +4,10 @@
 #include <vector>
 #include "stdafx.h"
 #include "gameutil.h"
-#include "tower.h"
+#include "tower/tower.h"
+#include "tower/sniper.h"
+#include "tower/cannon.h"
+#include "tower/freezing.h"
 
 class block : public game_framework::CMovingBitmap {
 public:

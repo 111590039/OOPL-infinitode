@@ -15,6 +15,11 @@ public:
 	void SetSpeed(double speed);
 	void SetTarget(std::shared_ptr<enemy> target);
 	void SetDamage(double damage);
+
+	double GetX();
+	double GetY();
+	double GetDamage();
+
 	virtual void loadPic();       //讀取圖片
 	virtual void show(double scale); //被OnShow調用 持續顯示
 	virtual void resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, int moveY); // 重新設定bitmap 相關設定
@@ -34,4 +39,15 @@ private:
 class basicbullet : public bullet {
 public:
 	basicbullet();
+};
+
+class sniperbullet : public bullet {
+public:
+	sniperbullet();
+	sniperbullet(bool crit);
+};
+
+class cannonbullet : public bullet {
+public:
+	cannonbullet();
 };

@@ -26,3 +26,15 @@ void barrel::resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX
 basicBarrel::basicBarrel() {
 	SetBarrelPicPaths({ "resources/Barrel_Basic.bmp" });
 }
+///////////////////////////////sniperBarrel///////////////////////////
+sniperBarrel::sniperBarrel() {
+	SetBarrelPicPaths({ "resources/Barrel_Sniper.bmp" });
+}
+///////////////////////////////cannonBarrel///////////////////////////
+cannonBarrel::cannonBarrel() {
+	SetBarrelPicPaths({ "resources/Barrel_Cannon.bmp" });
+}
+///////////////////////////////freezingBarrel///////////////////////////
+freezingBarrel::freezingBarrel() {
+	SetBarrelPicPaths({ "resources/Barrel_Freezing.bmp" });
+}
