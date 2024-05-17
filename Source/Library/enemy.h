@@ -39,7 +39,6 @@ protected:
 	void SetPicPath(std::string picPath);
 
 private:
-	int wave = 1;
 	double x, y;
 	std::string type;
 	std::string picPath;
