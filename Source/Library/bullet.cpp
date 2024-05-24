@@ -25,6 +25,15 @@ void bullet::SetTarget(std::shared_ptr<enemy> target) {
 void bullet::SetDamage(double damage) {
 	this->damage = damage;
 }
+double bullet::GetX() {
+	return x;
+}
+double bullet::GetY() {
+	return y;
+}
+double bullet::GetDamage() {
+	return damage;
+}
 void bullet::loadPic() {
 	LoadBitmapByString({ picPath }, RGB(255, 255, 255));
 }
@@ -64,7 +73,19 @@ bool bullet::IsPathOver() {
 }
 ////////////////////////////////basicbullet////////////////////////////
 basicbullet::basicbullet() {
-	SetPicPath("resources/basic_bullet.bmp");
-	SetSpeed(1.0);
-	SetDamage(2.3);
+	SetPicPath("resources/bullet_basic.bmp");
+}
+////////////////////////////////sniperbullet////////////////////////////
+sniperbullet::sniperbullet() {
+	SetPicPath("resources/bullet_sniper.bmp");
+}
+sniperbullet::sniperbullet(bool crit) {
+	SetPicPath("resources/bullet_sniper.bmp");
+	if (crit) {
+		SetPicPath("resources/bullet_sniper_crit.bmp");
+	}
+}
+////////////////////////////////cannonbullet////////////////////////////
+cannonbullet::cannonbullet() {
+	SetPicPath("resources/bullet_cannon.bmp");
 }

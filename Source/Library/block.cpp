@@ -84,6 +84,11 @@ void tile::buildTower(std::shared_ptr<tower> Tower) {
 	Tower->loadPic();
 }
 int tile::sellTower() {
+	if (this->haveTower()) {
+		int cost = int(Tower->GetTotalCost() / 2);
+		this -> Tower = std::make_shared<emptytower>();
+		return cost;
+	}
 	return 0;
 }
 void tile::loadPic() {

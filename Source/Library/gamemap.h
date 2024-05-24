@@ -60,10 +60,13 @@ private:
 	game_framework::CMovingBitmap blueCircle; //顯示範圍的藍圈
 	double greenScale =0.1; //顯示範圍的綠圈Size
 	double blueScale = 0.1; //顯示範圍的藍圈Size
+	game_framework::CMovingBitmap sellingTower; //賣塔的確認框
+	bool is_selling_visable = false;		//賣塔的確認框是否顯示
 	std::vector<double> origin_range = {2.0,4.5,1.75,2.0,2.1,1.85,1.75,2.5,2.8,4.5,2.8,4.0}; //砲塔的基礎射程
-	std::vector<string> towernames = {"基本","狙擊","大炮","寒冰","毒液","噴灑","爆破","多重射擊","機關槍","航空","特斯拉","導彈"};
+	std::vector<string> towernames = {"基本","狙擊","大炮","冰凍","毒液","噴灑","爆破","多重射擊","機關槍","航空","特斯拉","導彈"};
 	std::vector<game_framework::CMovingBitmap> towerButtons; //蓋塔模式的按鈕
 	CPoint selected_tile; //目前選擇的地圖格子位置
+	std::shared_ptr<tower> last_selected_tower;
 	int last_selected = -1; //蓋塔模式中上一個選擇的塔
 	int last_selected_upgrade = -1; //升級模式中上一個選擇的升級
 	game_framework::CMovingBitmap selected_block; //地圖格子的選擇框

@@ -29,3 +29,21 @@ public:
 	basicBarrel();
 
 };
+
+class sniperBarrel : public barrel {
+public:
+	sniperBarrel();
+
+};
+
+class cannonBarrel : public barrel {
+public:
+	cannonBarrel();
+
+};
+
+class freezingBarrel : public barrel {
+public:
+	freezingBarrel();
+
+};

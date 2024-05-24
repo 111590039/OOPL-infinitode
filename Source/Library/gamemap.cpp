@@ -63,7 +63,7 @@ void gamemap::processMove() {
 		else {
 			t->GetTower()->SetTarget(nullptr);
 		}
-		t->GetTower()->move(time, t->GetX(), t->GetY());
+		t->GetTower()->move(time, t->GetX(), t->GetY() ,Enemy);
 		t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
 	//敵人移動
@@ -148,26 +148,24 @@ void gamemap::drawmap() {
 	else if (controlPanelMode == 3) {
 		controlPanel.SetFrameIndexOfBitmap(2);
 		if (!is_control_panel_invisable && showing_control_panel) {
-			for (std::shared_ptr<tile> t : tiles) {
-				if (selected_tile.x == t->GetX() && selected_tile.y == t->GetY()) {
-					std::vector<int> cost = t->GetTower()->GetUpgradeCost();
-					for (int i = 0; i < 4; i++) {
-						if (cost[i] > coins) {
-							upgradeButton[i].SetFrameIndexOfBitmap(1);
-						}
-						else {
-							upgradeButton[i].SetFrameIndexOfBitmap(0);
-						}
-						upgradeButton[i].ShowBitmap();
-					}
-					break;
+			std::vector<int> cost = last_selected_tower->GetUpgradeCost();
+			for (int i = 0; i < 4; i++) {
+				if (cost[i] > coins) {
+					upgradeButton[i].SetFrameIndexOfBitmap(1);
 				}
+				else {
+					upgradeButton[i].SetFrameIndexOfBitmap(0);
+				}
+				upgradeButton[i].ShowBitmap();
 			}
 			confirmUpgrade.ShowBitmap();
 			for (int i = 0; i < 4; i++) {
 				upgradeIcon[i].ShowBitmap();
 			}
 		}
+	}
+	if (is_selling_visable) {
+		sellingTower.ShowBitmap();
 	}
 	coinIcon.ShowBitmap(0.9);
 	healthIcon.ShowBitmap(0.9);
@@ -212,77 +210,73 @@ void gamemap::showtext() {
 			}
 		}
 		else if (controlPanelMode == 3) {
-			for (std::shared_ptr<tile> t : tiles) {
-				if (selected_tile.x  == t->GetX() && selected_tile.y == t->GetY()) {
-					std::shared_ptr<tower> T = t->GetTower();
-					std::vector<int> cost = T->GetUpgradeCost();
-					std::vector<string> names = T->GetAttributeName();
-					std::vector<string> values = T->GetAttributeValue();
-					game_framework::CTextDraw::ChangeFontLog(pDC, 42, "微軟正黑體", RGB(255, 255, 255), 1200);
-					game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, T->GetTowerName());
-					//印出屬性名
-					for (size_t i = 0; i < names.size(); i++) {
-						game_framework::CTextDraw::ChangeFontLog(pDC, 19, "微軟正黑體", RGB(255, 255, 255), 600);
-						if (names[i].at(0) == '#') {
-							game_framework::CTextDraw::ChangeFontLog(pDC, 19, "微軟正黑體", RGB(255, 192, 0), 600);
-							names[i] = names[i].substr(1);
-						}
-						game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 120 + 25*i, names[i]);
-					}
-					//印出屬性值
-					std::vector<std::vector<double>> affected = T->GetAffected(last_selected_upgrade);
+			std::vector<int> cost = last_selected_tower->GetUpgradeCost();
+			std::vector<string> names = last_selected_tower->GetAttributeName();
+			std::vector<string> values = last_selected_tower->GetAttributeValue();
+			game_framework::CTextDraw::ChangeFontLog(pDC, 42, "微軟正黑體", RGB(255, 255, 255), 1200);
+			game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, last_selected_tower->GetTowerName());
+			//印出屬性名
+			for (size_t i = 0; i < names.size(); i++) {
+				game_framework::CTextDraw::ChangeFontLog(pDC, 19, "微軟正黑體", RGB(255, 255, 255), 600);
+				if (names[i].at(0) == '#') {
+					game_framework::CTextDraw::ChangeFontLog(pDC, 19, "微軟正黑體", RGB(255, 192, 0), 600);
+					names[i] = names[i].substr(1);
+				}
+				game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 120 + 25*i, names[i]);
+			}
+			//印出屬性值
+			std::vector<std::vector<double>> affected = last_selected_tower->GetAffected(last_selected_upgrade);
 
-					for (size_t i = 0; i < values.size(); i++) {
-						std::string D = ""; //升級影響的綠字
-						int pos = values[i].find('.');
+			for (size_t i = 0; i < values.size(); i++) {
+				std::string D = ""; //升級影響的綠字
+				int pos = values[i].find('.');
+				if (pos != std::string::npos) {
+					values[i] = values[i].substr(0, pos+3);
+				}
+				for (std::vector<double> j : affected) {
+					if (i == size_t(j[0])) {
+						D = std::to_string(j[1]);
+						int pos = D.find('.');
 						if (pos != std::string::npos) {
-							values[i] = values[i].substr(0, pos+3);
+							D = D.substr(0, pos + 4);
 						}
-						for (std::vector<double> j : affected) {
-							if (i == size_t(j[0])) {
-								D = std::to_string(j[1]);
-								int pos = D.find('.');
-								if (pos != std::string::npos) {
-									D = D.substr(0, pos + 4);
-								}
-								D = " +" + D;
-								for (size_t k = 0; k < D.size(); k++) {
-									values[i] = values[i] + " ";
-								}
-							}
-						}
-						game_framework::CTextDraw::ChangeFontLog(pDC, 19, "微軟正黑體", RGB(0, 255, 0), 600);
-						game_framework::CTextDraw::Print(pDC, 370 - D.size() * 10, PANEL_SPACE + 120 + 25 * i, D);
-						game_framework::CTextDraw::ChangeFontLog(pDC, 19, "微軟正黑體", RGB(255, 255, 255), 600);
-						game_framework::CTextDraw::Print(pDC, 370 - values[i].size() * 10, PANEL_SPACE + 120 + 25 * i, values[i]);
-
-					}
-					//升級費用
-					std::vector<CPoint> p;
-					p = { CPoint(101,458), CPoint(285,458), CPoint(101,550), CPoint(285,550) };
-					for (int i = 0; i < 4; i++) {
-						if (cost[i] < 9999999) {
-
-							game_framework::CTextDraw::ChangeFontLog(pDC, 17, "微軟正黑體", RGB(255, 255, 255), 600);
-							if (cost[i] > coins) {
-								game_framework::CTextDraw::ChangeFontLog(pDC, 17, "微軟正黑體", RGB(255, 0, 0), 600);
-							}
-							game_framework::CTextDraw::Print(pDC, p[i].x, PANEL_SPACE + p[i].y, std::to_string(cost[i]));
-						}
-						else {
-							game_framework::CTextDraw::ChangeFontLog(pDC, 17, "微軟正黑體", RGB(255, 0, 0), 600);
-							game_framework::CTextDraw::Print(pDC, p[i].x, PANEL_SPACE + p[i].y, "MAX");
+						D = " +" + D;
+						for (size_t k = 0; k < D.size(); k++) {
+							values[i] = values[i] + " ";
 						}
 					}
-					//升級等級
+				}
+				game_framework::CTextDraw::ChangeFontLog(pDC, 19, "微軟正黑體", RGB(0, 255, 0), 600);
+				game_framework::CTextDraw::Print(pDC, 370 - D.size() * 10, PANEL_SPACE + 120 + 25 * i, D);
+				game_framework::CTextDraw::ChangeFontLog(pDC, 19, "微軟正黑體", RGB(255, 255, 255), 600);
+				game_framework::CTextDraw::Print(pDC, 370 - values[i].size() * 10, PANEL_SPACE + 120 + 25 * i, values[i]);
+
+			}
+			//升級費用
+			std::vector<CPoint> p;
+			p = { CPoint(101,458), CPoint(285,458), CPoint(101,550), CPoint(285,550) };
+			for (int i = 0; i < 4; i++) {
+				if (cost[i] < 9999999) {
+
 					game_framework::CTextDraw::ChangeFontLog(pDC, 17, "微軟正黑體", RGB(255, 255, 255), 600);
-					game_framework::CTextDraw::Print(pDC, 141, PANEL_SPACE + 428, std::to_string(T->GetUpgradeLevel()[0]) + " lvl");
-					game_framework::CTextDraw::Print(pDC, 325, PANEL_SPACE + 428, std::to_string(T->GetUpgradeLevel()[1]) + " lvl");
-					game_framework::CTextDraw::Print(pDC, 141, PANEL_SPACE + 520, std::to_string(T->GetUpgradeLevel()[2]) + " lvl");
-					game_framework::CTextDraw::Print(pDC, 325, PANEL_SPACE + 520, std::to_string(T->GetUpgradeLevel()[3]) + " lvl");
-					break;
+					if (cost[i] > coins) {
+						game_framework::CTextDraw::ChangeFontLog(pDC, 17, "微軟正黑體", RGB(255, 0, 0), 600);
+					}
+					game_framework::CTextDraw::Print(pDC, p[i].x, PANEL_SPACE + p[i].y, std::to_string(cost[i]));
+				}
+				else {
+					game_framework::CTextDraw::ChangeFontLog(pDC, 17, "微軟正黑體", RGB(255, 0, 0), 600);
+					game_framework::CTextDraw::Print(pDC, p[i].x, PANEL_SPACE + p[i].y, "MAX");
 				}
 			}
+			//升級等級
+			game_framework::CTextDraw::ChangeFontLog(pDC, 17, "微軟正黑體", RGB(255, 255, 255), 600);
+			game_framework::CTextDraw::Print(pDC, 141, PANEL_SPACE + 428, std::to_string(last_selected_tower->GetUpgradeLevel()[0]) + " lvl");
+			game_framework::CTextDraw::Print(pDC, 325, PANEL_SPACE + 428, std::to_string(last_selected_tower->GetUpgradeLevel()[1]) + " lvl");
+			game_framework::CTextDraw::Print(pDC, 141, PANEL_SPACE + 520, std::to_string(last_selected_tower->GetUpgradeLevel()[2]) + " lvl");
+			game_framework::CTextDraw::Print(pDC, 325, PANEL_SPACE + 520, std::to_string(last_selected_tower->GetUpgradeLevel()[3]) + " lvl");
+			//顯示出售價格
+			game_framework::CTextDraw::Print(pDC, 101, PANEL_SPACE + 630, std::to_string(int(last_selected_tower->GetTotalCost() / 2)));
 		}
 	}
 	game_framework::CDDraw::ReleaseBackCDC();
@@ -324,7 +318,11 @@ void gamemap::loadpic() {
 		upgradeIcon[i].LoadBitmapByString({ "resources/upgrade_range.bmp",
 			"resources/upgrade_power.bmp",
 			"resources/upgrade_attack_speed.bmp",
-			"resources/upgrade_spin_and_projectile_speed.bmp"}, RGB(0, 0, 0));
+			"resources/upgrade_spin_and_projectile_speed.bmp",
+			"resources/upgrade_aim_time.bmp",
+			"resources/upgrade_freezing%.bmp", 
+			"resources/upgrade_freeze_time.bmp", 
+			"resources/upgrade_defrosting_time.bmp"}, RGB(0, 0, 0));
 	}
 	upgradeIcon[0].SetTopLeft(36, 425 + PANEL_SPACE);
 	upgradeIcon[1].SetTopLeft(220, 425 + PANEL_SPACE);
@@ -334,8 +332,13 @@ void gamemap::loadpic() {
 	greenCircle.SetTopLeft(-200, -200);
 	blueCircle.LoadBitmapByString({ "resources/blue_circle.bmp" }, RGB(255, 255, 255));
 	blueCircle.SetTopLeft(-200, -200);
-	for (int i = 0; i < 1; i++) {
-		std::vector<string> towerpics = {"resources/tower_button_basic.bmp"};
+	sellingTower.LoadBitmapByString({ "resources/selling_tower.bmp" }, RGB(255, 255, 255));
+	sellingTower.SetTopLeft(514, 333);
+	for (int i = 0; i < 4; i++) {
+		std::vector<string> towerpics = {"resources/tower_button_basic.bmp",
+			 "resources/tower_button_sniper.bmp",
+		     "resources/tower_button_cannon.bmp",
+			"resources/tower_button_freezing.bmp" };
 		towerButtons.push_back(game_framework::CMovingBitmap());
 		towerButtons[i].LoadBitmapByString({ towerpics[i] } , RGB(255, 255, 255));
 		towerButtons[i].SetTopLeft(((i % 4) * TOWER_BUTTON_SIZE), PANEL_SPACE + 300 + (i/4) * TOWER_BUTTON_SIZE);
@@ -378,6 +381,21 @@ void gamemap::buildTower(int x, int y, std::string type) {
 				t->buildTower(tower);
 				t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);		
 			}
+			else if (!type.compare("sniper")) {
+				std::shared_ptr<sniper> tower = std::make_shared<sniper>();
+				t->buildTower(tower);
+				t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
+			}
+			else if (!type.compare("cannon")) {
+				std::shared_ptr<cannon> tower = std::make_shared<cannon>();
+				t->buildTower(tower);
+				t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
+			}
+			else if (!type.compare("freezing")) {
+				std::shared_ptr<freezing> tower = std::make_shared<freezing>();
+				t->buildTower(tower);
+				t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
+			}
 			break;
 		}
 	}
@@ -418,54 +436,62 @@ void gamemap::clickOnMap(CPoint point) {
 						coins -= 40;
 						is_build_success = true;
 					}
+					else if (selected == 1 && coins >= 100) {
+						buildTower(selected_tile.x, selected_tile.y, "sniper");
+						coins -= 100;
+						is_build_success = true;
+					}
+					else if (selected == 2 && coins >= 60) {
+						buildTower(selected_tile.x, selected_tile.y, "cannon");
+						coins -= 60;
+						is_build_success = true;
+					}
+					else if (selected == 3 && coins >= 70) {
+						buildTower(selected_tile.x, selected_tile.y, "freezing");
+						coins -= 70;
+						is_build_success = true;
+					}
 					//蓋完塔之後跳到升級頁面(tower模式)
 					if (is_build_success) {
 						controlPanelMode = 3; 
+						for (std::shared_ptr<tile> t : tiles) {
+							if (t->GetX() == selected_tile.x && t->GetY() == selected_tile.y && t->haveTower()) {
+								last_selected_tower = t->GetTower();
+							}
+						}
 						blueScale = origin_range[selected];
 						blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale)
 							, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale));
-						for (std::shared_ptr<tile> t : tiles) {
-							if (t->GetX() == selected_tile.x && t->GetY() == selected_tile.y) {
-								for (int i = 0; i < 4; i++) {
-									upgradeIcon[i].SetFrameIndexOfBitmap(t->GetTower()->GetUpgradeIcon()[i]);
-								}
-								confirmUpgrade.SetTopLeft(-100, -100);
-								break;
-							}
+						for (int i = 0; i < 4; i++) {
+							upgradeIcon[i].SetFrameIndexOfBitmap(last_selected_tower->GetUpgradeIcon()[i]);
 						}
+						confirmUpgrade.SetTopLeft(-100, -100);
 					}
 				}
 			}
 			else if (controlPanelMode == 3) {
-				std::shared_ptr<tower> T = nullptr;
-				for (std::shared_ptr<tile> t : tiles) {
-					if (t->GetX() == selected_tile.x && t->GetY() == selected_tile.y) {
-						T = t->GetTower();
-						break;
-					}
-				}
 				//左上
 				if (188 >= point.x && point.x >= 26 && 493 + PANEL_SPACE >= point.y && point.y >= 415 + PANEL_SPACE) {
-					if (last_selected_upgrade == 1 && coins >= T->GetUpgradeCost()[0]) {
-						coins -= T->GetUpgradeCost()[0];
-						T->upgrade1();
+					if (last_selected_upgrade == 1 && coins >= last_selected_tower->GetUpgradeCost()[0]) {
+						coins -= last_selected_tower ->GetUpgradeCost()[0];
+						last_selected_tower->upgrade1();
 						//由於左上一定是範圍升級 所以只在這裡重置藍圈
-						blueScale = T->GetRange();
+						blueScale = last_selected_tower->GetRange();
 						blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale)
 							, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale));
-						if ( T->GetUpgradeLevel()[0] >= 10 || coins < T->GetUpgradeCost()[0]) {
+						if (last_selected_tower->GetUpgradeLevel()[0] >= 10 || coins < last_selected_tower->GetUpgradeCost()[0]) {
 							last_selected_upgrade = -1;
 							confirmUpgrade.SetTopLeft(-200, -200 + PANEL_SPACE);
 						}
 						else {
 							//由於左上一定是範圍升級 所以只在這裡重置綠圈
-							greenScale = T->GetRange() + T->GetAffected(1)[0][1];
+							greenScale = last_selected_tower->GetRange() + last_selected_tower->GetAffected(1)[0][1];
 							greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale)
 								, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale));
 						}
 					}
-					else if (coins >= T->GetUpgradeCost()[0] && T->GetUpgradeLevel()[0] <= 10){
-						greenScale = T->GetRange() + T->GetAffected(1)[0][1];
+					else if (coins >= last_selected_tower->GetUpgradeCost()[0] && last_selected_tower->GetUpgradeLevel()[0] <= 10){
+						greenScale = last_selected_tower->GetRange() + last_selected_tower->GetAffected(1)[0][1];
 						greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale)
 							, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale));
 						last_selected_upgrade = 1;
@@ -474,55 +500,76 @@ void gamemap::clickOnMap(CPoint point) {
 				}
 				//右上
 				else if (372 >= point.x && point.x >= 210 && 493 + PANEL_SPACE >= point.y && point.y >= 415 + PANEL_SPACE) {
-					if (last_selected_upgrade == 2 && coins >= T->GetUpgradeCost()[1]) {
-						coins -= T->GetUpgradeCost()[1];
-						T->upgrade2();
-						if (T->GetUpgradeLevel()[1] >= 10 || coins < T->GetUpgradeCost()[1]) {
+					if (last_selected_upgrade == 2 && coins >= last_selected_tower->GetUpgradeCost()[1]) {
+						coins -= last_selected_tower->GetUpgradeCost()[1];
+						last_selected_tower->upgrade2();
+						if (last_selected_tower->GetUpgradeLevel()[1] >= 10 || coins < last_selected_tower->GetUpgradeCost()[1]) {
 							last_selected_upgrade = -1;
 							confirmUpgrade.SetTopLeft(-200, -200 + PANEL_SPACE);
 						}
 					}
-					else if (coins >= T->GetUpgradeCost()[1] && T->GetUpgradeLevel()[1] <= 10) {
+					else if (coins >= last_selected_tower->GetUpgradeCost()[1] && last_selected_tower->GetUpgradeLevel()[1] <= 10) {
 						last_selected_upgrade = 2;
 						confirmUpgrade.SetTopLeft(210, 415 + PANEL_SPACE);
 					}
 				}
 				//左下
 				else if (188 >= point.x && point.x >= 26 && 586 + PANEL_SPACE >= point.y && point.y >= 507 + PANEL_SPACE) {
-					if (last_selected_upgrade == 3 && coins >= T->GetUpgradeCost()[2]) {
-						coins -= T->GetUpgradeCost()[2];
-						T->upgrade3();
-						if (T->GetUpgradeLevel()[2] >= 10 || coins < T->GetUpgradeCost()[2]) {
+					if (last_selected_upgrade == 3 && coins >= last_selected_tower->GetUpgradeCost()[2]) {
+						coins -= last_selected_tower->GetUpgradeCost()[2];
+						last_selected_tower->upgrade3();
+						if (last_selected_tower->GetUpgradeLevel()[2] >= 10 || coins < last_selected_tower->GetUpgradeCost()[2]) {
 							last_selected_upgrade = -1;
 							confirmUpgrade.SetTopLeft(-200, -200 + PANEL_SPACE);
 						}
 					}
-					else if (coins >= T->GetUpgradeCost()[2] && T->GetUpgradeLevel()[2] <= 10) {
+					else if (coins >= last_selected_tower->GetUpgradeCost()[2] && last_selected_tower->GetUpgradeLevel()[2] <= 10) {
 						last_selected_upgrade = 3;
 						confirmUpgrade.SetTopLeft(26, 507 + PANEL_SPACE);
 					}
 				}
 				//右下
 				else if (372 >= point.x && point.x >= 210 && 586 + PANEL_SPACE >= point.y && point.y >= 507 + PANEL_SPACE) {
-					if (last_selected_upgrade == 4 && coins >= T->GetUpgradeCost()[3]) {
-						coins -= T->GetUpgradeCost()[3];
-						T->upgrade4();
-						if (T->GetUpgradeLevel()[3] >= 10 || coins < T->GetUpgradeCost()[3]) {
+					if (last_selected_upgrade == 4 && coins >= last_selected_tower->GetUpgradeCost()[3]) {
+						coins -= last_selected_tower->GetUpgradeCost()[3];
+						last_selected_tower->upgrade4();
+						if (last_selected_tower->GetUpgradeLevel()[3] >= 10 || coins < last_selected_tower->GetUpgradeCost()[3]) {
 							last_selected_upgrade = -1;
 							confirmUpgrade.SetTopLeft(-200, -200 + PANEL_SPACE);
 						}
 					}
-					else if (coins >= T->GetUpgradeCost()[3] && T->GetUpgradeLevel()[3] <= 10) {
+					else if (coins >= last_selected_tower->GetUpgradeCost()[3] && last_selected_tower->GetUpgradeLevel()[3] <= 10) {
 						last_selected_upgrade = 4;
 						confirmUpgrade.SetTopLeft(210, 507 + PANEL_SPACE);
 					}
 				}
-				blueScale = T->GetRange();
+				//賣塔
+				else if (188 >= point.x && point.x >= 27 && 679 + PANEL_SPACE >= point.y && point.y >= 602 + PANEL_SPACE) {
+					is_selling_visable = true;
+				}
+				blueScale = last_selected_tower->GetRange();
 				blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale)
 					, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale));
 			}
 			done = true;
 		}
+	}
+	if (!done && is_selling_visable && 887 >= point.x && point.x >= 514 && 567 >= point.y && point.y >= 333) {
+		//否
+		if (689 >= point.x && point.x >= 526 && 560 >= point.y && point.y >= 473) {
+			is_selling_visable = false;
+		}
+		//是
+		else if (970 >= point.x && point.x >= 709 && 560 >= point.y && point.y >= 473) {
+			for (std::shared_ptr<tile> t : tiles) {
+				if (t->GetX() == selected_tile.x && t->GetY() == selected_tile.y && t->haveTower()) {
+					coins += t->sellTower();
+					is_selling_visable = false;
+					controlPanelMode = 1;
+				}
+			}
+		}
+		done = true;
 	}
 	if (!done) {
 		for (std::shared_ptr<tile> t : tiles) {
@@ -541,7 +588,8 @@ void gamemap::clickOnMap(CPoint point) {
 				selected_block.SetTopLeft(int(LEFT + moveX + t->GetX() * TILE_SIZE*scale - 2*scale), int(TOP + moveY + t->GetY() * TILE_SIZE*scale - 2 * scale));
 
 				if (t->haveTower()) {
-					blueScale = t->GetTower()->GetRange();
+					last_selected_tower = t->GetTower();
+					blueScale = last_selected_tower->GetRange();
 					greenCircle.SetTopLeft(-100, 100);
 					greenScale = 0.1;
 				}
@@ -610,6 +658,7 @@ void gamemap::clickOnMap(CPoint point) {
 		//greenScale = 0.1;
 		blueCircle.SetTopLeft(-200, -200);
 		blueScale = 0.1;
+		is_selling_visable = false;
 	}
 	wave.IsClockClicked(point);
 }
@@ -631,22 +680,21 @@ void gamemap::TESTMAP1() {
 	newblock(std::make_shared<road>(1, 3));
 	newblock(std::make_shared<road>(1, 4));
 	newblock(std::make_shared<road>(1, 5));
-	newblock(std::make_shared<road>(1, 5));
 	newblock(std::make_shared<road>(2, 5));
 	newblock(std::make_shared<road>(3, 5));
 	newblock(std::make_shared<road>(4, 5));
 	newblock(std::make_shared<road>(5, 5));
-	newblock(std::make_shared<road>(6, 5));
-	newblock(std::make_shared<road>(6, 4));
-	newblock(std::make_shared<road>(6, 3));
-	newblock(std::make_shared<road>(6, 2));
-	newblock(std::make_shared<road>(7, 2));
+	newblock(std::make_shared<road>(5, 4));
+	newblock(std::make_shared<road>(5, 3));
+	newblock(std::make_shared<road>(5, 2));
+	newblock(std::make_shared<road>(5, 1));
+	newblock(std::make_shared<road>(6, 1));
+	newblock(std::make_shared<road>(7, 1));
+	newblock(std::make_shared<road>(8, 1));
 	newblock(std::make_shared<road>(8, 2));
-	newblock(std::make_shared<road>(9, 2));
-	newblock(std::make_shared<road>(9, 3));
-	newblock(std::make_shared<road>(9, 4));
-	newblock(std::make_shared<road>(9, 5));
-	newblock(std::make_shared<base>(9, 6));
+	newblock(std::make_shared<road>(8, 3));
+	newblock(std::make_shared<road>(8, 4));
+	newblock(std::make_shared<base>(8, 5));
 	newtile(std::make_shared<tile>(0, 3));
 	newtile(std::make_shared<tile>(0, 4));
 	newtile(std::make_shared<tile>(0, 5));
@@ -656,8 +704,23 @@ void gamemap::TESTMAP1() {
 	newtile(std::make_shared<tile>(2, 4));
 	newtile(std::make_shared<tile>(3, 4));
 	newtile(std::make_shared<tile>(4, 4));
+	newtile(std::make_shared<tile>(1, 6));
+	newtile(std::make_shared<tile>(2, 6));
+	newtile(std::make_shared<tile>(3, 6));
+	newtile(std::make_shared<tile>(4, 6));
+	newtile(std::make_shared<tile>(5, 6));
+	newtile(std::make_shared<tile>(6, 5));
+	newtile(std::make_shared<tile>(6, 4));
+	newtile(std::make_shared<tile>(6, 3));
+	newtile(std::make_shared<tile>(6, 2));
+	newtile(std::make_shared<tile>(7, 2));
+	newtile(std::make_shared<tile>(7, 3));
+	newtile(std::make_shared<tile>(7, 0));
+	newtile(std::make_shared<tile>(8, 0));
+	newtile(std::make_shared<tile>(9, 1));
+	newtile(std::make_shared<tile>(9, 2));
 	Setdifficulty(0.7);
-	enemyPath = { CPoint(1, 0), CPoint(1, 5), CPoint(6, 5), CPoint(6, 2), CPoint(9, 2), CPoint(9, 6) };
+	enemyPath = { CPoint(1, 0), CPoint(1, 5), CPoint(5, 5), CPoint(5, 1), CPoint(8, 1), CPoint(8, 5) };
 	newEnemy(std::make_shared<Regular>(0.7, 1, enemyPath));
 }
 void gamemap::SummonTestEnemy() {
