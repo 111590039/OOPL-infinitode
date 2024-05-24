@@ -258,6 +258,7 @@
     <ClCompile Include="Source\Library\tower\freezing.cpp" />
     <ClCompile Include="Source\Library\tower\sniper.cpp" />
     <ClCompile Include="Source\Library\tower\tower.cpp" />
+    <ClCompile Include="Source\Library\wave.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\Game.h" />
@@ -280,6 +281,7 @@
     <ClInclude Include="Source\Library\tower\freezing.h" />
     <ClInclude Include="Source\Library\tower\sniper.h" />
     <ClInclude Include="Source\Library\tower\tower.h" />
+    <ClInclude Include="Source\Library\wave.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source\Core\game.rc" />

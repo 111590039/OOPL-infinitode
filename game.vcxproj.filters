@@ -86,6 +86,8 @@
     </ClCompile>
     <ClCompile Include="Source\Library\tower\freezing.cpp">
       <Filter>GameLibrary\tower</Filter>
+    <ClCompile Include="Source\Library\wave.cpp">
+      <Filter>GameLibrary</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +150,9 @@
     </ClInclude>
     <ClInclude Include="Source\Library\tower\freezing.h">
       <Filter>GameLibrary\tower</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Library\wave.h">
+      <Filter>GameLibrary</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

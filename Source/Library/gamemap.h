@@ -10,6 +10,7 @@
 #include <mmsystem.h>
 #include <ddraw.h>
 #include "gamecore.h"
+#include "wave.h"
 
 class gamemap {
 public:
@@ -79,4 +80,5 @@ private:
 	int moveY = 200;
 	chrono::steady_clock::time_point lastTime = chrono::steady_clock::now();
 	std::vector<CPoint> enemyPath;
+	Wave wave;
 };

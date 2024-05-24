@@ -84,6 +84,27 @@ void gamemap::processMove() {
 			continue;
 		}
 	}
+	//關卡進行
+	if (wave.Start) {
+		if (wave.GetRemainingCount() == 0) {
+			if (wave.GetCd15() > 0) {
+				wave.showCD();
+				wave.ReduceCd(time);
+			}
+			else {
+				wave.SetCd15(15.0);
+				wave.nextLevel();
+				std::string type = wave.enemyType(wave.GetWave());
+				wave.SetRemainingCount(wave.enemyCount(type, wave.GetWave()));
+			}
+		}
+		else if (wave.GetdelayTime() > 0.5 && wave.GetRemainingCount() > 0) {
+			newEnemy(std::make_shared<Regular>(0.7, wave.GetWave(), enemyPath));
+			wave.SetRemainingCount(wave.GetRemainingCount() - 1);
+			wave.SetDelayTime(0);
+		}
+		wave.AccDelayTime(time);
+	}
 	refreshTime();//一定要在最下面
 }
 //讓整張地圖顯示
@@ -148,6 +169,7 @@ void gamemap::drawmap() {
 	}
 	coinIcon.ShowBitmap(0.9);
 	healthIcon.ShowBitmap(0.9);
+	wave.showClock();
 }
 void gamemap::showtext() {
 	CDC *pDC = game_framework::CDDraw::GetBackCDC();
@@ -258,6 +280,12 @@ void gamemap::showtext() {
 		}
 	}
 	game_framework::CDDraw::ReleaseBackCDC();
+	if (wave.Start) {
+		wave.showWaveText();
+	}
+	else {
+		wave.showStartText();
+	}
 }
 void gamemap::loadpic() {
 	coinIcon.LoadBitmapByString({ "resources/coins.bmp" }, RGB(255, 255, 255));
@@ -327,6 +355,7 @@ void gamemap::loadpic() {
 		e->loadPic();
 		e->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
+	wave.loadClockPic();
 }
 void gamemap::resetshow() {
 	for (std::shared_ptr<block> b : map) {
@@ -631,6 +660,7 @@ void gamemap::clickOnMap(CPoint point) {
 		blueScale = 0.1;
 		is_selling_visable = false;
 	}
+	wave.IsClockClicked(point);
 }
 void gamemap::newblock(std::shared_ptr<block> block) {
 	map.push_back(block);
