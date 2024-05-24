@@ -45,7 +45,7 @@ void gamemap::refreshTime() {
 }
 void gamemap::processMove() {
 	//¯¥¶ð¤u§@
-	double time = 10* GetElapsedTime();
+	double time = GetElapsedTime();
 	for (std::shared_ptr<tile> t : tiles) {
 		if (Enemy.size() != 0){
 			bool findTarget = false;

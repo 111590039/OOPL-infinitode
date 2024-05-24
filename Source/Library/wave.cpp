@@ -49,7 +49,7 @@ void Wave::ReduceCd(double time) {
 	this->cd15 -= time;
 }
 void Wave::nextLevel() {
-	this->wave += 20;
+	this->wave += 1;
 }
 void Wave::enemyType(int wave) {
 	int RegularProb = 0, FastProb = 0, StrongProb = 0, DenseRegularProb = 0, AirProb = 0;
