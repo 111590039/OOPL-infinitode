@@ -6,6 +6,7 @@
 #include <string>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 
 Wave::Wave() {
 
@@ -21,6 +22,12 @@ int Wave::GetRemainingCount() {
 }
 double Wave::GetCd15() {
 	return cd15;
+}
+std::string Wave::GetEnemyType() {
+	return enemytype;
+}
+bool Wave::GetStart() {
+	return Start;
 }
 void Wave::NextWave() {
 	this->wave += 1;
@@ -42,9 +49,9 @@ void Wave::ReduceCd(double time) {
 	this->cd15 -= time;
 }
 void Wave::nextLevel() {
-	this->wave += 1;
+	this->wave += 20;
 }
-std::string Wave::enemyType(int wave) {
+void Wave::enemyType(int wave) {
 	int RegularProb = 0, FastProb = 0, StrongProb = 0, DenseRegularProb = 0, AirProb = 0;
 
 	RegularProb = 10 - (int)(wave / 28);
@@ -84,26 +91,26 @@ std::string Wave::enemyType(int wave) {
 	}
 
 	int TotalProb = RegularProb + FastProb + StrongProb + DenseRegularProb + AirProb;
-	srand(0);
+	srand(unsigned int(time(NULL)));
 	int x = rand() % (TotalProb + 1);
 
 	if (x < RegularProb) {
-		return "Regular";
+		enemytype = "Regular";
 	}
 	else if (x < RegularProb + FastProb) {
-		return "Fast";
+		enemytype = "Fast";
 	}
 	else if (x < RegularProb + FastProb + StrongProb) {
-		return "Strong";
+		enemytype = "Strong";
 	}
 	else if (x < RegularProb + FastProb + StrongProb + DenseRegularProb) {
-		return "DenseRegular";
+		enemytype = "DenseRegular";
 	}
 	else if (x < RegularProb + FastProb + StrongProb + DenseRegularProb + AirProb) {
-		return "Air";
+		enemytype = "Air";
 	}
 	else {
-		return "Regular";
+		enemytype = "Regular";
 	}
 }
 int Wave::enemyCount(std::string eType, int wave) {

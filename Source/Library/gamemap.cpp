@@ -45,7 +45,7 @@ void gamemap::refreshTime() {
 }
 void gamemap::processMove() {
 	//砲塔工作
-	double time = GetElapsedTime();
+	double time = 10* GetElapsedTime();
 	for (std::shared_ptr<tile> t : tiles) {
 		if (Enemy.size() != 0){
 			bool findTarget = false;
@@ -85,7 +85,7 @@ void gamemap::processMove() {
 		}
 	}
 	//關卡進行
-	if (wave.Start) {
+	if (wave.GetStart()) {
 		if (wave.GetRemainingCount() == 0) {
 			if (wave.GetCd15() > 0) {
 				wave.showCD();
@@ -94,12 +94,26 @@ void gamemap::processMove() {
 			else {
 				wave.SetCd15(15.0);
 				wave.nextLevel();
-				std::string type = wave.enemyType(wave.GetWave());
-				wave.SetRemainingCount(wave.enemyCount(type, wave.GetWave()));
+				wave.enemyType(wave.GetWave());
+				wave.SetRemainingCount(wave.enemyCount(wave.GetEnemyType(), wave.GetWave()));
 			}
 		}
 		else if (wave.GetdelayTime() > 0.5 && wave.GetRemainingCount() > 0) {
-			newEnemy(std::make_shared<Regular>(0.7, wave.GetWave(), enemyPath));
+			if (wave.GetEnemyType() == "Regular") {
+				newEnemy(std::make_shared<Regular>(0.7, wave.GetWave(), enemyPath));
+			}
+			else if (wave.GetEnemyType() == "Fast") {
+				newEnemy(std::make_shared<Fast>(0.7, wave.GetWave(), enemyPath));
+			}
+			else if (wave.GetEnemyType() == "Strong") {
+				newEnemy(std::make_shared<Strong>(0.7, wave.GetWave(), enemyPath));
+			}
+			else if (wave.GetEnemyType() == "DenseRegular") {
+				newEnemy(std::make_shared<DenseRegular>(0.7, wave.GetWave(), enemyPath));
+			}
+			else if (wave.GetEnemyType() == "Air") {
+				newEnemy(std::make_shared<Air>(0.7, wave.GetWave(), enemyPath));
+			}
 			wave.SetRemainingCount(wave.GetRemainingCount() - 1);
 			wave.SetDelayTime(0);
 		}
@@ -280,7 +294,7 @@ void gamemap::showtext() {
 		}
 	}
 	game_framework::CDDraw::ReleaseBackCDC();
-	if (wave.Start) {
+	if (wave.GetStart()) {
 		wave.showWaveText();
 	}
 	else {
@@ -721,7 +735,6 @@ void gamemap::TESTMAP1() {
 	newtile(std::make_shared<tile>(9, 2));
 	Setdifficulty(0.7);
 	enemyPath = { CPoint(1, 0), CPoint(1, 5), CPoint(5, 5), CPoint(5, 1), CPoint(8, 1), CPoint(8, 5) };
-	newEnemy(std::make_shared<Regular>(0.7, 1, enemyPath));
 }
 void gamemap::SummonTestEnemy() {
 	std::shared_ptr<Regular> enemy = std::make_shared<Regular>(0.7, 1, enemyPath);

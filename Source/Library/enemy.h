@@ -16,6 +16,10 @@ public:
 	double GetX();
 	double GetY();
 	int GetDamage();
+	bool GetSlow();
+	bool GetPoisoned();
+	bool GetBurning();
+	bool GetDizzy();
 
 	std::string GetPicPath();
 	void show(double scale);
@@ -26,6 +30,10 @@ public:
 	void GetDamage(double damage);
 	bool IsDied();
 	bool IsSurvive = true;
+	virtual void GetSlow(double slowEffect, double slowTime);
+	virtual void GetPoisoned(double poisonedEffect, double poisonedTime);
+	virtual void GetBurning(double burningEffect, double burningTime);
+	virtual void GetDizzy(double dizzyTime);
 
 protected:
 	void Sethealth(double health);
@@ -37,6 +45,10 @@ protected:
 	void SetMaxHealth(double health);
 	void SetType(std::string type);
 	void SetPicPath(std::string picPath);
+	void SetSlowTime(double time);
+	void SetPoisonedTime(double time);
+	void SetBurningTime(double time);
+	void SetDizzyTime(double time);
 
 private:
 	double x, y;
@@ -46,6 +58,17 @@ private:
 	double difficulty = 1, health, speed, bounty, exp, maxHealth;
 	std::vector<CPoint> enemyPath;
 	game_framework::CMovingBitmap HealthBar;
+	bool Slow = false;
+	bool Poisoned = false;
+	bool Burning = false;
+	bool Dizzy = false;
+	double slowEffect;
+	double PoisonedEffect;
+	double BurningEffect;
+	double SlowTime = 0.0;
+	double PoisonedTime = 0.0;
+	double BurningTime = 0.0;
+	double DizzyTime = 0.0;
 };
 
 class Regular : public enemy {
@@ -53,58 +76,22 @@ public:
 	Regular(double difficulty, int wave, std::vector<CPoint> enemyPath);
 };
 
+class Fast : public enemy {
+public:
+	Fast(double difficulty, int wave, std::vector<CPoint> enemyPath);
+};
 
-/* Regular
-int prob = 10 - (int)(value / 28); 
-if (prob < 1) prob = 1; 
-if (value > 300) prob = 0; 
-return prob;
-*/
+class Strong : public enemy {
+public:
+	Strong(double difficulty, int wave, std::vector<CPoint> enemyPath);
+};
 
-/* Fast
-if (value < 7) { 
-	return 0; 
-}
-else {
-	int prob = 1 + (int)(difficulty / 10); 
-	if (prob > 5) prob = 5; 
-	return prob; 
-*/
+class DenseRegular : public enemy {
+public:
+	DenseRegular(double difficulty, int wave, std::vector<CPoint> enemyPath);
+};
 
-/* Strong
-if (value < 15) {
-	return 0;
-}
-else {
-	int prob = 1 + (int)(value / 15);
-	if (prob > 4) prob = 4;
-	return prob;
-}
-*/
-
-/* DenseRegular
-	if (value < 20) {
-	return 0;
-	} else {
-	int prob = 1 + (int)(value / 50);
-	if (prob > 5) prob = 5;
-	return prob;
-	}
-*/
-
-/* Air
-	if (value < 10) {
-	return 0;
-	} else {
-	int prob = 1 + (int)(value / 20);
-	if (prob > 4) prob = 4;
-	return prob;
-	}
-*/
-
-
-/*int prob = 10 - (int)(value / 28);
-if (prob < 1) prob = 1;
-if (value > 300) prob = 0;
-return prob;*/
-
+class Air : public enemy {
+public:
+	Air(double difficulty, int wave, std::vector<CPoint> enemyPath);
+};
