@@ -75,6 +75,9 @@
     <ClCompile Include="Source\Library\bullet.cpp">
       <Filter>GameLibrary</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Library\wave.cpp">
+      <Filter>GameLibrary</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Library\audio.h">
@@ -126,6 +129,9 @@
       <Filter>GameLibrary</Filter>
     </ClInclude>
     <ClInclude Include="Source\Library\tower.h">
+      <Filter>GameLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Library\wave.h">
       <Filter>GameLibrary</Filter>
     </ClInclude>
   </ItemGroup>
