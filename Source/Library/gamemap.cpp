@@ -16,6 +16,42 @@ gamemap::gamemap() {
 gamemap::gamemap(int size) {
 
 }
+bool gamemap::IsGameover() {
+	return health <= 0;
+}
+void gamemap::resetGamemap() {
+	coins = 2000;
+	health = 100;
+	showing_control_panel = false;
+	is_control_panel_invisable = true;
+	controlPanelMode = 1;
+	greenScale = 0.1;
+	blueScale = 0.1;
+	is_selling_visable = false;
+	gameSpeed = 1;
+	last_selected_tower = nullptr;
+	last_selected = -1;
+	last_selected_upgrade = -1;
+	scale = 1.0;
+	moveX = 550;
+	moveY = 200;
+	totalTime = 0;
+	lastTime = chrono::steady_clock::now();
+	controlPanel.SetTopLeft(-600, PANEL_SPACE);
+	controlPanelButton.SetTopLeft(-200, PANEL_SPACE + 400);
+	selected_box.SetTopLeft(-100, -100);
+	selected_block.SetTopLeft(-100, -100);
+	confirmUpgrade.SetTopLeft(-100, -100);
+	greenCircle.SetTopLeft(-200, -200);
+	blueCircle.SetTopLeft(-200, -200);
+	gameSpeedButton.SetFrameIndexOfBitmap(0);
+	for (std::shared_ptr<tile> t : tiles) {
+		if (t->haveTower()) {
+			t->sellTower();
+		}
+	}
+	Enemy.clear();
+}
 void gamemap::addScale(double delta) {
 	scale = max(scale + delta, 0.1);
 }
@@ -27,6 +63,12 @@ void gamemap::addMoveY(int delta) {
 }
 double gamemap::GetScale() {
 	return scale;
+}
+int gamemap::GetTotalTime() {
+	return int(totalTime);
+}
+int gamemap::GetWave() {
+	return wave.GetWave();
 }
 double gamemap::GetElapsedTime() {
 	auto time = std::chrono::duration<double>(lastTime.time_since_epoch());
@@ -46,6 +88,8 @@ void gamemap::refreshTime() {
 void gamemap::processMove() {
 	//砲塔工作
 	double time = GetElapsedTime();
+	totalTime += time;
+	time = time * gameSpeed;
 	for (std::shared_ptr<tile> t : tiles) {
 		if (Enemy.size() != 0){
 			bool findTarget = false;
@@ -185,6 +229,43 @@ void gamemap::drawmap() {
 	coinIcon.ShowBitmap(0.9);
 	healthIcon.ShowBitmap(0.9);
 	wave.showClock();
+	gameSpeedButton.ShowBitmap(0.6);
+}
+void gamemap::loadmap(int level) {
+	std::string filepath = "Source/Map/level" + to_string(level) + ".map";
+	ifstream ifs(filepath);
+	int mx, my,temp,temp2;
+	CPoint p;
+	ifs >> temp;
+	Setdifficulty(double(temp)/100);
+	ifs >> mx;
+	for (int i = 0; i < mx; i++) {
+		ifs >> temp;
+		ifs >> temp2;
+		p.x = temp;
+		p.y = temp2;
+		enemyPath.push_back(p);
+	}
+	ifs >> mx;
+	ifs >> my;
+	for (int y = 0; y < my; y++) {
+		for (int x = 0; x < mx; x++) {
+			ifs >> temp;
+			if (temp == 1) {
+				newblock(std::make_shared<road>(x, y));
+			}
+			else if (temp == 2) {
+				newblock(std::make_shared<portal>(x, y));
+			}
+			else if (temp == 3) {
+				newblock(std::make_shared<base>(x, y));
+			}
+			else if (temp == 4) {
+				newtile(std::make_shared<tile>(x, y));
+			}
+		}
+	}
+	ifs.close();
 }
 void gamemap::showtext() {
 	CDC *pDC = game_framework::CDDraw::GetBackCDC();
@@ -205,8 +286,9 @@ void gamemap::showtext() {
 			}
 			//選單按鈕文字
 			game_framework::CTextDraw::ChangeFontLog(pDC, 21, "微軟正黑體", RGB(255, 255, 255), 800);
+			int counter = 0;
 			for (game_framework::CMovingBitmap b : towerButtons) {
-				game_framework::CTextDraw::Print(pDC, b.GetLeft()+70 , b.GetTop()+70 , "40");
+				game_framework::CTextDraw::Print(pDC, b.GetLeft()+70 , b.GetTop()+70 , std::to_string(towerPrice[counter++]));
 			}
 		}
 		else if (controlPanelMode == 2) {
@@ -349,15 +431,25 @@ void gamemap::loadpic() {
 	blueCircle.SetTopLeft(-200, -200);
 	sellingTower.LoadBitmapByString({ "resources/selling_tower.bmp" }, RGB(255, 255, 255));
 	sellingTower.SetTopLeft(514, 333);
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 10; i++) {
 		std::vector<string> towerpics = {"resources/tower_button_basic.bmp",
-			 "resources/tower_button_sniper.bmp",
-		     "resources/tower_button_cannon.bmp",
-			"resources/tower_button_freezing.bmp" };
+			"resources/tower_button_sniper.bmp",
+		    "resources/tower_button_cannon.bmp",
+			"resources/tower_button_freezing.bmp",
+			"resources/tower_button_venom.bmp", 
+			"resources/tower_button_splash.bmp", 
+			"resources/tower_button_blast.bmp", 
+			"resources/tower_button_multishot.bmp", 
+			"resources/tower_button_minigun.bmp", 
+			"resources/tower_button_air.bmp", };
 		towerButtons.push_back(game_framework::CMovingBitmap());
 		towerButtons[i].LoadBitmapByString({ towerpics[i] } , RGB(255, 255, 255));
 		towerButtons[i].SetTopLeft(((i % 4) * TOWER_BUTTON_SIZE), PANEL_SPACE + 300 + (i/4) * TOWER_BUTTON_SIZE);
 	}
+	gameSpeedButton.LoadBitmapByString({ "resources/gameSpeed1.bmp",
+		"resources/gameSpeed2.bmp",
+		"resources/gameSpeed3.bmp" }, RGB(255, 255, 255));
+	gameSpeedButton.SetTopLeft(10, 800);
 	for (std::shared_ptr<block> b : map) {
 		b->loadPic();
 		b -> resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
@@ -410,6 +502,48 @@ void gamemap::buildTower(int x, int y, std::string type) {
 				std::shared_ptr<freezing> tower = std::make_shared<freezing>();
 				t->buildTower(tower);
 				t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
+			}
+			else if (!type.compare("venom")) {
+				/*
+				std::shared_ptr<venom> tower = std::make_shared<venom>();
+				t->buildTower(tower);
+				t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
+				*/
+			}
+			else if (!type.compare("splash")) {
+				/*
+				std::shared_ptr<splash> tower = std::make_shared<splash>();
+				t->buildTower(tower);
+				t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
+				*/
+			}
+			else if (!type.compare("blast")) {
+				/*
+				std::shared_ptr<blast> tower = std::make_shared<blast>();
+				t->buildTower(tower);
+				t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
+				*/
+			}
+			else if (!type.compare("multishot")) {
+				/*
+				std::shared_ptr<multishot> tower = std::make_shared<multishot>();
+				t->buildTower(tower);
+				t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
+				*/
+			}
+			else if (!type.compare("minigun")) {
+				/*
+				std::shared_ptr<minigun> tower = std::make_shared<minigun>();
+				t->buildTower(tower);
+				t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
+				*/
+			}
+			else if (!type.compare("air")) {
+				/*
+				std::shared_ptr<air> tower = std::make_shared<air>();
+				t->buildTower(tower);
+				t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
+				*/
 			}
 			break;
 		}
@@ -465,6 +599,36 @@ void gamemap::clickOnMap(CPoint point) {
 						buildTower(selected_tile.x, selected_tile.y, "freezing");
 						coins -= 70;
 						is_build_success = true;
+					}
+					else if (selected == 4 && coins >= 120) {
+						buildTower(selected_tile.x, selected_tile.y, "venom");
+						coins -= 120;
+						is_build_success = true;
+					}
+					else if (selected == 5 && coins >= 70) {
+						buildTower(selected_tile.x, selected_tile.y, "splash");
+						coins -= 70;
+						//is_build_success = true;
+					}
+					else if (selected == 6 && coins >= 120) {
+						buildTower(selected_tile.x, selected_tile.y, "blast");
+						coins -= 120;
+						//is_build_success = true;
+					}
+					else if (selected == 7 && coins >= 90) {
+						buildTower(selected_tile.x, selected_tile.y, "multishot");
+						coins -= 90;
+						//is_build_success = true;
+					}
+					else if (selected == 8 && coins >= 160) {
+						buildTower(selected_tile.x, selected_tile.y, "minigun");
+						coins -= 160;
+						//is_build_success = true;
+					}
+					else if (selected == 9 && coins >= 60) {
+						buildTower(selected_tile.x, selected_tile.y, "air");
+						coins -= 60;
+						//is_build_success = true;
 					}
 					//蓋完塔之後跳到升級頁面(tower模式)
 					if (is_build_success) {
@@ -583,6 +747,21 @@ void gamemap::clickOnMap(CPoint point) {
 					controlPanelMode = 1;
 				}
 			}
+		}
+		done = true;
+	}
+	if (!done && 85 >= point.x && point.x >= 0 && 875 >= point.y && point.y >= 800) {
+		if (gameSpeed == 1) {
+			gameSpeed = 2;
+			gameSpeedButton.SetFrameIndexOfBitmap(1);
+		}
+		else if (gameSpeed == 2) {
+			gameSpeed = 4;
+			gameSpeedButton.SetFrameIndexOfBitmap(2);
+		}
+		else if (gameSpeed == 4) {
+			gameSpeed = 1;
+			gameSpeedButton.SetFrameIndexOfBitmap(0);
 		}
 		done = true;
 	}

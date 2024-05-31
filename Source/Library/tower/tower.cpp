@@ -139,6 +139,7 @@ basictower::basictower() {
 	totalCost = 40;
 }
 void basictower::move(double time,double x, double y, std::vector<std::shared_ptr<enemy>> Enemy) {
+	coolDown = max(0, coolDown - time);
 	if (coolDown == 0) {
 		if (target != nullptr) {
 			std::shared_ptr<basicbullet> Bullet = std::make_shared<basicbullet>();
@@ -149,9 +150,6 @@ void basictower::move(double time,double x, double y, std::vector<std::shared_pt
 			newBullet(Bullet);
 			coolDown = 1 / attackSpeed;
 		}
-	}
-	else {
-		coolDown = max(0, coolDown - time);
 	}
 	//¤l¼u²¾°Ê
 	for (std::shared_ptr<bullet> b : Bullets) {

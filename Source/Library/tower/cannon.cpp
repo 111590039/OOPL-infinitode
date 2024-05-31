@@ -15,6 +15,7 @@ cannon::cannon() {
 	totalCost = 60;
 }
 void cannon::move(double time, double x, double y,std::vector<std::shared_ptr<enemy>> Enemy) {
+	coolDown = max(0, coolDown - time);
 	if (coolDown == 0) {
 		if (target != nullptr) {
 			std::shared_ptr<cannonbullet> Bullet = std::make_shared<cannonbullet>();
@@ -26,9 +27,7 @@ void cannon::move(double time, double x, double y,std::vector<std::shared_ptr<en
 			coolDown = 1 / attackSpeed;
 		}
 	}
-	else {
-		coolDown = max(0, coolDown - time);
-	}
+
 	//¤l¼u²¾°Ê
 	for (std::shared_ptr<bullet> b : Bullets) {
 		b->move(time);
