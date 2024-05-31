@@ -29,8 +29,8 @@ std::string Wave::GetEnemyType() {
 bool Wave::GetStart() {
 	return Start;
 }
-void Wave::NextWave() {
-	this->wave += 1;
+void Wave::SetWave(int wave) {
+	this->wave = wave;
 }
 void Wave::AccDelayTime(double time) {
 	this->delayTime += time;

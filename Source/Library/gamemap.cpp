@@ -68,6 +68,7 @@ void gamemap::processMove() {
 	}
 	//敵人移動
 	for (size_t i = 0; i < Enemy.size(); i++) {
+		Enemy[i]->Effect(time);
 		if (Enemy[i] -> IsDied() && Enemy[i] -> IsSurvive) {
 			Enemy[i]->IsSurvive = false;
 			coins += int(Enemy[i]->Getbounty());
@@ -190,7 +191,7 @@ void gamemap::showtext() {
 	//選單文字
 	game_framework::CTextDraw::ChangeFontLog(pDC, 40, "微軟正黑體", RGB(255, 255, 255), 1200);
 	game_framework::CTextDraw::Print(pDC, 100, 20,std::to_string(coins));
-	game_framework::CTextDraw::Print(pDC, 440, 20, std::to_string(health));
+	game_framework::CTextDraw::Print(pDC, 440, 20, std::to_string((int)ceil(health))); //(int)ceil(health))
 	if (showing_control_panel && !is_control_panel_invisable) {
 		if (controlPanelMode == 1) {
 			if (last_selected == -1) {

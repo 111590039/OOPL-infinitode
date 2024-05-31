@@ -15,10 +15,10 @@ public:
 	double Getexp();
 	double GetX();
 	double GetY();
-	int GetDamage();
-	bool GetSlow();
+	double GetDamage();
+	double GetMaxSpeed();
+	bool GetSlow(); //回傳是否冰凍
 	bool GetPoisoned();
-	bool GetBurning();
 	bool GetDizzy();
 
 	std::string GetPicPath();
@@ -30,10 +30,11 @@ public:
 	void GetDamage(double damage);
 	bool IsDied();
 	bool IsSurvive = true;
-	virtual void GetSlow(double slowEffect, double slowTime);
+	virtual void GetSlow(double slowEffect, double slowTime); //受到冰凍
 	virtual void GetPoisoned(double poisonedEffect, double poisonedTime);
-	virtual void GetBurning(double burningEffect, double burningTime);
+	virtual void GetBurning();
 	virtual void GetDizzy(double dizzyTime);
+	void Effect(double time);
 
 protected:
 	void Sethealth(double health);
@@ -43,6 +44,8 @@ protected:
 	void SetX(double x);
 	void SetY(double y);
 	void SetMaxHealth(double health);
+	void SetDamage(double damage);
+	void SetMaxSpeed(double MaxSpeed);
 	void SetType(std::string type);
 	void SetPicPath(std::string picPath);
 	void SetSlowTime(double time);
@@ -54,7 +57,7 @@ private:
 	double x, y;
 	std::string type;
 	std::string picPath;
-	int damage = 1;
+	double damage = 1;
 	double difficulty = 1, health, speed, bounty, exp, maxHealth;
 	std::vector<CPoint> enemyPath;
 	game_framework::CMovingBitmap HealthBar;
@@ -62,13 +65,14 @@ private:
 	bool Poisoned = false;
 	bool Burning = false;
 	bool Dizzy = false;
-	double slowEffect;
+	double SlowEffect;
 	double PoisonedEffect;
 	double BurningEffect;
 	double SlowTime = 0.0;
 	double PoisonedTime = 0.0;
 	double BurningTime = 0.0;
 	double DizzyTime = 0.0;
+	double MaxSpeed;
 };
 
 class Regular : public enemy {

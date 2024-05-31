@@ -22,7 +22,7 @@ public:
 	void showCD();
 	bool IsClockClicked(CPoint point);
 	void loadClockPic();
-	void NextWave();
+	void SetWave(int wave);
 	void AccDelayTime(double time);
 	void SetDelayTime(double time);
 	void SetRemainingCount(int count);
