@@ -25,8 +25,20 @@ double enemy::GetX() {
 double enemy::GetY() {
 	return y;
 }
-int enemy::GetDamage() {
+double enemy::GetDamage() {
 	return damage;
+}
+double enemy::GetMaxSpeed() {
+	return MaxSpeed;
+}
+bool enemy::GetSlow() {
+	return Slow;
+}
+bool enemy::GetPoisoned() {
+	return Poisoned;
+}
+bool enemy::GetDizzy() {
+	return Dizzy;
 }
 void enemy::SetType(std::string type) {
 	this->type = type;
@@ -52,12 +64,30 @@ void enemy::SetY(double y) {
 void enemy::SetMaxHealth(double health) {
 	this->maxHealth = health;
 }
+void enemy::SetDamage(double damage) {
+	this->damage = damage;
+}
+void enemy::SetMaxSpeed(double MaxSpeed) {
+	this->MaxSpeed = MaxSpeed;
+}
 void enemy::show(double scale) {
 	ShowBitmap(scale);
 	HealthBar.ShowBitmap(scale);
 }
 void enemy::SetPicPath(std::string picPath) {
 	this->picPath = picPath;
+}
+void enemy::SetSlowTime(double time) {
+	this->SlowTime = time;
+}
+void enemy::SetPoisonedTime(double time) {
+	this->PoisonedTime = time;
+}
+void enemy::SetBurningTime(double time) {
+	this->BurningTime = time;
+}
+void enemy::SetDizzyTime(double time) {
+	this->DizzyTime = time;
 }
 void enemy::GetDamage(double damage) {
 	health = health - damage;
@@ -76,6 +106,50 @@ void enemy::GetDamage(double damage) {
 }
 bool enemy::IsDied() {
 	return (health <= 0);
+}
+void enemy::GetSlow(double slowEffect, double slowTime) {
+	this->Slow = true;
+	this->SlowTime = slowTime;
+	Setspeed(GetMaxSpeed() * (1 - slowEffect));
+}
+void enemy::GetPoisoned(double poisonedEffect, double poisonedTime) {
+	this->Poisoned = true;
+	this->PoisonedEffect = poisonedEffect;
+	this->PoisonedTime = poisonedTime;
+}
+void enemy::GetBurning() {
+	this->Burning = true;
+}
+void enemy::GetDizzy(double dizzyTime) {
+	this->Dizzy = true;
+	this->DizzyTime = dizzyTime;
+	Setspeed(0);
+}
+void enemy::Effect(double time) {
+	if (Slow) {
+		SlowTime = SlowTime - time;
+		if (SlowTime <= 0) {
+			Slow = false;
+			Setspeed(GetMaxSpeed());
+		}
+	}
+	if (Poisoned) {
+		health = health - PoisonedEffect * time;
+		PoisonedTime = PoisonedTime - time;
+		if (PoisonedTime <= 0) {
+			Poisoned = false;
+		}
+	}
+	if (Burning) {
+		health = health - (0.2 * maxHealth * time);
+	}
+	if (Dizzy) {
+		DizzyTime = DizzyTime - time;
+		if (DizzyTime <= 0) {
+			Dizzy = false;
+			Setspeed(GetMaxSpeed());
+		}
+	}
 }
 std::string enemy::GetPicPath() {
 	return picPath;
@@ -115,10 +189,11 @@ bool enemy::enemyMove(double time) {
 	return false;
 }
 Regular::Regular(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
-	Sethealth(23.0);
+	Sethealth(4 + pow(wave * 7.0, 1.3));
 	SetMaxHealth(Gethealth());
 	Setspeed(1.0);
-	Setbounty(3.0);
+	SetMaxSpeed(Getspeed());
+	Setbounty(2.0);
 	Setexp(1.0);
 	SetPicPath("resources/enemy_Regular.bmp");
 }
@@ -134,4 +209,45 @@ void enemy::loadPic() {
 void enemy::resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, int moveY) {
 	SetTopLeft(int(LEFT + moveX + GetX() * TILE_SIZE*scale), int(TOP + moveY + GetY()* TILE_SIZE*scale));
 	HealthBar.SetTopLeft(int(LEFT + moveX + GetX() * TILE_SIZE*scale - 3 * scale), int(TOP + moveY + GetY()* TILE_SIZE*scale - 7 * scale));
+}
+
+Fast::Fast(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
+	Sethealth(2.95 + pow(wave * 0.45, 1.695));
+	SetMaxHealth(Gethealth());
+	Setspeed(1.4 + pow(wave / 1500, 1.25));
+	SetMaxSpeed(Getspeed());
+	Setbounty(4 + pow(wave, 0.55));
+	Setexp(1.0);
+	SetPicPath("resources/enemy_Fast.bmp");
+}
+
+Strong::Strong(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
+	Sethealth(8.2 + pow(wave * 0.69, 1.7));
+	SetMaxHealth(Gethealth());
+	Setspeed(0.85);
+	SetMaxSpeed(Getspeed());
+	Setbounty(8 + pow(wave * 2, 0.6));
+	Setexp(1.0);
+	SetDamage(2.0);
+	SetPicPath("resources/enemy_Strong.bmp");
+}
+
+DenseRegular::DenseRegular(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
+	Sethealth(4.1 + pow(wave * 0.4, 1.67));
+	SetMaxHealth(Gethealth());
+	Setspeed(1);
+	SetMaxSpeed(Getspeed());
+	Setbounty(2 + pow(wave * 0.45, 0.6));
+	Setexp(1.0);
+	SetPicPath("resources/enemy_Regular.bmp");
+}
+
+Air::Air(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
+	Sethealth(3.4 + pow(wave * 0.5, 1.7));
+	SetMaxHealth(Gethealth());
+	Setspeed(1);
+	SetMaxSpeed(Getspeed());
+	Setbounty(4 + pow(wave, 0.6));
+	Setexp(1.0);
+	SetPicPath("resources/enemy_Air.bmp");
 }

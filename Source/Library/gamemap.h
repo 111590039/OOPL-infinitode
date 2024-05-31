@@ -9,6 +9,7 @@
 #include <chrono>
 #include <mmsystem.h>
 #include <ddraw.h>
+#include <math.h>
 #include "gamecore.h"
 #include "wave.h"
 
@@ -46,7 +47,7 @@ private:
 	game_framework::CMovingBitmap coinIcon;
 	game_framework::CMovingBitmap healthIcon;
 	int coins = 2000;
-	int health = 100;
+	double health = 100;
 	game_framework::CMovingBitmap controlPanel; //控制面版底座
 	game_framework::CMovingBitmap controlPanelButton; //控制面板按鈕
 	game_framework::CMovingBitmap selected_box; //蓋塔選單的選擇框
