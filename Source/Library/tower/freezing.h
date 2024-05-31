@@ -27,7 +27,8 @@ private:
 	double freezeing_persentage = 20;
 	double freeze_time = 2.5;
 	double defrosting_time = 1;
-	std::vector<enemy> inRange;
+	std::vector<std::shared_ptr<enemy>> inRange;
+	std::vector<double> inTime;
 	//poison_duration = 1.5
 	//tesla chain length
 

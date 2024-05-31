@@ -7,13 +7,37 @@ freezing::freezing() {
 	SetTowerName("жBнс");
 	upgradeIcons = { 0,5,6,7 };
 	Barrel = std::make_shared<freezingBarrel>();
-	range = 4.5;
+	range = 2;
 	totalCost = 70;
+	freezeing_persentage = 20;
+	freeze_time = 2.5;
+	defrosting_time = 1;
 }
 void freezing::move(double time, double x, double y, std::vector<std::shared_ptr<enemy>> Enemy) {
 	for (std::shared_ptr<enemy> e : Enemy) {
 		if (sqrt(pow( x + 0.5 - e->GetX(), 2) + pow( y + 0.5 - e->GetY(), 2)) <= range) {
-			//incomplete
+			bool alreadyInside = false;
+			for (size_t i = 0; i < inRange.size();i++) {
+				if (e == inRange[i]) {
+					alreadyInside = true;
+					inTime[i] += time;
+					break;
+				}
+			}
+			if (!alreadyInside) {
+				inRange.push_back(e);
+				inTime.push_back(0.0);
+			}
+		}
+	}
+	for (size_t i = 0; i < inRange.size(); i++) {
+		if (inTime[i] >= freeze_time) {
+			//inRange[i]->GetSlow(freezeing_persentage,defrosting_time);
+		}
+		if (inRange[i]->IsDied() || sqrt(pow(x + 0.5 - inRange[i]->GetX(), 2) + pow(y + 0.5 - inRange[i]->GetY(), 2)) > range) {
+			inRange.erase(inRange.begin() + i);
+			inTime.erase(inTime.begin() + i);
+			continue;
 		}
 	}
 }

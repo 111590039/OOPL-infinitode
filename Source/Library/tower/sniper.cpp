@@ -24,6 +24,7 @@ void sniper::move(double time, double x, double y, std::vector<std::shared_ptr<e
 	else {
 		aimimgtime = aimTime;
 	}
+	coolDown = max(0, coolDown - time);
 	if (coolDown == 0 && aimimgtime == 0) {
 		if (target != nullptr) {
 			bool p = (rand() % 10) == 1;
@@ -41,10 +42,6 @@ void sniper::move(double time, double x, double y, std::vector<std::shared_ptr<e
 			coolDown = 1 / attackSpeed;
 		}
 	}
-	else {
-		coolDown = max(0, coolDown - time);
-	}
-
 	//¤l¼u²¾°Ê
 	for (std::shared_ptr<bullet> b : Bullets) {
 		b->move(time);
