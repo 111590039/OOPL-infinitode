@@ -1,187 +1,68 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="MFC">
-      <UniqueIdentifier>{da904ee8-7f59-4a6c-b3ff-b91b6fb6d0ea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameLibrary">
-      <UniqueIdentifier>{df7aa532-3fdf-46a0-b3fc-8f5922e8d9e4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MyGame">
-      <UniqueIdentifier>{0c798913-b7d2-4e26-8241-0f83266cd626}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MyGame\Resource Files">
-      <UniqueIdentifier>{1a913106-0be0-4476-b0ce-2aa855072614}</UniqueIdentifier>
-      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;cnt;rtf;gif;jpg;jpeg;jpe</Extensions>
-    </Filter>
-    <Filter Include="GameLibrary\tower">
-      <UniqueIdentifier>{599adee9-0d21-4c2f-89af-6e9872a170b1}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="Source\Library\barrel.cpp" />
+    <ClCompile Include="Source\Library\block.cpp" />
+    <ClCompile Include="Source\Core\game.cpp" />
+    <ClCompile Include="Source\Core\gameDoc.cpp" />
+    <ClCompile Include="Source\Core\gameView.cpp" />
+    <ClCompile Include="Source\Core\MainFrm.cpp" />
+    <ClCompile Include="Source\Core\StdAfx.cpp" />
+    <ClCompile Include="Source\Game\mygame_initialize.cpp" />
+    <ClCompile Include="Source\Game\mygame_over.cpp" />
+    <ClCompile Include="Source\Game\mygame_run.cpp" />
+    <ClCompile Include="Source\Library\audio.cpp" />
+    <ClCompile Include="Source\Library\bullet.cpp" />
+    <ClCompile Include="Source\Library\enemy.cpp" />
+    <ClCompile Include="Source\Library\gamecore.cpp" />
+    <ClCompile Include="Source\Library\gamemap.cpp" />
+    <ClCompile Include="Source\Library\gameutil.cpp" />
+    <ClCompile Include="Source\Library\tower\cannon.cpp" />
+    <ClCompile Include="Source\Library\tower\freezing.cpp" />
+    <ClCompile Include="Source\Library\tower\sniper.cpp" />
+    <ClCompile Include="Source\Library\tower\tower.cpp" />
+    <ClCompile Include="Source\Library\wave.cpp" />
+    <ClCompile Include="Source\Library\tower\blast.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\gamecurs.cur">
-      <Filter>MyGame\Resource Files</Filter>
-    </None>
-    <None Include="Resources\GAME.RC2">
-      <Filter>MyGame\Resource Files</Filter>
-    </None>
+    <ClInclude Include="Source\Core\Game.h" />
+    <ClInclude Include="Source\Core\gameDoc.h" />
+    <ClInclude Include="Source\Core\gameView.h" />
+    <ClInclude Include="Source\Core\MainFrm.h" />
+    <ClInclude Include="Source\Core\Resource.h" />
+    <ClInclude Include="Source\Core\StdAfx.h" />
+    <ClInclude Include="Source\Game\config.h" />
+    <ClInclude Include="Source\Game\mygame.h" />
+    <ClInclude Include="Source\Library\audio.h" />
+    <ClInclude Include="Source\Library\barrel.h" />
+    <ClInclude Include="Source\Library\block.h" />
+    <ClInclude Include="Source\Library\bullet.h" />
+    <ClInclude Include="Source\Library\enemy.h" />
+    <ClInclude Include="Source\Library\gamecore.h" />
+    <ClInclude Include="Source\Library\gamemap.h" />
+    <ClInclude Include="Source\Library\gameutil.h" />
+    <ClInclude Include="Source\Library\tower\cannon.h" />
+    <ClInclude Include="Source\Library\tower\freezing.h" />
+    <ClInclude Include="Source\Library\tower\sniper.h" />
+    <ClInclude Include="Source\Library\tower\tower.h" />
+    <ClInclude Include="Source\Library\wave.h" />
+    <ClInclude Include="Source\Library\tower\blast.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Library\audio.cpp">
-      <Filter>GameLibrary</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Library\gamecore.cpp">
-      <Filter>GameLibrary</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Library\gameutil.cpp">
-      <Filter>GameLibrary</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\game.cpp">
-      <Filter>MFC</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\gameDoc.cpp">
-      <Filter>MFC</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\gameView.cpp">
-      <Filter>MFC</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\MainFrm.cpp">
-      <Filter>MFC</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\StdAfx.cpp">
-      <Filter>MFC</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\mygame_initialize.cpp">
-      <Filter>MyGame</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\mygame_over.cpp">
-      <Filter>MyGame</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\mygame_run.cpp">
-      <Filter>MyGame</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Library\block.cpp">
-      <Filter>GameLibrary</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Library\gamemap.cpp">
-      <Filter>GameLibrary</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Library\enemy.cpp">
-      <Filter>GameLibrary</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Library\barrel.cpp">
-      <Filter>GameLibrary</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Library\bullet.cpp">
-      <Filter>GameLibrary</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Library\tower\tower.cpp">
-      <Filter>GameLibrary\tower</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Library\tower\sniper.cpp">
-      <Filter>GameLibrary\tower</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Library\tower\cannon.cpp">
-      <Filter>GameLibrary\tower</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Library\tower\freezing.cpp">
-      <Filter>GameLibrary\tower</Filter>
-    <ClCompile Include="Source\Library\wave.cpp">
-      <Filter>GameLibrary</Filter>
-    </ClCompile>
+    <ResourceCompile Include="Source\Core\game.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Library\audio.h">
-      <Filter>GameLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Library\gamecore.h">
-      <Filter>GameLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Library\gameutil.h">
-      <Filter>GameLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Game.h">
-      <Filter>MFC</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\gameDoc.h">
-      <Filter>MFC</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\gameView.h">
-      <Filter>MFC</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\MainFrm.h">
-      <Filter>MFC</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Resource.h">
-      <Filter>MFC</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\StdAfx.h">
-      <Filter>MFC</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\mygame.h">
-      <Filter>MyGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\config.h">
-      <Filter>MyGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Library\block.h">
-      <Filter>GameLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Library\gamemap.h">
-      <Filter>GameLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Library\enemy.h">
-      <Filter>GameLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Library\barrel.h">
-      <Filter>GameLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Library\bullet.h">
-      <Filter>GameLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Library\tower\tower.h">
-      <Filter>GameLibrary\tower</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Library\tower\sniper.h">
-      <Filter>GameLibrary\tower</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Library\tower\cannon.h">
-      <Filter>GameLibrary\tower</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Library\tower\freezing.h">
-      <Filter>GameLibrary\tower</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Library\wave.h">
-      <Filter>GameLibrary</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Source\Core\game.rc">
-      <Filter>MFC</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="resources\Toolbar.bmp">
-      <Filter>MyGame\Resource Files</Filter>
-    </Image>
-    <Image Include="resources\game.ico">
-      <Filter>MyGame\Resource Files</Filter>
-    </Image>
-    <Image Include="resources\gameDoc.ico">
-      <Filter>MyGame\Resource Files</Filter>
-    </Image>
-    <Image Include="resources\icon1.ico">
-      <Filter>MyGame\Resource Files</Filter>
-    </Image>
+    <Image Include="resources\bitmap1.bmp" />
     <Image Include="Resources\Game Framework.png" />
-    <Image Include="Resources\GAME_FRAMEWORK.ico">
-      <Filter>MyGame\Resource Files</Filter>
-    </Image>
-    <Image Include="resources\bitmap1.bmp">
-      <Filter>MyGame\Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\GAME_FRAMEWORK.bmp">
-      <Filter>MyGame\Resource Files</Filter>
-    </Image>
+    <Image Include="resources\game.ico" />
+    <Image Include="resources\gameDoc.ico" />
+    <Image Include="Resources\GAME_FRAMEWORK.bmp" />
+    <Image Include="Resources\GAME_FRAMEWORK.ico" />
+    <Image Include="resources\icon1.ico" />
+    <Image Include="resources\Toolbar.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gamecurs.cur" />
+    <None Include="Resources\GAME.RC2" />
   </ItemGroup>
 </Project>

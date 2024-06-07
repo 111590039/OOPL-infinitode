@@ -162,29 +162,29 @@ void gamemap::processMove() {
 				newEnemy(std::make_shared<Air>(0.7, wave.GetWave(), enemyPath[i]));
 			}
 			else if (wave.GetEnemyType() == "Jet") {
-				newEnemy(std::make_shared<Jet>(0.7, wave.GetWave(), enemyPath));
+				newEnemy(std::make_shared<Jet>(0.7, wave.GetWave(), enemyPath[i]));
 			}
 			else if (wave.GetEnemyType() == "Light") {
-				newEnemy(std::make_shared<Light>(0.7, wave.GetWave(), enemyPath));
+				newEnemy(std::make_shared<Light>(0.7, wave.GetWave(), enemyPath[i]));
 			}
 			else if (wave.GetEnemyType() == "Icy") {
-				newEnemy(std::make_shared<Icy>(0.7, wave.GetWave(), enemyPath));
+				newEnemy(std::make_shared<Icy>(0.7, wave.GetWave(), enemyPath[i]));
 			}
 			else if (wave.GetEnemyType() == "Toxic") {
-				newEnemy(std::make_shared<Toxic>(0.7, wave.GetWave(), enemyPath));
+				newEnemy(std::make_shared<Toxic>(0.7, wave.GetWave(), enemyPath[i]));
 			}
 			else if (wave.GetEnemyType() == "SuperBoss") {
-				newEnemy(std::make_shared<Boss>(0.7, wave.GetWave(), enemyPath));
+				newEnemy(std::make_shared<Boss>(0.7, wave.GetWave(), enemyPath[i]));
 			}
 			else if (wave.GetEnemyType() == "Boss") {
 				if (wave.GetRemainingCount() > 4 + int(floor(pow(wave.GetWave() / 8, 0.6)))) {
-					newEnemy(std::make_shared<BossArmored>(0.7, wave.GetWave(), enemyPath));
+					newEnemy(std::make_shared<BossArmored>(0.7, wave.GetWave(), enemyPath[i]));
 				}
 				else if (wave.GetRemainingCount() > 3 + int(floor(pow(wave.GetWave() / 8, 0.6)))) {
-					newEnemy(std::make_shared<BossFighter>(0.7, wave.GetWave(), enemyPath));
+					newEnemy(std::make_shared<BossFighter>(0.7, wave.GetWave(), enemyPath[i]));
 				}
 				else {
-					newEnemy(std::make_shared<BossFast>(0.7, wave.GetWave(), enemyPath));
+					newEnemy(std::make_shared<BossFast>(0.7, wave.GetWave(), enemyPath[i]));
 				}
 			}
 			wave.SetRemainingCount(wave.GetRemainingCount() - 1);
@@ -459,7 +459,9 @@ void gamemap::loadpic() {
 			"resources/upgrade_aim_time.bmp",
 			"resources/upgrade_freezing%.bmp", 
 			"resources/upgrade_freeze_time.bmp", 
-			"resources/upgrade_defrosting_time.bmp"}, RGB(0, 0, 0));
+			"resources/upgrade_defrosting_time.bmp",
+			"resources/upgrade_stun_chance.bmp"}, RGB(0, 0, 0));
+		
 	}
 	upgradeIcon[0].SetTopLeft(36, 425 + PANEL_SPACE);
 	upgradeIcon[1].SetTopLeft(220, 425 + PANEL_SPACE);
@@ -558,11 +560,9 @@ void gamemap::buildTower(int x, int y, std::string type) {
 				*/
 			}
 			else if (!type.compare("blast")) {
-				/*
 				std::shared_ptr<blast> tower = std::make_shared<blast>();
 				t->buildTower(tower);
 				t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
-				*/
 			}
 			else if (!type.compare("multishot")) {
 				/*
@@ -643,7 +643,7 @@ void gamemap::clickOnMap(CPoint point) {
 					else if (selected == 4 && coins >= 120) {
 						buildTower(selected_tile.x, selected_tile.y, "venom");
 						coins -= 120;
-						is_build_success = true;
+						//is_build_success = true;
 					}
 					else if (selected == 5 && coins >= 70) {
 						buildTower(selected_tile.x, selected_tile.y, "splash");
@@ -653,7 +653,7 @@ void gamemap::clickOnMap(CPoint point) {
 					else if (selected == 6 && coins >= 120) {
 						buildTower(selected_tile.x, selected_tile.y, "blast");
 						coins -= 120;
-						//is_build_success = true;
+						is_build_success = true;
 					}
 					else if (selected == 7 && coins >= 90) {
 						buildTower(selected_tile.x, selected_tile.y, "multishot");
@@ -957,7 +957,7 @@ void gamemap::TESTMAP1() {
 	enemyPath = { { CPoint(1, 0), CPoint(1, 5), CPoint(5, 5), CPoint(5, 1), CPoint(8, 1), CPoint(8, 5) } };
 }
 void gamemap::SummonTestEnemy() {
-	std::shared_ptr<Regular> enemy = std::make_shared<Regular>(0.7, 1, enemyPath[0]);
+	std::shared_ptr<Regular> enemy = std::make_shared<Regular>(0.7, 25, enemyPath[0]);
 	if (enemy) {
 		newEnemy(enemy);
 	}

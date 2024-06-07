@@ -38,3 +38,7 @@ cannonBarrel::cannonBarrel() {
 freezingBarrel::freezingBarrel() {
 	SetBarrelPicPaths({ "resources/Barrel_Freezing.bmp" });
 }
+///////////////////////////////blastBarrel///////////////////////////
+blastBarrel::blastBarrel() {
+	SetBarrelPicPaths({ "resources/Barrel_blast.bmp" });
+}

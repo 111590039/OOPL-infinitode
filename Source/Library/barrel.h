@@ -47,3 +47,9 @@ public:
 	freezingBarrel();
 
 };
+
+class blastBarrel : public barrel {
+public:
+	blastBarrel();
+
+};

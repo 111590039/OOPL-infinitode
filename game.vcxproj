@@ -254,6 +254,7 @@
     <ClCompile Include="Source\Library\gamecore.cpp" />
     <ClCompile Include="Source\Library\gamemap.cpp" />
     <ClCompile Include="Source\Library\gameutil.cpp" />
+    <ClCompile Include="Source\Library\tower\blast.cpp" />
     <ClCompile Include="Source\Library\tower\cannon.cpp" />
     <ClCompile Include="Source\Library\tower\freezing.cpp" />
     <ClCompile Include="Source\Library\tower\sniper.cpp" />
@@ -277,6 +278,7 @@
     <ClInclude Include="Source\Library\gamecore.h" />
     <ClInclude Include="Source\Library\gamemap.h" />
     <ClInclude Include="Source\Library\gameutil.h" />
+    <ClInclude Include="Source\Library\tower\blast.h" />
     <ClInclude Include="Source\Library\tower\cannon.h" />
     <ClInclude Include="Source\Library\tower\freezing.h" />
     <ClInclude Include="Source\Library\tower\sniper.h" />

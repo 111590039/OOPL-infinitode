@@ -8,6 +8,7 @@
 #include "tower/sniper.h"
 #include "tower/cannon.h"
 #include "tower/freezing.h"
+#include "tower/blast.h"
 
 class block : public game_framework::CMovingBitmap {
 public:
