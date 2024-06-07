@@ -90,6 +90,6 @@ private:
 	int moveX = 550;
 	int moveY = 200;
 	chrono::steady_clock::time_point lastTime = chrono::steady_clock::now();
-	std::vector<CPoint> enemyPath;
+	std::vector<std::vector<CPoint>> enemyPath;
 	Wave wave;
 };

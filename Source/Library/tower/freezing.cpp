@@ -9,7 +9,7 @@ freezing::freezing() {
 	Barrel = std::make_shared<freezingBarrel>();
 	range = 2;
 	totalCost = 70;
-	freezeing_persentage = 20;
+	freezeing_persentage = 0.2;
 	freeze_time = 2.5;
 	defrosting_time = 1;
 }
@@ -32,7 +32,7 @@ void freezing::move(double time, double x, double y, std::vector<std::shared_ptr
 	}
 	for (size_t i = 0; i < inRange.size(); i++) {
 		if (inTime[i] >= freeze_time) {
-			//inRange[i]->GetSlow(freezeing_persentage,defrosting_time);
+			inRange[i]->GetSlow(freezeing_persentage,defrosting_time);
 		}
 		if (inRange[i]->IsDied() || sqrt(pow(x + 0.5 - inRange[i]->GetX(), 2) + pow(y + 0.5 - inRange[i]->GetY(), 2)) > range) {
 			inRange.erase(inRange.begin() + i);
@@ -62,7 +62,7 @@ std::vector<std::string> freezing::GetAttributeName() {
 std::vector<std::string> freezing::GetAttributeValue() {
 	std::vector<std::string> result = {};
 	result.push_back(std::to_string(this->range));
-	result.push_back(std::to_string(this->freezeing_persentage) + "%");
+	result.push_back(std::to_string(this->freezeing_persentage * 100) + "%");
 	result.push_back(std::to_string(this->freeze_time) + "/s");
 	result.push_back(std::to_string(this->defrosting_time) + "/s");
 	result.push_back("+1.50s");
