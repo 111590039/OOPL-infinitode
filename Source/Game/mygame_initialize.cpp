@@ -53,11 +53,21 @@ void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
 {	
 	if (195 >= point.x && point.x >= 105 && 438 >= point.y && point.y >= 315) {
 		//向左箭頭
-		selected_level = max(1, selected_level - 1);
+		if (selected_level == 1) {
+			selected_level = 17;
+		}
+		else {
+			selected_level--;
+		}
 	}
 	else if (1305 >= point.x && point.x >= 1215 && 438 >= point.y && point.y >= 315) {
 		//向右箭頭
-		selected_level = min(17, selected_level + 1);
+		if (selected_level == 17) {
+			selected_level = 1;
+		}
+		else {
+			selected_level++;
+		}
 	}
 	previewLevelPic.SetFrameIndexOfBitmap(selected_level - 1);
 	if (1311 >= point.x && point.x >= 1098 && 780 >= point.y && point.y >= 712) {
