@@ -189,12 +189,12 @@ bool enemy::enemyMove(double time) {
 	return false;
 }
 Regular::Regular(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
-	Sethealth(4 + pow(wave * 7.0, 1.3));
+	Sethealth(4.1 + pow(wave * 0.4, 1.67));
 	SetMaxHealth(Gethealth());
 	Setspeed(1.0);
 	SetMaxSpeed(Getspeed());
-	Setbounty(2.0);
-	Setexp(1.0);
+	Setbounty(2 + pow(wave * 0.45, 0.6));
+	Setexp(0.75);
 	SetPicPath("resources/enemy_Regular.bmp");
 }
 
@@ -250,4 +250,84 @@ Air::Air(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(dif
 	Setbounty(4 + pow(wave, 0.6));
 	Setexp(1.0);
 	SetPicPath("resources/enemy_Air.bmp");
+}
+
+Jet::Jet(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
+	Sethealth(1.7 + pow(wave * 0.21, 1.71));
+	SetMaxHealth(Gethealth());
+	Setspeed(1.25);
+	SetMaxSpeed(Getspeed());
+	Setbounty(4 + pow(wave, 0.6));
+	Setexp(1.0);
+	SetPicPath("resources/enemy_Jet.bmp");
+}
+
+BossArmored::BossArmored(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
+	Sethealth(2.0 + pow(wave * 0.35, 1.68));
+	SetMaxHealth(Gethealth());
+	Setspeed(1);
+	SetMaxSpeed(Getspeed());
+	Setbounty(4 + pow(wave, 0.6));
+	Setexp(1.0);
+	SetPicPath("resources/enemy_Armored.bmp");
+}
+
+BossFast::BossFast(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
+	Sethealth(2.45 + pow(wave * 0.4, 1.695));
+	SetMaxHealth(Gethealth());
+	Setspeed(1.5);
+	SetMaxSpeed(Getspeed());
+	Setbounty(4 + pow(wave, 0.6));
+	Setexp(1);
+	SetPicPath("resources/enemy_Fast.bmp");
+}
+
+BossFighter::BossFighter(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
+	Sethealth(10 + pow(wave * 1.2, 1.75));
+	SetMaxHealth(Gethealth());
+	Setspeed(0.95);
+	SetMaxSpeed(Getspeed());
+	Setbounty(24 + pow(wave * 5, 0.6));
+	Setexp(1);
+	SetPicPath("resources/enemy_Fighter.bmp");
+}
+
+Boss::Boss(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
+	Sethealth(28 + pow(wave * 1.92, 1.83));
+	SetMaxHealth(Gethealth());
+	Setspeed(0.7);
+	SetMaxSpeed(Getspeed());
+	Setbounty(100 + pow(wave * 70, 0.75));
+	Setexp(1);
+	SetPicPath("resources/enemy_Boss.bmp");
+}
+
+Light::Light(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
+	Sethealth(4.1 + pow(wave * 0.50, 1.68));
+	SetMaxHealth(Gethealth());
+	Setspeed(1.05);
+	SetMaxSpeed(Getspeed());
+	Setbounty(4 + pow(wave * 0.95, 0.55));
+	Setexp(1);
+	SetPicPath("resources/enemy_Light.bmp");
+}
+
+Icy::Icy(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
+	Sethealth(5.4 + pow(wave * 0.59, 1.51));
+	SetMaxHealth(Gethealth());
+	Setspeed(0.9);
+	SetMaxSpeed(Getspeed());
+	Setbounty(1.5 + pow(wave * 0.26, 0.6));
+	Setexp(1);
+	SetPicPath("resources/enemy_Icy.bmp");
+}
+
+Toxic::Toxic(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
+	Sethealth(4.1 + pow(wave * 0.49, 1.67));
+	SetMaxHealth(Gethealth());
+	Setspeed(1.0);
+	SetMaxSpeed(Getspeed());
+	Setbounty(3.5 + pow(wave * 0.94, 0.55));
+	Setexp(1);
+	SetPicPath("resources/enemy_Toxic.bmp");
 }

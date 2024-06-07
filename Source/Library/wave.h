@@ -29,6 +29,7 @@ public:
 	void SetCd15(double time);
 	void ReduceCd(double time);
 	void nextLevel();
+	void Restart();
 
 private:
 	game_framework::CMovingBitmap clock;

@@ -52,7 +52,7 @@ void Wave::nextLevel() {
 	this->wave += 1;
 }
 void Wave::enemyType(int wave) {
-	int RegularProb = 0, FastProb = 0, StrongProb = 0, DenseRegularProb = 0, AirProb = 0;
+	int RegularProb = 0, FastProb = 0, StrongProb = 0, DenseRegularProb = 0, AirProb = 0, JetProb = 0, Lightprob = 0, IcyProb = 0, ToxicProb = 0;
 
 	RegularProb = 10 - (int)(wave / 28);
 	if (RegularProb < 1) RegularProb = 1;
@@ -90,7 +90,43 @@ void Wave::enemyType(int wave) {
 		if (AirProb > 4) AirProb = 4;
 	}
 
-	int TotalProb = RegularProb + FastProb + StrongProb + DenseRegularProb + AirProb;
+	if (wave < 75){ 
+		JetProb = 0;
+	}
+	else {
+		int JetProb = 1 + (int)(wave / 70);
+		if (JetProb > 5) JetProb = 5;
+	}
+
+	if (wave < 40) { 
+		Lightprob = 0;
+	}
+	else { 
+		int Lightprob = 1 + (int)(wave / 35);
+		if (Lightprob > 5) Lightprob = 5;
+	}
+
+	if (wave < 40) { 
+		IcyProb = 0; 
+	}
+	else { 
+		int IcyProb = 1 + (int)(wave / 80);
+		if (IcyProb > 4) IcyProb = 4;
+	}
+
+	if (wave < 120) { 
+		ToxicProb = 0; 
+	}
+	else { 
+		int ToxicProb = 1 + (int)((wave - 120) / 20);
+		if (ToxicProb > 5) ToxicProb = 5;
+		if (ToxicProb >= 5) {
+			ToxicProb -= (int)((wave - 240) / 40);
+			if (ToxicProb < 0) ToxicProb = 0;
+		}
+	}
+
+	int TotalProb = RegularProb + FastProb + StrongProb + DenseRegularProb + AirProb + JetProb + Lightprob + IcyProb + ToxicProb;
 	srand(unsigned int(time(NULL)));
 	int x = rand() % (TotalProb + 1);
 
@@ -109,8 +145,28 @@ void Wave::enemyType(int wave) {
 	else if (x < RegularProb + FastProb + StrongProb + DenseRegularProb + AirProb) {
 		enemytype = "Air";
 	}
+	else if (x < RegularProb + FastProb + StrongProb + DenseRegularProb + AirProb + JetProb) {
+		enemytype = "Jet";
+	}
+	else if (x < RegularProb + FastProb + StrongProb + DenseRegularProb + AirProb + JetProb + Lightprob) {
+		enemytype = "Light";
+	}
+	else if (x < RegularProb + FastProb + StrongProb + DenseRegularProb + AirProb + JetProb + Lightprob + IcyProb) {
+		enemytype = "Icy";
+	}
+	else if (x < RegularProb + FastProb + StrongProb + DenseRegularProb + AirProb + JetProb + Lightprob + IcyProb + ToxicProb) {
+		enemytype = "Toxic";
+	}
 	else {
 		enemytype = "Regular";
+	}
+
+	if (wave % 20 == 0) {
+		enemytype = "Boss";
+	}
+
+	if (wave % 100 == 0) {
+		enemytype = "SuperBoss";
 	}
 }
 int Wave::enemyCount(std::string eType, int wave) {
@@ -128,6 +184,24 @@ int Wave::enemyCount(std::string eType, int wave) {
 	}
 	else if (eType == "Air") {
 		return 6 + int(floor(pow(wave / 12, 0.65)));
+	}
+	else if (eType == "Jet") {
+		return 6 + int(floor(pow(wave / 10, 0.7)));
+	}
+	else if (eType == "Light") {
+		return 10 + int(floor(pow(wave, 0.6)));
+	}
+	else if (eType == "Icy") {
+		return 24 + int(floor(pow(wave * 1.5, 0.7)));
+	}
+	else if (eType == "Toxic") {
+		return 7 + int(floor(pow(wave * 0.55, 0.62)));
+	}
+	else if (eType == "SuperBoss") {
+		return 1;
+	}
+	else if (eType == "Boss") {
+		return 2 + int(floor(pow(wave / 12, 0.6))) + 1 + 3 + int(floor(pow(wave / 8, 0.6)));
 	}
 	else {
 		return 12 + int(floor(pow(wave, 0.65)));
@@ -166,4 +240,14 @@ bool Wave::IsClockClicked(CPoint point) {
 		clock.SetFrameIndexOfBitmap(1);
 	}
 	return false;
+}
+
+void Wave::Restart() {
+	wave = 0;
+	delayTime = 0.0; //敵人間隔
+	RemainingCount = 0; //敵人剩餘數量
+	MaxRemainingCount = 0; //敵人最大數量
+	cd15 = 0;
+	Start = false;
+	clock.SetFrameIndexOfBitmap(0);
 }

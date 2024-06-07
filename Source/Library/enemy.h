@@ -99,3 +99,43 @@ class Air : public enemy {
 public:
 	Air(double difficulty, int wave, std::vector<CPoint> enemyPath);
 };
+
+class Jet : public enemy {
+public:
+	Jet(double difficulty, int wave, std::vector<CPoint> enemyPath);
+};
+
+class BossArmored : public enemy {
+public:
+	BossArmored(double difficulty, int wave, std::vector<CPoint> enemyPath);
+};
+
+class BossFast : public enemy {
+public:
+	BossFast(double difficulty, int wave, std::vector<CPoint> enemyPath);
+};
+
+class BossFighter : public enemy {
+public:
+	BossFighter(double difficulty, int wave, std::vector<CPoint> enemyPath);
+};
+
+class Boss : public enemy {
+public:
+	Boss(double difficulty, int wave, std::vector<CPoint> enemyPath);
+};
+
+class Light : public enemy {
+public:
+	Light(double difficulty, int wave, std::vector<CPoint> enemyPath);
+};
+
+class Icy : public enemy {
+public:
+	Icy(double difficulty, int wave, std::vector<CPoint> enemyPath);
+};
+
+class Toxic : public enemy {
+public:
+	Toxic(double difficulty, int wave, std::vector<CPoint> enemyPath);
+};

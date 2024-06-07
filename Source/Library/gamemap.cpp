@@ -51,6 +51,7 @@ void gamemap::resetGamemap() {
 		}
 	}
 	Enemy.clear();
+	wave.Restart();
 }
 void gamemap::addScale(double delta) {
 	scale = max(scale + delta, 0.1);
@@ -158,6 +159,32 @@ void gamemap::processMove() {
 			}
 			else if (wave.GetEnemyType() == "Air") {
 				newEnemy(std::make_shared<Air>(0.7, wave.GetWave(), enemyPath));
+			}
+			else if (wave.GetEnemyType() == "Jet") {
+				newEnemy(std::make_shared<Jet>(0.7, wave.GetWave(), enemyPath));
+			}
+			else if (wave.GetEnemyType() == "Light") {
+				newEnemy(std::make_shared<Light>(0.7, wave.GetWave(), enemyPath));
+			}
+			else if (wave.GetEnemyType() == "Icy") {
+				newEnemy(std::make_shared<Icy>(0.7, wave.GetWave(), enemyPath));
+			}
+			else if (wave.GetEnemyType() == "Toxic") {
+				newEnemy(std::make_shared<Toxic>(0.7, wave.GetWave(), enemyPath));
+			}
+			else if (wave.GetEnemyType() == "SuperBoss") {
+				newEnemy(std::make_shared<Boss>(0.7, wave.GetWave(), enemyPath));
+			}
+			else if (wave.GetEnemyType() == "Boss") {
+				if (wave.GetRemainingCount() > 4 + int(floor(pow(wave.GetWave() / 8, 0.6)))) {
+					newEnemy(std::make_shared<BossArmored>(0.7, wave.GetWave(), enemyPath));
+				}
+				else if (wave.GetRemainingCount() > 3 + int(floor(pow(wave.GetWave() / 8, 0.6)))) {
+					newEnemy(std::make_shared<BossFighter>(0.7, wave.GetWave(), enemyPath));
+				}
+				else {
+					newEnemy(std::make_shared<BossFast>(0.7, wave.GetWave(), enemyPath));
+				}
 			}
 			wave.SetRemainingCount(wave.GetRemainingCount() - 1);
 			wave.SetDelayTime(0);
