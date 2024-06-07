@@ -51,7 +51,6 @@ void gamemap::resetGamemap() {
 		}
 	}
 	Enemy.clear();
-	wave.SetWave(0);
 }
 void gamemap::addScale(double delta) {
 	scale = max(scale + delta, 0.1);
@@ -233,8 +232,13 @@ void gamemap::drawmap() {
 	wave.showClock();
 	gameSpeedButton.ShowBitmap(0.6);
 }
-void gamemap::loadmap(int level) {
+void gamemap::loadmap() {
+	int level;
+	ifstream f("Source/Game/Settings.map");
+	f >> level;
+	f.close();
 	std::string filepath = "Source/Map/level" + to_string(level) + ".map";
+
 	ifstream ifs(filepath);
 	int mx, my,temp,temp2;
 	CPoint p;

@@ -65,6 +65,9 @@ namespace game_framework {
 	protected:
 		void OnShow();									// 顯示這個狀態的遊戲畫面
 	private:
+		int selected_level;
+		CMovingBitmap background;
+		CMovingBitmap previewLevelPic;
 		CMovingBitmap logo;								// csie的logo
 	};
 

@@ -23,6 +23,8 @@ CGameStateRun::~CGameStateRun()
 
 void CGameStateRun::OnBeginState()
 {
+	map.loadmap();
+	map.loadpic();
 }
 
 void CGameStateRun::OnMove()							// 移動遊戲元素
@@ -41,9 +43,6 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 
 void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 {
-	//map.TESTMAP1();
-	map.loadmap(1);
-	map.loadpic();
 	gameoverPage.LoadBitmapByString({ "resources/gameover.bmp" });
 }
 
@@ -98,7 +97,10 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 			map.resetGamemap();
 		}
 		else if (1341 >= point.x && point.x >= 1100 && 838 >= point.y && point.y >= 773) {
-			//回到選擇頁面(未實作)
+			//回到選擇頁面
+			gamemap temp;
+			map = temp;
+			GotoGameState(GAME_STATE_INIT);
 		}
 	}
 	else {

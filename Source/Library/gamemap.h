@@ -36,7 +36,7 @@ public:
 	void processMove();     //計算物體
 	void drawmap();           //讓整張地圖顯示
 	void showtext();		//顯示文字
-	void loadmap(int level);  //讀取地圖
+	void loadmap();  //讀取地圖
 	void loadpic();           //初始化地圖
 	void resetshow();   //刷新並套用新位置大小
 	void buildTower(int x,int y,std::string type);
