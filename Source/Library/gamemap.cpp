@@ -145,20 +145,21 @@ void gamemap::processMove() {
 			}
 		}
 		else if (wave.GetdelayTime() > 0.5 && wave.GetRemainingCount() > 0) {
+			int i = (rand() % enemyPath.size());
 			if (wave.GetEnemyType() == "Regular") {
-				newEnemy(std::make_shared<Regular>(0.7, wave.GetWave(), enemyPath));
+				newEnemy(std::make_shared<Regular>(0.7, wave.GetWave(), enemyPath[i]));
 			}
 			else if (wave.GetEnemyType() == "Fast") {
-				newEnemy(std::make_shared<Fast>(0.7, wave.GetWave(), enemyPath));
+				newEnemy(std::make_shared<Fast>(0.7, wave.GetWave(), enemyPath[i]));
 			}
 			else if (wave.GetEnemyType() == "Strong") {
-				newEnemy(std::make_shared<Strong>(0.7, wave.GetWave(), enemyPath));
+				newEnemy(std::make_shared<Strong>(0.7, wave.GetWave(), enemyPath[i]));
 			}
 			else if (wave.GetEnemyType() == "DenseRegular") {
-				newEnemy(std::make_shared<DenseRegular>(0.7, wave.GetWave(), enemyPath));
+				newEnemy(std::make_shared<DenseRegular>(0.7, wave.GetWave(), enemyPath[i]));
 			}
 			else if (wave.GetEnemyType() == "Air") {
-				newEnemy(std::make_shared<Air>(0.7, wave.GetWave(), enemyPath));
+				newEnemy(std::make_shared<Air>(0.7, wave.GetWave(), enemyPath[i]));
 			}
 			else if (wave.GetEnemyType() == "Jet") {
 				newEnemy(std::make_shared<Jet>(0.7, wave.GetWave(), enemyPath));
@@ -258,20 +259,31 @@ void gamemap::drawmap() {
 	wave.showClock();
 	gameSpeedButton.ShowBitmap(0.6);
 }
-void gamemap::loadmap(int level) {
+void gamemap::loadmap() {
+	int level;
+	ifstream f("Source/Game/Settings.map");
+	f >> level;
+	f.close();
 	std::string filepath = "Source/Map/level" + to_string(level) + ".map";
+
 	ifstream ifs(filepath);
 	int mx, my,temp,temp2;
 	CPoint p;
+	std::vector<CPoint> pathtemp;
 	ifs >> temp;
 	Setdifficulty(double(temp)/100);
 	ifs >> mx;
 	for (int i = 0; i < mx; i++) {
-		ifs >> temp;
-		ifs >> temp2;
-		p.x = temp;
-		p.y = temp2;
-		enemyPath.push_back(p);
+		ifs >> my;
+		for (int j = 0; j < my; j++) {
+			ifs >> temp;
+			ifs >> temp2;
+			p.x = temp;
+			p.y = temp2;
+			pathtemp.push_back(p);
+		}
+		enemyPath.push_back(std::vector<CPoint>(pathtemp));
+		pathtemp.clear();
 	}
 	ifs >> mx;
 	ifs >> my;
@@ -412,6 +424,7 @@ void gamemap::showtext() {
 	}
 }
 void gamemap::loadpic() {
+	srand(unsigned(time(NULL)));
 	coinIcon.LoadBitmapByString({ "resources/coins.bmp" }, RGB(255, 255, 255));
 	coinIcon.SetTopLeft(10,10);
 	healthIcon.LoadBitmapByString({ "resources/heart.bmp" }, RGB(255, 255, 255));
@@ -941,10 +954,10 @@ void gamemap::TESTMAP1() {
 	newtile(std::make_shared<tile>(9, 1));
 	newtile(std::make_shared<tile>(9, 2));
 	Setdifficulty(0.7);
-	enemyPath = { CPoint(1, 0), CPoint(1, 5), CPoint(5, 5), CPoint(5, 1), CPoint(8, 1), CPoint(8, 5) };
+	enemyPath = { { CPoint(1, 0), CPoint(1, 5), CPoint(5, 5), CPoint(5, 1), CPoint(8, 1), CPoint(8, 5) } };
 }
 void gamemap::SummonTestEnemy() {
-	std::shared_ptr<Regular> enemy = std::make_shared<Regular>(0.7, 1, enemyPath);
+	std::shared_ptr<Regular> enemy = std::make_shared<Regular>(0.7, 1, enemyPath[0]);
 	if (enemy) {
 		newEnemy(enemy);
 	}

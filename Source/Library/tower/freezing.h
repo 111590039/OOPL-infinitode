@@ -24,7 +24,7 @@ private:
 	std::vector<double> freezeTimeUpgrade = { -0.175, -0.205, -0.213, -0.203, -0.210, -0.195, -0.187, -0.171, -0.164, -0.172 };//-2
 	std::vector<double> defrostingTimeUpgrade = { 0.175, 0.201, 0.227, 0.235, 0.258, 0.285, 0.303, 0.321, 0.345, 0.368 };//-2
 	double range = 2;
-	double freezeing_persentage = 20;
+	double freezeing_persentage = 0.2;
 	double freeze_time = 2.5;
 	double defrosting_time = 1;
 	std::vector<std::shared_ptr<enemy>> inRange;
