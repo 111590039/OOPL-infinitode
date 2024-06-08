@@ -65,3 +65,9 @@ public:
 	airBarrel();
 
 };
+
+class venomBarrel : public barrel {
+public:
+	venomBarrel();
+
+};

@@ -463,7 +463,8 @@ void gamemap::loadpic() {
 			"resources/upgrade_freeze_time.bmp", 
 			"resources/upgrade_defrosting_time.bmp",
 			"resources/upgrade_stun_chance.bmp",
-			"resources/upgrade_rotation_speed.bmp" }, RGB(0, 0, 0));
+			"resources/upgrade_rotation_speed.bmp",
+			"resources/upgrade_poison_damage.bmp" }, RGB(0, 0, 0));
 		
 	}
 	upgradeIcon[0].SetTopLeft(36, 425 + PANEL_SPACE);
@@ -549,11 +550,9 @@ void gamemap::buildTower(int x, int y, std::string type) {
 				t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 			}
 			else if (!type.compare("venom")) {
-				/*
 				std::shared_ptr<venom> tower = std::make_shared<venom>();
 				t->buildTower(tower);
 				t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
-				*/
 			}
 			else if (!type.compare("splash")) {
 				/*
@@ -642,7 +641,7 @@ void gamemap::clickOnMap(CPoint point) {
 					else if (selected == 4 && coins >= 120) {
 						buildTower(selected_tile.x, selected_tile.y, "venom");
 						coins -= 120;
-						//is_build_success = true;
+						is_build_success = true;
 					}
 					else if (selected == 5 && coins >= 70) {
 						buildTower(selected_tile.x, selected_tile.y, "splash");

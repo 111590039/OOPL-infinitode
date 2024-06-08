@@ -62,3 +62,8 @@ class airbullet : public bullet {
 public:
 	airbullet();
 };
+
+class venombullet : public bullet {
+public:
+	venombullet();
+};

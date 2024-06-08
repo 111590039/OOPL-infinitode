@@ -100,3 +100,7 @@ minigunbullet::minigunbullet() {
 airbullet::airbullet() {
 	SetPicPath("resources/bullet_air.bmp");
 }
+////////////////////////////////venombullet////////////////////////////
+venombullet::venombullet() {
+	SetPicPath("resources/bullet_venom.bmp");
+}

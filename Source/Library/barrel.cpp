@@ -50,3 +50,7 @@ minigunBarrel::minigunBarrel() {
 airBarrel::airBarrel() {
 	SetBarrelPicPaths({ "resources/Barrel_air.bmp" });
 }
+///////////////////////////////venomBarrel///////////////////////////
+venomBarrel::venomBarrel() {
+	SetBarrelPicPaths({ "resources/Barrel_venom.bmp" });
+}
