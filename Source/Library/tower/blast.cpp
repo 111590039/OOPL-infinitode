@@ -15,14 +15,18 @@ blast::blast() {
 	stun_duration = 2;
 	totalCost = 120;
 }
+
 void blast::move(double time, double x, double y, std::vector<std::shared_ptr<enemy>> Enemy) {
+	findTarget(x,y,Enemy);
 	coolDown = max(0, coolDown - time);
 	if (coolDown == 0 && target != NULL) {
 		for (std::shared_ptr<enemy> e : Enemy) {
 			if (sqrt(pow(x + 0.5 - e->GetX(), 2) + pow(y + 0.5 - e->GetY(), 2)) <= range) {
-				e->GetDamage(damage);
-				if (rand() % 100 < stun_chance) {
-					e->GetDizzy(stun_duration);
+				if (e->GetType().compare("Air") && e->GetType().compare("Icy") && e->GetType().compare("Jet")) {
+					e->GetDamage(damage);
+					if (rand() % 100 < stun_chance) {
+						e->GetDizzy(stun_duration);
+					}
 				}
 			}
 		}
@@ -91,4 +95,19 @@ void blast::upgrade4() {
 	stun_chance += stunChanceUpgrade.at(upgradeLevel[3]);
 	totalCost += upgradeCost[3].at(upgradeLevel[3]);
 	upgradeLevel[3] += 1;
+}
+void blast::findTarget(double x, double y, std::vector<std::shared_ptr<enemy>> Enemy) {
+	bool findTarget = false;
+	for (std::shared_ptr<enemy> e : Enemy) {
+		if (sqrt(pow(x + 0.5 - e->GetX(), 2) + pow(y + 0.5 - e->GetY(), 2)) <= GetRange()) {
+			if (e->GetType().compare("Air") && e->GetType().compare("Jet") && e->GetType().compare("Icy")) {
+				SetTarget(e);
+				findTarget = true;
+				break;
+			}
+		}
+	}
+	if (!findTarget) {
+		SetTarget(nullptr);
+	}
 }

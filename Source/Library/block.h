@@ -9,6 +9,8 @@
 #include "tower/cannon.h"
 #include "tower/freezing.h"
 #include "tower/blast.h"
+#include "tower/minigun.h"
+#include "tower/air.h"
 
 class block : public game_framework::CMovingBitmap {
 public:

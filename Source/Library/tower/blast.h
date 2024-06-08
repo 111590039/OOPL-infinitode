@@ -15,6 +15,8 @@ public:
 	void upgrade2() override;
 	void upgrade3() override;
 	void upgrade4() override;
+protected:
+	void findTarget(double x, double y, std::vector<std::shared_ptr<enemy>> Enemy) override;
 private:
 	std::vector<std::vector<int>> upgradeCost = { {91,138,216,347,571,964,1669,2961,4765,6952,9463},//-3
 		{137,205,312,484,765,1232,2021,3254,4692,6847},//-3

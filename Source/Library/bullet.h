@@ -16,6 +16,7 @@ public:
 	void SetTarget(std::shared_ptr<enemy> target);
 	void SetDamage(double damage);
 
+	std::shared_ptr<enemy> GetTarget();
 	double GetX();
 	double GetY();
 	double GetDamage();
@@ -50,4 +51,14 @@ public:
 class cannonbullet : public bullet {
 public:
 	cannonbullet();
+};
+
+class minigunbullet : public bullet {
+public:
+	minigunbullet();
+};
+
+class airbullet : public bullet {
+public:
+	airbullet();
 };

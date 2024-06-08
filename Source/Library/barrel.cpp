@@ -42,3 +42,11 @@ freezingBarrel::freezingBarrel() {
 blastBarrel::blastBarrel() {
 	SetBarrelPicPaths({ "resources/Barrel_blast.bmp" });
 }
+///////////////////////////////minigunBarrel///////////////////////////
+minigunBarrel::minigunBarrel() {
+	SetBarrelPicPaths({ "resources/Barrel_minigun.bmp" });
+}
+///////////////////////////////airBarrel///////////////////////////
+airBarrel::airBarrel() {
+	SetBarrelPicPaths({ "resources/Barrel_air.bmp" });
+}

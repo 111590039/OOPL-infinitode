@@ -20,7 +20,7 @@ bool gamemap::IsGameover() {
 	return health <= 0;
 }
 void gamemap::resetGamemap() {
-	coins = 2000;
+	coins = 500;
 	health = 100;
 	showing_control_panel = false;
 	is_control_panel_invisable = true;
@@ -92,6 +92,7 @@ void gamemap::processMove() {
 	totalTime += time;
 	time = time * gameSpeed;
 	for (std::shared_ptr<tile> t : tiles) {
+		/*
 		if (Enemy.size() != 0){
 			bool findTarget = false;
 			for (std::shared_ptr<enemy> e : Enemy) {
@@ -108,6 +109,7 @@ void gamemap::processMove() {
 		else {
 			t->GetTower()->SetTarget(nullptr);
 		}
+		*/
 		t->GetTower()->move(time, t->GetX(), t->GetY() ,Enemy);
 		t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
@@ -460,7 +462,8 @@ void gamemap::loadpic() {
 			"resources/upgrade_freezing%.bmp", 
 			"resources/upgrade_freeze_time.bmp", 
 			"resources/upgrade_defrosting_time.bmp",
-			"resources/upgrade_stun_chance.bmp"}, RGB(0, 0, 0));
+			"resources/upgrade_stun_chance.bmp",
+			"resources/upgrade_rotation_speed.bmp" }, RGB(0, 0, 0));
 		
 	}
 	upgradeIcon[0].SetTopLeft(36, 425 + PANEL_SPACE);
@@ -572,18 +575,14 @@ void gamemap::buildTower(int x, int y, std::string type) {
 				*/
 			}
 			else if (!type.compare("minigun")) {
-				/*
 				std::shared_ptr<minigun> tower = std::make_shared<minigun>();
 				t->buildTower(tower);
 				t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
-				*/
 			}
 			else if (!type.compare("air")) {
-				/*
 				std::shared_ptr<air> tower = std::make_shared<air>();
 				t->buildTower(tower);
 				t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
-				*/
 			}
 			break;
 		}
@@ -663,12 +662,12 @@ void gamemap::clickOnMap(CPoint point) {
 					else if (selected == 8 && coins >= 160) {
 						buildTower(selected_tile.x, selected_tile.y, "minigun");
 						coins -= 160;
-						//is_build_success = true;
+						is_build_success = true;
 					}
 					else if (selected == 9 && coins >= 60) {
 						buildTower(selected_tile.x, selected_tile.y, "air");
 						coins -= 60;
-						//is_build_success = true;
+						is_build_success = true;
 					}
 					//蓋完塔之後跳到升級頁面(tower模式)
 					if (is_build_success) {
@@ -957,7 +956,7 @@ void gamemap::TESTMAP1() {
 	enemyPath = { { CPoint(1, 0), CPoint(1, 5), CPoint(5, 5), CPoint(5, 1), CPoint(8, 1), CPoint(8, 5) } };
 }
 void gamemap::SummonTestEnemy() {
-	std::shared_ptr<Regular> enemy = std::make_shared<Regular>(0.7, 25, enemyPath[0]);
+	std::shared_ptr<Air> enemy = std::make_shared<Air>(0.7, 25, enemyPath[0]);
 	if (enemy) {
 		newEnemy(enemy);
 	}

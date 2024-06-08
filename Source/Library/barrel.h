@@ -53,3 +53,15 @@ public:
 	blastBarrel();
 
 };
+
+class minigunBarrel : public barrel {
+public:
+	minigunBarrel();
+
+};
+
+class airBarrel : public barrel {
+public:
+	airBarrel();
+
+};

@@ -39,12 +39,14 @@ public:
 	void SetTarget(std::shared_ptr<enemy> target);
 	void newBullet(std::shared_ptr<bullet> bullet);
 
-	virtual double GetRange() = 0;
+	virtual double GetRange();
 protected:
 	void SetType(std::string type);
 	void SetBasePicPath(std::string basepicpath);
 	void SetBarrelPicPath(std::string barrelpicpath);
 	void SetTowerName(std::string);
+
+	virtual void findTarget(double x, double y, std::vector<std::shared_ptr<enemy>> Enemy);	//被OnMove持續調用 處理砲塔工作
 
 	std::shared_ptr <barrel> Barrel;
 	std::shared_ptr<enemy> GetTarget();

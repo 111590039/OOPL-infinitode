@@ -23,6 +23,8 @@
     <ClCompile Include="Source\Library\tower\tower.cpp" />
     <ClCompile Include="Source\Library\wave.cpp" />
     <ClCompile Include="Source\Library\tower\blast.cpp" />
+    <ClCompile Include="Source\Library\tower\air.cpp" />
+    <ClCompile Include="Source\Library\tower\minigun.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\Game.h" />
@@ -47,6 +49,8 @@
     <ClInclude Include="Source\Library\tower\tower.h" />
     <ClInclude Include="Source\Library\wave.h" />
     <ClInclude Include="Source\Library\tower\blast.h" />
+    <ClInclude Include="Source\Library\tower\air.h" />
+    <ClInclude Include="Source\Library\tower\minigun.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source\Core\game.rc" />

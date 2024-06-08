@@ -25,6 +25,9 @@ void bullet::SetTarget(std::shared_ptr<enemy> target) {
 void bullet::SetDamage(double damage) {
 	this->damage = damage;
 }
+std::shared_ptr<enemy> bullet::GetTarget() {
+	return target;
+}
 double bullet::GetX() {
 	return x;
 }
@@ -88,4 +91,12 @@ sniperbullet::sniperbullet(bool crit) {
 ////////////////////////////////cannonbullet////////////////////////////
 cannonbullet::cannonbullet() {
 	SetPicPath("resources/bullet_cannon.bmp");
+}
+////////////////////////////////minigunbullet////////////////////////////
+minigunbullet::minigunbullet() {
+	SetPicPath("resources/bullet_sniper.bmp");
+}
+////////////////////////////////airbullet////////////////////////////
+airbullet::airbullet() {
+	SetPicPath("resources/bullet_air.bmp");
 }
