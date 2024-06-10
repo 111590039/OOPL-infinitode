@@ -54,3 +54,11 @@ airBarrel::airBarrel() {
 venomBarrel::venomBarrel() {
 	SetBarrelPicPaths({ "resources/Barrel_venom.bmp" });
 }
+///////////////////////////////venomBarrel///////////////////////////
+multishotBarrel::multishotBarrel() {
+	SetBarrelPicPaths({ "resources/Barrel_multishot.bmp" });
+}
+///////////////////////////////venomBarrel///////////////////////////
+splashBarrel::splashBarrel() {
+	SetBarrelPicPaths({ "resources/Barrel_splash.bmp" });
+}

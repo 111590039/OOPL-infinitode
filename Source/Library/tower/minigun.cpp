@@ -114,3 +114,16 @@ void minigun::upgrade4() {
 	totalCost += upgradeCost[3].at(upgradeLevel[3]);
 	upgradeLevel[3] += 1;
 }
+void minigun::findTarget(double x, double y, std::vector<std::shared_ptr<enemy>> Enemy) {
+	bool findTarget = false;
+	for (std::shared_ptr<enemy> e : Enemy) {
+		if (sqrt(pow(x + 0.5 - e->GetX(), 2) + pow(y + 0.5 - e->GetY(), 2)) <= GetRange()) {
+			SetTarget(e);
+			findTarget = true;
+			break;
+		}
+	}
+	if (!findTarget) {
+		SetTarget(nullptr);
+	}
+}

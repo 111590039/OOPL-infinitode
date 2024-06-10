@@ -259,6 +259,7 @@
     <ClCompile Include="Source\Library\tower\cannon.cpp" />
     <ClCompile Include="Source\Library\tower\freezing.cpp" />
     <ClCompile Include="Source\Library\tower\minigun.cpp" />
+    <ClCompile Include="Source\Library\tower\multishot.cpp" />
     <ClCompile Include="Source\Library\tower\sniper.cpp" />
     <ClCompile Include="Source\Library\tower\tower.cpp" />
     <ClCompile Include="Source\Library\tower\venom.cpp" />
@@ -286,6 +287,7 @@
     <ClInclude Include="Source\Library\tower\cannon.h" />
     <ClInclude Include="Source\Library\tower\freezing.h" />
     <ClInclude Include="Source\Library\tower\minigun.h" />
+    <ClInclude Include="Source\Library\tower\multishot.h" />
     <ClInclude Include="Source\Library\tower\sniper.h" />
     <ClInclude Include="Source\Library\tower\tower.h" />
     <ClInclude Include="Source\Library\tower\venom.h" />

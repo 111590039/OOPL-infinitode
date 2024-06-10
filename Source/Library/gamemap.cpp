@@ -567,11 +567,9 @@ void gamemap::buildTower(int x, int y, std::string type) {
 				t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 			}
 			else if (!type.compare("multishot")) {
-				/*
 				std::shared_ptr<multishot> tower = std::make_shared<multishot>();
 				t->buildTower(tower);
 				t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
-				*/
 			}
 			else if (!type.compare("minigun")) {
 				std::shared_ptr<minigun> tower = std::make_shared<minigun>();
@@ -656,7 +654,7 @@ void gamemap::clickOnMap(CPoint point) {
 					else if (selected == 7 && coins >= 90) {
 						buildTower(selected_tile.x, selected_tile.y, "multishot");
 						coins -= 90;
-						//is_build_success = true;
+						is_build_success = true;
 					}
 					else if (selected == 8 && coins >= 160) {
 						buildTower(selected_tile.x, selected_tile.y, "minigun");
@@ -955,7 +953,8 @@ void gamemap::TESTMAP1() {
 	enemyPath = { { CPoint(1, 0), CPoint(1, 5), CPoint(5, 5), CPoint(5, 1), CPoint(8, 1), CPoint(8, 5) } };
 }
 void gamemap::SummonTestEnemy() {
-	std::shared_ptr<Air> enemy = std::make_shared<Air>(0.7, 25, enemyPath[0]);
+	std::shared_ptr<Regular> enemy = std::make_shared<Regular>(0.7, 25, enemyPath[0]);
+	//std::shared_ptr<Air> enemy = std::make_shared<Air>(0.7, 25, enemyPath[0]);
 	if (enemy) {
 		newEnemy(enemy);
 	}

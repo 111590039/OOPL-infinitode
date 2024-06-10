@@ -12,6 +12,7 @@
 #include "tower/minigun.h"
 #include "tower/air.h"
 #include "tower/venom.h"
+#include "tower/multishot.h"
 
 class block : public game_framework::CMovingBitmap {
 public:

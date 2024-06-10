@@ -71,3 +71,15 @@ public:
 	venomBarrel();
 
 };
+
+class multishotBarrel : public barrel {
+public:
+	multishotBarrel();
+
+};
+
+class splashBarrel : public barrel {
+public:
+	splashBarrel();
+
+};

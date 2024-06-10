@@ -68,6 +68,23 @@ void bullet::move(double time) {
 	}
 
 }
+void bullet::moveNoTrack(double time) {
+	double r = sqrt(pow(tarX - x, 2) + pow(tarY - y, 2));
+	double angleX = (tarX - x) / r;
+	double angleY = (tarY - y) / r;
+	if (abs(speed * time * angleX) < abs(tarX - x)) {
+		x = x + speed * time * angleX;
+	}
+	else {
+		x = tarX;
+	}
+	if (abs(speed * time * angleY) < abs(tarY - y)) {
+		y = y + speed * time * angleY;
+	}
+	else {
+		y = tarY;
+	}
+}
 bool bullet::IsPathOver() {
 	if (x == tarX && y == tarY) {
 		return true;
@@ -103,4 +120,12 @@ airbullet::airbullet() {
 ////////////////////////////////venombullet////////////////////////////
 venombullet::venombullet() {
 	SetPicPath("resources/bullet_venom.bmp");
+}
+////////////////////////////////multishotbullet////////////////////////////
+multishotbullet::multishotbullet() {
+	SetPicPath("resources/bullet_multishot.bmp");
+}
+////////////////////////////////splashbullet////////////////////////////
+splashbullet::splashbullet() {
+	SetPicPath("resources/bullet_splash.bmp");
 }
