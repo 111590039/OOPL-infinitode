@@ -13,6 +13,7 @@
 #include "tower/air.h"
 #include "tower/venom.h"
 #include "tower/multishot.h"
+#include "tower/splash.h"
 
 class block : public game_framework::CMovingBitmap {
 public:

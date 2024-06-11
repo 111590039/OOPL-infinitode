@@ -555,11 +555,9 @@ void gamemap::buildTower(int x, int y, std::string type) {
 				t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 			}
 			else if (!type.compare("splash")) {
-				/*
 				std::shared_ptr<splash> tower = std::make_shared<splash>();
 				t->buildTower(tower);
 				t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
-				*/
 			}
 			else if (!type.compare("blast")) {
 				std::shared_ptr<blast> tower = std::make_shared<blast>();
@@ -644,7 +642,7 @@ void gamemap::clickOnMap(CPoint point) {
 					else if (selected == 5 && coins >= 70) {
 						buildTower(selected_tile.x, selected_tile.y, "splash");
 						coins -= 70;
-						//is_build_success = true;
+						is_build_success = true;
 					}
 					else if (selected == 6 && coins >= 120) {
 						buildTower(selected_tile.x, selected_tile.y, "blast");
@@ -953,8 +951,8 @@ void gamemap::TESTMAP1() {
 	enemyPath = { { CPoint(1, 0), CPoint(1, 5), CPoint(5, 5), CPoint(5, 1), CPoint(8, 1), CPoint(8, 5) } };
 }
 void gamemap::SummonTestEnemy() {
-	std::shared_ptr<Regular> enemy = std::make_shared<Regular>(0.7, 25, enemyPath[0]);
-	//std::shared_ptr<Air> enemy = std::make_shared<Air>(0.7, 25, enemyPath[0]);
+	//std::shared_ptr<Regular> enemy = std::make_shared<Regular>(0.7, 25, enemyPath[0]);
+	std::shared_ptr<Air> enemy = std::make_shared<Air>(0.7, 25, enemyPath[0]);
 	if (enemy) {
 		newEnemy(enemy);
 	}
