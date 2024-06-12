@@ -86,6 +86,9 @@ void tower::newBullet(std::shared_ptr<bullet> bullet) {
 	bullet->loadPic();
 	Bullets.push_back(bullet);
 }
+double tower::GetRange() {
+	return 0;
+}
 void tower::SetType(std::string type) {
 	this->type = type;
 }
@@ -97,6 +100,21 @@ void tower::SetBarrelPicPath(std::string barrelpicpath) {
 }
 void tower::SetTowerName(std::string towerName) {
 	this->towerName = towerName;
+}
+void tower::findTarget(double x, double y, std::vector<std::shared_ptr<enemy>> Enemy) {
+	bool findTarget = false;
+	for (std::shared_ptr<enemy> e : Enemy) {
+		if (sqrt(pow(x + 0.5 - e->GetX(), 2) + pow(y + 0.5 - e->GetY(), 2)) <= GetRange()) {
+			if (e->GetType().compare("Air") && e->GetType().compare("Jet")) {
+				SetTarget(e);
+				findTarget = true;
+				break;
+			}
+		}
+	}
+	if (!findTarget) {
+		SetTarget(nullptr);
+	}
 }
 std::shared_ptr<enemy> tower::GetTarget() {
 	return target;
@@ -139,6 +157,7 @@ basictower::basictower() {
 	totalCost = 40;
 }
 void basictower::move(double time,double x, double y, std::vector<std::shared_ptr<enemy>> Enemy) {
+	findTarget(x,y,Enemy);
 	coolDown = max(0, coolDown - time);
 	if (coolDown == 0) {
 		if (target != nullptr) {
@@ -158,8 +177,8 @@ void basictower::move(double time,double x, double y, std::vector<std::shared_pt
 	//刪除已用完的子彈
 	for (size_t i = 0; i < Bullets.size(); i++) {
 		if (Bullets[i]->IsPathOver()) {
-			if (GetTarget() != nullptr) {
-				GetTarget()->GetDamage(Bullets[i]->GetDamage());
+			if (Bullets[i]->GetTarget() != nullptr) {
+				Bullets[i]->GetTarget()->GetDamage(Bullets[i]->GetDamage());
 			}
 			Bullets.erase(Bullets.begin() + i);
 		}

@@ -16,6 +16,7 @@ public:
 	void SetTarget(std::shared_ptr<enemy> target);
 	void SetDamage(double damage);
 
+	std::shared_ptr<enemy> GetTarget();
 	double GetX();
 	double GetY();
 	double GetDamage();
@@ -24,6 +25,7 @@ public:
 	virtual void show(double scale); //被OnShow調用 持續顯示
 	virtual void resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX, int moveY); // 重新設定bitmap 相關設定
 	void move(double time);
+	void moveNoTrack(double time); //不會追蹤的子彈
 	bool IsPathOver();
 private:
 	double x = 0;	//相對位置
@@ -50,4 +52,29 @@ public:
 class cannonbullet : public bullet {
 public:
 	cannonbullet();
+};
+
+class minigunbullet : public bullet {
+public:
+	minigunbullet();
+};
+
+class airbullet : public bullet {
+public:
+	airbullet();
+};
+
+class venombullet : public bullet {
+public:
+	venombullet();
+};
+
+class multishotbullet : public bullet {
+public:
+	multishotbullet();
+};
+
+class splashbullet : public bullet {
+public:
+	splashbullet();
 };

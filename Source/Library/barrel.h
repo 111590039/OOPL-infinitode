@@ -47,3 +47,39 @@ public:
 	freezingBarrel();
 
 };
+
+class blastBarrel : public barrel {
+public:
+	blastBarrel();
+
+};
+
+class minigunBarrel : public barrel {
+public:
+	minigunBarrel();
+
+};
+
+class airBarrel : public barrel {
+public:
+	airBarrel();
+
+};
+
+class venomBarrel : public barrel {
+public:
+	venomBarrel();
+
+};
+
+class multishotBarrel : public barrel {
+public:
+	multishotBarrel();
+
+};
+
+class splashBarrel : public barrel {
+public:
+	splashBarrel();
+
+};

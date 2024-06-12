@@ -18,6 +18,7 @@ sniper::sniper() {
 	srand(unsigned(time(NULL)));
 }
 void sniper::move(double time, double x, double y, std::vector<std::shared_ptr<enemy>> Enemy) {
+	findTarget(x, y, Enemy);
 	if (target == last_target && target != nullptr) {
 		aimimgtime = max(0, aimimgtime - time);
 	}
@@ -49,8 +50,8 @@ void sniper::move(double time, double x, double y, std::vector<std::shared_ptr<e
 	//刪除已用完的子彈
 	for (size_t i = 0; i < Bullets.size(); i++) {
 		if (Bullets[i]->IsPathOver()) {
-			if (GetTarget() != nullptr) {
-				GetTarget()->GetDamage(Bullets[i]->GetDamage());
+			if (Bullets[i]->GetTarget() != nullptr) {
+				Bullets[i]->GetTarget()->GetDamage(Bullets[i]->GetDamage());
 			}
 			Bullets.erase(Bullets.begin() + i);
 		}

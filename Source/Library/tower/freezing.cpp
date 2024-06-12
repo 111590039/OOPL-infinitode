@@ -24,7 +24,7 @@ void freezing::move(double time, double x, double y, std::vector<std::shared_ptr
 					break;
 				}
 			}
-			if (!alreadyInside) {
+			if (!alreadyInside && e->GetType().compare("Icy")) {
 				inRange.push_back(e);
 				inTime.push_back(0.0);
 			}
@@ -90,7 +90,7 @@ void freezing::upgrade1() {
 	upgradeLevel[0] += 1;
 }
 void freezing::upgrade2() {
-	freezeing_persentage += freezePercentUpgrade.at(upgradeLevel[1]);
+	freezeing_persentage += freezePercentUpgrade.at(upgradeLevel[1]) / 100;
 	totalCost += upgradeCost[1].at(upgradeLevel[1]);
 	upgradeLevel[1] += 1;
 }

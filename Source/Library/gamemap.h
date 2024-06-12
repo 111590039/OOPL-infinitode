@@ -52,7 +52,7 @@ protected:
 private:
 	game_framework::CMovingBitmap coinIcon;
 	game_framework::CMovingBitmap healthIcon;
-	int coins = 2000;
+	int coins = 500;
 	double health = 100;
 	game_framework::CMovingBitmap controlPanel; //±±¨î­±ª©©³®y
 	game_framework::CMovingBitmap controlPanelButton; //±±¨î­±ªO«ö¶s

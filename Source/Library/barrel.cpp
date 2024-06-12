@@ -38,3 +38,27 @@ cannonBarrel::cannonBarrel() {
 freezingBarrel::freezingBarrel() {
 	SetBarrelPicPaths({ "resources/Barrel_Freezing.bmp" });
 }
+///////////////////////////////blastBarrel///////////////////////////
+blastBarrel::blastBarrel() {
+	SetBarrelPicPaths({ "resources/Barrel_blast.bmp" });
+}
+///////////////////////////////minigunBarrel///////////////////////////
+minigunBarrel::minigunBarrel() {
+	SetBarrelPicPaths({ "resources/Barrel_minigun.bmp" });
+}
+///////////////////////////////airBarrel///////////////////////////
+airBarrel::airBarrel() {
+	SetBarrelPicPaths({ "resources/Barrel_air.bmp" });
+}
+///////////////////////////////venomBarrel///////////////////////////
+venomBarrel::venomBarrel() {
+	SetBarrelPicPaths({ "resources/Barrel_venom.bmp" });
+}
+///////////////////////////////venomBarrel///////////////////////////
+multishotBarrel::multishotBarrel() {
+	SetBarrelPicPaths({ "resources/Barrel_multishot.bmp" });
+}
+///////////////////////////////venomBarrel///////////////////////////
+splashBarrel::splashBarrel() {
+	SetBarrelPicPaths({ "resources/Barrel_splash.bmp" });
+}
