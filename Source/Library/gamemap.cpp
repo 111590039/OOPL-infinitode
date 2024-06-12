@@ -57,10 +57,10 @@ void gamemap::addScale(double delta) {
 	scale = max(scale + delta, 0.1);
 }
 void gamemap::addMoveX(int delta) {
-	moveX = max(moveX + delta, -100);
+	moveX = moveX + delta;
 }
 void gamemap::addMoveY(int delta) {
-	moveY  = max(moveY + delta, -100);
+	moveY  = moveY + delta;
 }
 double gamemap::GetScale() {
 	return scale;
@@ -131,6 +131,9 @@ void gamemap::processMove() {
 			Enemy.erase(Enemy.begin() + i);
 			continue;
 		}
+	}
+	if ((Enemy.size() < 8) && (wave.GetRemainingCount() == 0) && (wave.GetWave() > 0)) {
+		wave.SkipWave();
 	}
 	//關卡進行
 	if (wave.GetStart()) {

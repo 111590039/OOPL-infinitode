@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "enemy.h"
 enemy::enemy(double difficulty, int wave, std::vector<CPoint> enemyPath):enemyPath(enemyPath){
-	SetX(1.5);
-	SetY(0.5);
+	SetX(enemyPath[0].x + 0.5);
+	SetY(enemyPath[0].y + 0.5);
 }
 std::string enemy::GetType() {
 	return type;

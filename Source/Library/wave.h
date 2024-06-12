@@ -30,6 +30,7 @@ public:
 	void ReduceCd(double time);
 	void nextLevel();
 	void Restart();
+	void SkipWave();
 
 private:
 	game_framework::CMovingBitmap clock;
@@ -40,4 +41,5 @@ private:
 	double cd15 = 0;
 	std::string enemytype;
 	bool Start = false;
+	bool clockClicked = false;
 };
