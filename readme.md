@@ -30,6 +30,16 @@ dev -- 使金錢/血量固定為99999 畫面右上角顯示每幀之間的秒數
 
 ggs -- 馬上結束該輪遊戲
 
+## 註記
+
+這個遊戲目前在GooglePlay 或是 AppStore 中似乎無法正常搜尋到，在此附上原版遊戲連結
+
+由於目前的infinitode一般是指Infinitode2，而非infinitode，若要搜尋，搜尋infinitode 1可能會有幫助
+
+Google : https://chromewebstore.google.com/detail/infinitode/pccbnhhcclnlnpgeejkkemlkaaidehbe?hl=zh-TW
+
+AppStore : https://apps.apple.com/gb/app/infinitode/id1230344867?l=zh
+
 # 使用框架
 ## Leistungsstarkes Game Framework
 
