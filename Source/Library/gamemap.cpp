@@ -87,7 +87,7 @@ void gamemap::refreshTime() {
 	lastTime = chrono::steady_clock::now();
 }
 void gamemap::processMove() {
-	//ç ²å¡”å·¥ä½œ
+	//¯¥¶ğ¤u§@
 	double time = GetElapsedTime();
 	totalTime += time;
 	time = time * gameSpeed;
@@ -95,7 +95,7 @@ void gamemap::processMove() {
 		t->GetTower()->move(time, t->GetX(), t->GetY() ,Enemy);
 		t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
-	//æ•µäººç§»å‹•
+	//¼Ä¤H²¾°Ê
 	for (size_t i = 0; i < Enemy.size(); i++) {
 		Enemy[i]->Effect(time);
 		if (Enemy[i] -> IsDied() && Enemy[i] -> IsSurvive) {
@@ -117,7 +117,7 @@ void gamemap::processMove() {
 	if ((Enemy.size() < 8) && (wave.GetRemainingCount() == 0) && (wave.GetWave() > 0)) {
 		wave.SkipWave();
 	}
-	//é—œå¡é€²è¡Œ
+	//Ãö¥d¶i¦æ
 	if (wave.GetStart()) {
 		if (wave.GetRemainingCount() == 0) {
 			if (wave.GetCd15() > 0) {
@@ -183,9 +183,9 @@ void gamemap::processMove() {
 		coins = 99999;
 		health = 99999;
 	}
-	refreshTime();//ä¸€å®šè¦åœ¨æœ€ä¸‹é¢ 
+	refreshTime();//¤@©w­n¦b³Ì¤U­± 
 }
-//è®“æ•´å¼µåœ°åœ–é¡¯ç¤º
+//Åı¾ã±i¦a¹ÏÅã¥Ü
 void gamemap::drawmap() {
 	for (std::shared_ptr<block> b : map) {
 		b->show(scale);
@@ -213,7 +213,7 @@ void gamemap::drawmap() {
 	if (controlPanelMode == 1) {
 		controlPanel.SetFrameIndexOfBitmap(0);
 		if (showing_control_panel && !is_control_panel_invisable){
-			//é¸å–®æŒ‰éˆ•åœ–ç‰‡
+			//¿ï³æ«ö¶s¹Ï¤ù
 			for (game_framework::CMovingBitmap b : towerButtons) {
 				b.ShowBitmap();
 			}	
@@ -299,23 +299,23 @@ void gamemap::loadmap() {
 }
 void gamemap::showtext() {
 	CDC *pDC = game_framework::CDDraw::GetBackCDC();
-	//é¸å–®æ–‡å­—
-	game_framework::CTextDraw::ChangeFontLog(pDC, 40, "å¾®è»Ÿæ­£é»‘é«”", RGB(255, 255, 255), 1200);
+	//¿ï³æ¤å¦r
+	game_framework::CTextDraw::ChangeFontLog(pDC, 40, "·L³n¥¿¶ÂÅé", RGB(255, 255, 255), 1200);
 	game_framework::CTextDraw::Print(pDC, 100, 20,std::to_string(coins));
 	game_framework::CTextDraw::Print(pDC, 440, 20, std::to_string((int)ceil(health))); //(int)ceil(health))
 	if (showing_control_panel && !is_control_panel_invisable) {
 		if (controlPanelMode == 1) {
 			if (last_selected == -1) {
-				game_framework::CTextDraw::ChangeFontLog(pDC, 21, "å¾®è»Ÿæ­£é»‘é«”", RGB(255, 255, 255), 800);
-				game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, "é»æ“Šå¡”çš„åœ–æ¡ˆä»¥æ‰“é–‹æè¿°");
-				game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 60, "å–®æ“Šç¬¬äºŒæ¬¡ä¾†å»ºé€ å¡”");
+				game_framework::CTextDraw::ChangeFontLog(pDC, 21, "·L³n¥¿¶ÂÅé", RGB(255, 255, 255), 800);
+				game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, "ÂIÀ»¶ğªº¹Ï®×¥H¥´¶}´y­z");
+				game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 60, "³æÀ»²Ä¤G¦¸¨Ó«Ø³y¶ğ");
 			}
 			else {
-				game_framework::CTextDraw::ChangeFontLog(pDC, 42, "å¾®è»Ÿæ­£é»‘é«”", RGB(255, 255, 255), 1200);
+				game_framework::CTextDraw::ChangeFontLog(pDC, 42, "·L³n¥¿¶ÂÅé", RGB(255, 255, 255), 1200);
 				game_framework::CTextDraw::Print(pDC, 20 ,PANEL_SPACE+20 , towernames[last_selected]);
 			}
-			//é¸å–®æŒ‰éˆ•æ–‡å­—
-			game_framework::CTextDraw::ChangeFontLog(pDC, 21, "å¾®è»Ÿæ­£é»‘é«”", RGB(255, 255, 255), 800);
+			//¿ï³æ«ö¶s¤å¦r
+			game_framework::CTextDraw::ChangeFontLog(pDC, 21, "·L³n¥¿¶ÂÅé", RGB(255, 255, 255), 800);
 			int counter = 0;
 			for (game_framework::CMovingBitmap b : towerButtons) {
 				game_framework::CTextDraw::Print(pDC, b.GetLeft()+70 , b.GetTop()+70 , std::to_string(towerPrice[counter++]));
@@ -324,13 +324,13 @@ void gamemap::showtext() {
 		else if (controlPanelMode == 2) {
 			for (std::shared_ptr<block> b : map) {
 				if (selected_tile.x == b->GetX() && selected_tile.y == b->GetY()) {
-					game_framework::CTextDraw::ChangeFontLog(pDC, 42, "å¾®è»Ÿæ­£é»‘é«”", RGB(255, 255, 255), 1200);
+					game_framework::CTextDraw::ChangeFontLog(pDC, 42, "·L³n¥¿¶ÂÅé", RGB(255, 255, 255), 1200);
 					game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, b->GetTitle());
-					game_framework::CTextDraw::ChangeFontLog(pDC, 21, "å¾®è»Ÿæ­£é»‘é«”", RGB(255, 255, 255), 800);
+					game_framework::CTextDraw::ChangeFontLog(pDC, 21, "·L³n¥¿¶ÂÅé", RGB(255, 255, 255), 800);
 					game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 70, b->GetDescribe());
 					if (!b->GetType().compare("portal")) {
 						std::string D = std::to_string(int(difficulty *100)) + "%";
-						game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 100, "ç­‰ç´šé›£åº¦:" + D);
+						game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 100, "µ¥¯ÅÃø«×:" + D);
 					}
 					break;
 				}
@@ -340,22 +340,22 @@ void gamemap::showtext() {
 			std::vector<int> cost = last_selected_tower->GetUpgradeCost();
 			std::vector<string> names = last_selected_tower->GetAttributeName();
 			std::vector<string> values = last_selected_tower->GetAttributeValue();
-			game_framework::CTextDraw::ChangeFontLog(pDC, 42, "å¾®è»Ÿæ­£é»‘é«”", RGB(255, 255, 255), 1200);
+			game_framework::CTextDraw::ChangeFontLog(pDC, 42, "·L³n¥¿¶ÂÅé", RGB(255, 255, 255), 1200);
 			game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 20, last_selected_tower->GetTowerName());
-			//å°å‡ºå±¬æ€§å
+			//¦L¥XÄİ©Ê¦W
 			for (size_t i = 0; i < names.size(); i++) {
-				game_framework::CTextDraw::ChangeFontLog(pDC, 19, "å¾®è»Ÿæ­£é»‘é«”", RGB(255, 255, 255), 600);
+				game_framework::CTextDraw::ChangeFontLog(pDC, 19, "·L³n¥¿¶ÂÅé", RGB(255, 255, 255), 600);
 				if (names[i].at(0) == '#') {
-					game_framework::CTextDraw::ChangeFontLog(pDC, 19, "å¾®è»Ÿæ­£é»‘é«”", RGB(255, 192, 0), 600);
+					game_framework::CTextDraw::ChangeFontLog(pDC, 19, "·L³n¥¿¶ÂÅé", RGB(255, 192, 0), 600);
 					names[i] = names[i].substr(1);
 				}
 				game_framework::CTextDraw::Print(pDC, 20, PANEL_SPACE + 120 + 25*i, names[i]);
 			}
-			//å°å‡ºå±¬æ€§å€¼
+			//¦L¥XÄİ©Ê­È
 			std::vector<std::vector<double>> affected = last_selected_tower->GetAffected(last_selected_upgrade);
 
 			for (size_t i = 0; i < values.size(); i++) {
-				std::string D = ""; //å‡ç´šå½±éŸ¿çš„ç¶ å­—
+				std::string D = ""; //¤É¯Å¼vÅTªººñ¦r
 				int pos = values[i].find('.');
 				if (pos != std::string::npos) {
 					values[i] = values[i].substr(0, pos+3);
@@ -373,36 +373,36 @@ void gamemap::showtext() {
 						}
 					}
 				}
-				game_framework::CTextDraw::ChangeFontLog(pDC, 19, "å¾®è»Ÿæ­£é»‘é«”", RGB(0, 255, 0), 600);
+				game_framework::CTextDraw::ChangeFontLog(pDC, 19, "·L³n¥¿¶ÂÅé", RGB(0, 255, 0), 600);
 				game_framework::CTextDraw::Print(pDC, 370 - D.size() * 10, PANEL_SPACE + 120 + 25 * i, D);
-				game_framework::CTextDraw::ChangeFontLog(pDC, 19, "å¾®è»Ÿæ­£é»‘é«”", RGB(255, 255, 255), 600);
+				game_framework::CTextDraw::ChangeFontLog(pDC, 19, "·L³n¥¿¶ÂÅé", RGB(255, 255, 255), 600);
 				game_framework::CTextDraw::Print(pDC, 370 - values[i].size() * 10, PANEL_SPACE + 120 + 25 * i, values[i]);
 
 			}
-			//å‡ç´šè²»ç”¨
+			//¤É¯Å¶O¥Î
 			std::vector<CPoint> p;
 			p = { CPoint(101,458), CPoint(285,458), CPoint(101,550), CPoint(285,550) };
 			for (int i = 0; i < 4; i++) {
 				if (cost[i] < 9999999) {
 
-					game_framework::CTextDraw::ChangeFontLog(pDC, 17, "å¾®è»Ÿæ­£é»‘é«”", RGB(255, 255, 255), 600);
+					game_framework::CTextDraw::ChangeFontLog(pDC, 17, "·L³n¥¿¶ÂÅé", RGB(255, 255, 255), 600);
 					if (cost[i] > coins) {
-						game_framework::CTextDraw::ChangeFontLog(pDC, 17, "å¾®è»Ÿæ­£é»‘é«”", RGB(255, 0, 0), 600);
+						game_framework::CTextDraw::ChangeFontLog(pDC, 17, "·L³n¥¿¶ÂÅé", RGB(255, 0, 0), 600);
 					}
 					game_framework::CTextDraw::Print(pDC, p[i].x, PANEL_SPACE + p[i].y, std::to_string(cost[i]));
 				}
 				else {
-					game_framework::CTextDraw::ChangeFontLog(pDC, 17, "å¾®è»Ÿæ­£é»‘é«”", RGB(255, 0, 0), 600);
+					game_framework::CTextDraw::ChangeFontLog(pDC, 17, "·L³n¥¿¶ÂÅé", RGB(255, 0, 0), 600);
 					game_framework::CTextDraw::Print(pDC, p[i].x, PANEL_SPACE + p[i].y, "MAX");
 				}
 			}
-			//å‡ç´šç­‰ç´š
-			game_framework::CTextDraw::ChangeFontLog(pDC, 17, "å¾®è»Ÿæ­£é»‘é«”", RGB(255, 255, 255), 600);
+			//¤É¯Åµ¥¯Å
+			game_framework::CTextDraw::ChangeFontLog(pDC, 17, "·L³n¥¿¶ÂÅé", RGB(255, 255, 255), 600);
 			game_framework::CTextDraw::Print(pDC, 141, PANEL_SPACE + 428, std::to_string(last_selected_tower->GetUpgradeLevel()[0]) + " lvl");
 			game_framework::CTextDraw::Print(pDC, 325, PANEL_SPACE + 428, std::to_string(last_selected_tower->GetUpgradeLevel()[1]) + " lvl");
 			game_framework::CTextDraw::Print(pDC, 141, PANEL_SPACE + 520, std::to_string(last_selected_tower->GetUpgradeLevel()[2]) + " lvl");
 			game_framework::CTextDraw::Print(pDC, 325, PANEL_SPACE + 520, std::to_string(last_selected_tower->GetUpgradeLevel()[3]) + " lvl");
-			//é¡¯ç¤ºå‡ºå”®åƒ¹æ ¼
+			//Åã¥Ü¥X°â»ù®æ
 			game_framework::CTextDraw::Print(pDC, 101, PANEL_SPACE + 630, std::to_string(int(last_selected_tower->GetTotalCost() / 2)));
 		}
 	}
@@ -573,25 +573,25 @@ void gamemap::buildTower(int x, int y, std::string type) {
 	}
 }
 void gamemap::clickOnMap(CPoint point) {
-	bool done = false; //è¡¨ç¤ºæ­¤æ¬¡é»æ“Šæ˜¯å¦å·²ç¶“è™•ç†å®Œæˆ
+	bool done = false; //ªí¥Ü¦¹¦¸ÂIÀ»¬O§_¤w¸g³B²z§¹¦¨
 	if (!is_control_panel_invisable) {
-		//é»åˆ°é¸å–®é–‹å•Ÿæ™‚çš„æŒ‰éˆ•
+		//ÂI¨ì¿ï³æ¶}±Ò®Éªº«ö¶s
 		if (showing_control_panel && 470 >= point.x && point.x >= 400 && PANEL_SPACE+537 >= point.y && point.y >= PANEL_SPACE+400) {
 			showing_control_panel = false;
 			controlPanel.SetTopLeft(-400, PANEL_SPACE);
 			controlPanelButton.SetTopLeft(0, PANEL_SPACE + 400);
 			done = true;
 		}
-		//é»åˆ°é¸å–®é—œé–‰æ™‚çš„æŒ‰éˆ•
+		//ÂI¨ì¿ï³æÃö³¬®Éªº«ö¶s
 		else if (!showing_control_panel && 70 >= point.x && point.x >= 0 && PANEL_SPACE + 537 >= point.y && point.y >= PANEL_SPACE + 400){
 			showing_control_panel = true;
 			controlPanel.SetTopLeft(0, PANEL_SPACE);
 			controlPanelButton.SetTopLeft(400, PANEL_SPACE + 400);
 			done = true;
 		}
-		//æª¢æŸ¥æ˜¯å¦é»é¸åœ¨é¸å–®ä¸Š
+		//ÀË¬d¬O§_ÂI¿ï¦b¿ï³æ¤W
 		if (!done && showing_control_panel && 400 >= point.x && point.x >= 0 && PANEL_SPACE + 700 >= point.y && point.y >= PANEL_SPACE) {
-			//è“‹å¡”æ¨¡å¼
+			//»\¶ğ¼Ò¦¡
 			if (controlPanelMode == 1 && point.y >= PANEL_SPACE + 300) {
 				int selected = ((point.y - PANEL_SPACE - 300) / TOWER_BUTTON_SIZE) * 4 + (point.x / TOWER_BUTTON_SIZE);
 				if (selected != last_selected && selected >= 0 && selected <= 9) {
@@ -653,7 +653,7 @@ void gamemap::clickOnMap(CPoint point) {
 						coins -= 60;
 						is_build_success = true;
 					}
-					//è“‹å®Œå¡”ä¹‹å¾Œè·³åˆ°å‡ç´šé é¢(toweræ¨¡å¼)
+					//»\§¹¶ğ¤§«á¸õ¨ì¤É¯Å­¶­±(tower¼Ò¦¡)
 					if (is_build_success) {
 						controlPanelMode = 3; 
 						for (std::shared_ptr<tile> t : tiles) {
@@ -672,12 +672,12 @@ void gamemap::clickOnMap(CPoint point) {
 				}
 			}
 			else if (controlPanelMode == 3) {
-				//å·¦ä¸Š
+				//¥ª¤W
 				if (188 >= point.x && point.x >= 26 && 493 + PANEL_SPACE >= point.y && point.y >= 415 + PANEL_SPACE) {
 					if (last_selected_upgrade == 1 && coins >= last_selected_tower->GetUpgradeCost()[0]) {
 						coins -= last_selected_tower ->GetUpgradeCost()[0];
 						last_selected_tower->upgrade1();
-						//ç”±æ–¼å·¦ä¸Šä¸€å®šæ˜¯ç¯„åœå‡ç´š æ‰€ä»¥åªåœ¨é€™è£¡é‡ç½®è—åœˆ
+						//¥Ñ©ó¥ª¤W¤@©w¬O½d³ò¤É¯Å ©Ò¥H¥u¦b³o¸Ì­«¸mÂÅ°é
 						blueScale = last_selected_tower->GetRange();
 						blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale)
 							, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale));
@@ -686,7 +686,7 @@ void gamemap::clickOnMap(CPoint point) {
 							confirmUpgrade.SetTopLeft(-200, -200 + PANEL_SPACE);
 						}
 						else {
-							//ç”±æ–¼å·¦ä¸Šä¸€å®šæ˜¯ç¯„åœå‡ç´š æ‰€ä»¥åªåœ¨é€™è£¡é‡ç½®ç¶ åœˆ
+							//¥Ñ©ó¥ª¤W¤@©w¬O½d³ò¤É¯Å ©Ò¥H¥u¦b³o¸Ì­«¸mºñ°é
 							greenScale = last_selected_tower->GetRange() + last_selected_tower->GetAffected(1)[0][1];
 							greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale)
 								, int(TOP + moveY + (selected_tile.y - greenScale + 0.5) * TILE_SIZE*scale));
@@ -700,7 +700,7 @@ void gamemap::clickOnMap(CPoint point) {
 						confirmUpgrade.SetTopLeft(26, 415 + PANEL_SPACE);
 					}
 				}
-				//å³ä¸Š
+				//¥k¤W
 				else if (372 >= point.x && point.x >= 210 && 493 + PANEL_SPACE >= point.y && point.y >= 415 + PANEL_SPACE) {
 					if (last_selected_upgrade == 2 && coins >= last_selected_tower->GetUpgradeCost()[1]) {
 						coins -= last_selected_tower->GetUpgradeCost()[1];
@@ -715,7 +715,7 @@ void gamemap::clickOnMap(CPoint point) {
 						confirmUpgrade.SetTopLeft(210, 415 + PANEL_SPACE);
 					}
 				}
-				//å·¦ä¸‹
+				//¥ª¤U
 				else if (188 >= point.x && point.x >= 26 && 586 + PANEL_SPACE >= point.y && point.y >= 507 + PANEL_SPACE) {
 					if (last_selected_upgrade == 3 && coins >= last_selected_tower->GetUpgradeCost()[2]) {
 						coins -= last_selected_tower->GetUpgradeCost()[2];
@@ -730,7 +730,7 @@ void gamemap::clickOnMap(CPoint point) {
 						confirmUpgrade.SetTopLeft(26, 507 + PANEL_SPACE);
 					}
 				}
-				//å³ä¸‹
+				//¥k¤U
 				else if (372 >= point.x && point.x >= 210 && 586 + PANEL_SPACE >= point.y && point.y >= 507 + PANEL_SPACE) {
 					if (last_selected_upgrade == 4 && coins >= last_selected_tower->GetUpgradeCost()[3]) {
 						coins -= last_selected_tower->GetUpgradeCost()[3];
@@ -745,7 +745,7 @@ void gamemap::clickOnMap(CPoint point) {
 						confirmUpgrade.SetTopLeft(210, 507 + PANEL_SPACE);
 					}
 				}
-				//è³£å¡”
+				//½æ¶ğ
 				else if (188 >= point.x && point.x >= 27 && 679 + PANEL_SPACE >= point.y && point.y >= 602 + PANEL_SPACE) {
 					is_selling_visable = true;
 				}
@@ -757,11 +757,11 @@ void gamemap::clickOnMap(CPoint point) {
 		}
 	}
 	if (!done && is_selling_visable && 887 >= point.x && point.x >= 514 && 567 >= point.y && point.y >= 333) {
-		//å¦
+		//§_
 		if (689 >= point.x && point.x >= 526 && 560 >= point.y && point.y >= 473) {
 			is_selling_visable = false;
 		}
-		//æ˜¯
+		//¬O
 		else if (970 >= point.x && point.x >= 709 && 560 >= point.y && point.y >= 473) {
 			for (std::shared_ptr<tile> t : tiles) {
 				if (t->GetX() == selected_tile.x && t->GetY() == selected_tile.y && t->haveTower()) {
@@ -790,9 +790,9 @@ void gamemap::clickOnMap(CPoint point) {
 	}
 	if (!done) {
 		for (std::shared_ptr<tile> t : tiles) {
-			//é»åœ¨tilesä¸Š
+			//ÂI¦btiles¤W
 			if (t->ifClickOn(TOP, LEFT, TILE_SIZE, scale, moveX, moveY, point.x, point.y)) {
-				//è™•ç†æ§åˆ¶é¢æ¿åŠæŒ‰éˆ•
+				//³B²z±±¨î­±ªO¤Î«ö¶s
 				if (showing_control_panel) {
 					controlPanel.SetTopLeft(0, PANEL_SPACE);
 					controlPanelButton.SetTopLeft(400, PANEL_SPACE + 400);
@@ -820,7 +820,7 @@ void gamemap::clickOnMap(CPoint point) {
 				}
 				blueCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - blueScale + 0.5) * TILE_SIZE*scale)
 					, int(TOP + moveY + (selected_tile.y - blueScale + 0.5) * TILE_SIZE*scale));
-				//è™•ç†æ§åˆ¶äº‹ä»¶
+				//³B²z±±¨î¨Æ¥ó
 				if (t->haveTower()) {
 					controlPanelMode = 3;
 					for (int i = 0; i < 4; i++) {
@@ -858,14 +858,14 @@ void gamemap::clickOnMap(CPoint point) {
 			}
 		}
 	}
-	//è™•ç†æ§åˆ¶é¢æ¿æŒ‰éˆ•åœ–ç‰‡
+	//³B²z±±¨î­±ªO«ö¶s¹Ï¤ù
 	if (showing_control_panel) {
 		controlPanelButton.SetFrameIndexOfBitmap(0);
 	}
 	else {
 		controlPanelButton.SetFrameIndexOfBitmap(controlPanelMode);
 	}
-	//é»åˆ°æ²’æœ‰è¨­å®šçš„åœ°æ–¹
+	//ÂI¨ì¨S¦³³]©wªº¦a¤è
 	if (!done) {
 		controlPanel.SetTopLeft(-600, PANEL_SPACE);
 		controlPanelButton.SetTopLeft(-200, PANEL_SPACE + 400);
