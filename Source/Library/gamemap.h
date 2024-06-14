@@ -44,7 +44,10 @@ public:
 	void TESTMAP1();
 	void SummonTestEnemy(); //測試用 生成測試用敵人
 	void CheatCoin(); //測試用 設定金錢為99999
-
+	bool devmode = false;
+	void cheat_20();
+	void cheat_100();
+	void cheat_gameover();
 protected:
 	void newblock(std::shared_ptr<block> block);
 	void newtile(std::shared_ptr<tile> tile);
