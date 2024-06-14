@@ -57,10 +57,10 @@ void gamemap::addScale(double delta) {
 	scale = max(scale + delta, 0.1);
 }
 void gamemap::addMoveX(int delta) {
-	moveX = max(moveX + delta, -100);
+	moveX = moveX + delta;
 }
 void gamemap::addMoveY(int delta) {
-	moveY  = max(moveY + delta, -100);
+	moveY  =moveY + delta;
 }
 double gamemap::GetScale() {
 	return scale;
@@ -92,24 +92,6 @@ void gamemap::processMove() {
 	totalTime += time;
 	time = time * gameSpeed;
 	for (std::shared_ptr<tile> t : tiles) {
-		/*
-		if (Enemy.size() != 0){
-			bool findTarget = false;
-			for (std::shared_ptr<enemy> e : Enemy) {
-				if (sqrt(pow(t->GetX()+0.5 - e->GetX(), 2) + pow(t->GetY()+0.5 - e->GetY(), 2)) <= t->GetTower()->GetRange()) {
-					t->GetTower()-> SetTarget(e) ;
-					findTarget = true;
-					break;
-				}
-			}
-			if (!findTarget) {
-				t->GetTower()->SetTarget(nullptr);
-			}
-		}
-		else {
-			t->GetTower()->SetTarget(nullptr);
-		}
-		*/
 		t->GetTower()->move(time, t->GetX(), t->GetY() ,Enemy);
 		t->resetShow(TOP, LEFT, TILE_SIZE, scale, moveX, moveY);
 	}
@@ -194,7 +176,11 @@ void gamemap::processMove() {
 		}
 		wave.AccDelayTime(time);
 	}
-	refreshTime();//一定要在最下面
+	if (devmode) {
+		coins = 99999;
+		health = 99999;
+	}
+	refreshTime();//一定要在最下面 
 }
 //讓整張地圖顯示
 void gamemap::drawmap() {
@@ -605,7 +591,7 @@ void gamemap::clickOnMap(CPoint point) {
 			//蓋塔模式
 			if (controlPanelMode == 1 && point.y >= PANEL_SPACE + 300) {
 				int selected = ((point.y - PANEL_SPACE - 300) / TOWER_BUTTON_SIZE) * 4 + (point.x / TOWER_BUTTON_SIZE);
-				if (selected != last_selected && selected >= 0 && selected <= 11) {
+				if (selected != last_selected && selected >= 0 && selected <= 9) {
 					selected_box.SetTopLeft((selected % 4) * TOWER_BUTTON_SIZE, PANEL_SPACE + 300 + (selected / 4) * TOWER_BUTTON_SIZE);
 					greenScale = origin_range[selected];
 					greenCircle.SetTopLeft(int(LEFT + moveX + (selected_tile.x - greenScale + 0.5) * TILE_SIZE*scale)
@@ -959,4 +945,18 @@ void gamemap::SummonTestEnemy() {
 }
 void gamemap::CheatCoin() {
 	coins = 99999;
+}
+void gamemap::cheat_20() {
+	wave.SetWave(19);
+	wave.SetRemainingCount(0);
+	wave.SetCd15(0);
+}
+void gamemap::cheat_100() {
+	wave.SetWave(99);
+	wave.SetRemainingCount(0);
+	wave.SetCd15(0);
+}
+void gamemap::cheat_gameover() {
+	devmode = false;
+	health = 0;
 }

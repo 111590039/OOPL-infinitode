@@ -305,12 +305,13 @@ BossFighter::BossFighter(double difficulty, int wave, std::vector<CPoint> enemyP
 
 Boss::Boss(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
 	SetType("Boss");
-	Sethealth(28 + pow(wave * 1.92, 1.83));
+	Sethealth(28 + pow(wave * 1.92 *0.75, 1.83));
 	SetMaxHealth(Gethealth());
 	Setspeed(0.7);
 	SetMaxSpeed(Getspeed());
 	Setbounty(100 + pow(wave * 70, 0.75));
 	Setexp(1);
+	SetDamage(25.0);
 	SetPicPath("resources/enemy_Boss.bmp");
 }
 
