@@ -177,6 +177,7 @@ int Wave::enemyCount(std::string eType, int wave) {
 		return 10 + int(floor(pow(wave * 0.8, 0.65)));
 	}
 	else if (eType == "Strong") {
+		this->MaxRemainingCount = 12 + int(floor(pow(wave, 0.65)));
 		return 5 + int(floor(pow(wave * 0.4, 0.65)));
 	}
 	else if (eType == "DenseRegular") {
@@ -236,6 +237,9 @@ void Wave::showCD() {
 }
 bool Wave::IsClockClicked(CPoint point) {
 	if (1337 >= point.x && point.x >= 1300 && 846 >= point.y && point.y >= 800) {
+		if (Start == true) {
+			clockClicked = true;
+		}
 		Start = true;
 		clock.SetFrameIndexOfBitmap(1);
 	}
@@ -249,5 +253,13 @@ void Wave::Restart() {
 	MaxRemainingCount = 0; //敵人最大數量
 	cd15 = 0;
 	Start = false;
+	clock.SetFrameIndexOfBitmap(0);
+}
+
+void Wave::SkipWave() {
+	if (clockClicked) {
+		cd15 = 0;
+		clockClicked = false;
+	}
 	clock.SetFrameIndexOfBitmap(0);
 }
