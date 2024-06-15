@@ -192,7 +192,7 @@ bool enemy::enemyMove(double time) {
 }
 Regular::Regular(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
 	SetType("Regular");
-	Sethealth(4.1 + pow(wave * 0.4, 1.67));
+	Sethealth(4.1 + pow(wave * 0.4, 1.67) * difficulty);
 	SetMaxHealth(Gethealth());
 	Setspeed(1.0);
 	SetMaxSpeed(Getspeed());
@@ -216,7 +216,7 @@ void enemy::resetShow(int TOP, int LEFT, int TILE_SIZE, double scale, int moveX,
 
 Fast::Fast(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
 	SetType("Fast");
-	Sethealth(2.95 + pow(wave * 0.45, 1.695));
+	Sethealth(2.95 + pow(wave * 0.45, 1.695)* difficulty);
 	SetMaxHealth(Gethealth());
 	Setspeed(1.4 + pow(wave / 1500, 1.25));
 	SetMaxSpeed(Getspeed());
@@ -227,7 +227,7 @@ Fast::Fast(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(d
 
 Strong::Strong(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
 	SetType("Strong");
-	Sethealth(8.2 + pow(wave * 0.69, 1.7));
+	Sethealth(8.2 + pow(wave * 0.69, 1.7)* difficulty);
 	SetMaxHealth(Gethealth());
 	Setspeed(0.85);
 	SetMaxSpeed(Getspeed());
@@ -239,7 +239,7 @@ Strong::Strong(double difficulty, int wave, std::vector<CPoint> enemyPath) : ene
 
 DenseRegular::DenseRegular(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
 	SetType("Regular");
-	Sethealth(4.1 + pow(wave * 0.4, 1.67));
+	Sethealth(4.1 + pow(wave * 0.4, 1.67)* difficulty);
 	SetMaxHealth(Gethealth());
 	Setspeed(1);
 	SetMaxSpeed(Getspeed());
@@ -250,7 +250,7 @@ DenseRegular::DenseRegular(double difficulty, int wave, std::vector<CPoint> enem
 
 Air::Air(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
 	SetType("Air");
-	Sethealth(3.4 + pow(wave * 0.5, 1.7));
+	Sethealth(3.4 + pow(wave * 0.5, 1.7)* difficulty);
 	SetMaxHealth(Gethealth());
 	Setspeed(1);
 	SetMaxSpeed(Getspeed());
@@ -261,7 +261,7 @@ Air::Air(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(dif
 
 Jet::Jet(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
 	SetType("Jet");
-	Sethealth(1.7 + pow(wave * 0.21, 1.71));
+	Sethealth(1.7 + pow(wave * 0.21, 1.71)* difficulty);
 	SetMaxHealth(Gethealth());
 	Setspeed(1.25);
 	SetMaxSpeed(Getspeed());
@@ -272,7 +272,7 @@ Jet::Jet(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(dif
 
 BossArmored::BossArmored(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
 	SetType("Armored");
-	Sethealth(2.0 + pow(wave * 0.35, 1.68));
+	Sethealth(2.0 + pow(wave * 0.35, 1.68)* difficulty);
 	SetMaxHealth(Gethealth());
 	Setspeed(1);
 	SetMaxSpeed(Getspeed());
@@ -283,7 +283,7 @@ BossArmored::BossArmored(double difficulty, int wave, std::vector<CPoint> enemyP
 
 BossFast::BossFast(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
 	SetType("Fast");
-	Sethealth(2.45 + pow(wave * 0.4, 1.695));
+	Sethealth(2.45 + pow(wave * 0.4, 1.695)* difficulty);
 	SetMaxHealth(Gethealth());
 	Setspeed(1.5);
 	SetMaxSpeed(Getspeed());
@@ -294,7 +294,7 @@ BossFast::BossFast(double difficulty, int wave, std::vector<CPoint> enemyPath) :
 
 BossFighter::BossFighter(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
 	SetType("Fighter");
-	Sethealth(10 + pow(wave * 1.2, 1.75));
+	Sethealth(10 + pow(wave * 1.2, 1.75)* difficulty);
 	SetMaxHealth(Gethealth());
 	Setspeed(0.95);
 	SetMaxSpeed(Getspeed());
@@ -305,7 +305,7 @@ BossFighter::BossFighter(double difficulty, int wave, std::vector<CPoint> enemyP
 
 Boss::Boss(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
 	SetType("Boss");
-	Sethealth(28 + pow(wave * 1.92 *0.75, 1.83));
+	Sethealth(28 + pow(wave * 1.92 *0.75, 1.83)* difficulty);
 	SetMaxHealth(Gethealth());
 	Setspeed(0.7);
 	SetMaxSpeed(Getspeed());
@@ -317,7 +317,7 @@ Boss::Boss(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(d
 
 Light::Light(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
 	SetType("Light");
-	Sethealth(4.1 + pow(wave * 0.50, 1.68));
+	Sethealth(4.1 + pow(wave * 0.50, 1.68)* difficulty);
 	SetMaxHealth(Gethealth());
 	Setspeed(1.05);
 	SetMaxSpeed(Getspeed());
@@ -328,7 +328,7 @@ Light::Light(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy
 
 Icy::Icy(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
 	SetType("Icy");
-	Sethealth(5.4 + pow(wave * 0.59, 1.51));
+	Sethealth(5.4 + pow(wave * 0.59, 1.51)* difficulty);
 	SetMaxHealth(Gethealth());
 	Setspeed(0.9);
 	SetMaxSpeed(Getspeed());
@@ -339,7 +339,7 @@ Icy::Icy(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(dif
 
 Toxic::Toxic(double difficulty, int wave, std::vector<CPoint> enemyPath) : enemy(difficulty, wave, enemyPath) {
 	SetType("Toxic");
-	Sethealth(4.1 + pow(wave * 0.49, 1.67));
+	Sethealth(4.1 + pow(wave * 0.49, 1.67)* difficulty);
 	SetMaxHealth(Gethealth());
 	Setspeed(1.0);
 	SetMaxSpeed(Getspeed());

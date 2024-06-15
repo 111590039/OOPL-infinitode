@@ -134,44 +134,44 @@ void gamemap::processMove() {
 		else if (wave.GetdelayTime() > 0.5 && wave.GetRemainingCount() > 0) {
 			int i = (rand() % enemyPath.size());
 			if (wave.GetEnemyType() == "Regular") {
-				newEnemy(std::make_shared<Regular>(0.7, wave.GetWave(), enemyPath[i]));
+				newEnemy(std::make_shared<Regular>(difficulty, wave.GetWave(), enemyPath[i]));
 			}
 			else if (wave.GetEnemyType() == "Fast") {
-				newEnemy(std::make_shared<Fast>(0.7, wave.GetWave(), enemyPath[i]));
+				newEnemy(std::make_shared<Fast>(difficulty, wave.GetWave(), enemyPath[i]));
 			}
 			else if (wave.GetEnemyType() == "Strong") {
-				newEnemy(std::make_shared<Strong>(0.7, wave.GetWave(), enemyPath[i]));
+				newEnemy(std::make_shared<Strong>(difficulty, wave.GetWave(), enemyPath[i]));
 			}
 			else if (wave.GetEnemyType() == "DenseRegular") {
-				newEnemy(std::make_shared<DenseRegular>(0.7, wave.GetWave(), enemyPath[i]));
+				newEnemy(std::make_shared<DenseRegular>(difficulty, wave.GetWave(), enemyPath[i]));
 			}
 			else if (wave.GetEnemyType() == "Air") {
-				newEnemy(std::make_shared<Air>(0.7, wave.GetWave(), enemyPath[i]));
+				newEnemy(std::make_shared<Air>(difficulty, wave.GetWave(), enemyPath[i]));
 			}
 			else if (wave.GetEnemyType() == "Jet") {
-				newEnemy(std::make_shared<Jet>(0.7, wave.GetWave(), enemyPath[i]));
+				newEnemy(std::make_shared<Jet>(difficulty, wave.GetWave(), enemyPath[i]));
 			}
 			else if (wave.GetEnemyType() == "Light") {
-				newEnemy(std::make_shared<Light>(0.7, wave.GetWave(), enemyPath[i]));
+				newEnemy(std::make_shared<Light>(difficulty, wave.GetWave(), enemyPath[i]));
 			}
 			else if (wave.GetEnemyType() == "Icy") {
-				newEnemy(std::make_shared<Icy>(0.7, wave.GetWave(), enemyPath[i]));
+				newEnemy(std::make_shared<Icy>(difficulty, wave.GetWave(), enemyPath[i]));
 			}
 			else if (wave.GetEnemyType() == "Toxic") {
-				newEnemy(std::make_shared<Toxic>(0.7, wave.GetWave(), enemyPath[i]));
+				newEnemy(std::make_shared<Toxic>(difficulty, wave.GetWave(), enemyPath[i]));
 			}
 			else if (wave.GetEnemyType() == "SuperBoss") {
-				newEnemy(std::make_shared<Boss>(0.7, wave.GetWave(), enemyPath[i]));
+				newEnemy(std::make_shared<Boss>(difficulty, wave.GetWave(), enemyPath[i]));
 			}
 			else if (wave.GetEnemyType() == "Boss") {
 				if (wave.GetRemainingCount() > 4 + int(floor(pow(wave.GetWave() / 8, 0.6)))) {
-					newEnemy(std::make_shared<BossArmored>(0.7, wave.GetWave(), enemyPath[i]));
+					newEnemy(std::make_shared<BossArmored>(difficulty, wave.GetWave(), enemyPath[i]));
 				}
 				else if (wave.GetRemainingCount() > 3 + int(floor(pow(wave.GetWave() / 8, 0.6)))) {
-					newEnemy(std::make_shared<BossFighter>(0.7, wave.GetWave(), enemyPath[i]));
+					newEnemy(std::make_shared<BossFighter>(difficulty, wave.GetWave(), enemyPath[i]));
 				}
 				else {
-					newEnemy(std::make_shared<BossFast>(0.7, wave.GetWave(), enemyPath[i]));
+					newEnemy(std::make_shared<BossFast>(difficulty, wave.GetWave(), enemyPath[i]));
 				}
 			}
 			wave.SetRemainingCount(wave.GetRemainingCount() - 1);
