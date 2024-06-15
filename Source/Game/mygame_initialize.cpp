@@ -32,7 +32,7 @@ void CGameStateInit::OnInit()
 	//
 	background.LoadBitmapByString({ "resources/selectlevel.bmp" });
 	std::vector<std::string> picPath;
-	for (int i = 1; i <= 10; i++) {
+	for (int i = 1; i <= 17; i++) {
 		picPath.push_back("resources/preview" + to_string(i) + ".bmp");
 	}
 	previewLevelPic.LoadBitmapByString(picPath);
@@ -54,7 +54,7 @@ void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
 	if (195 >= point.x && point.x >= 105 && 438 >= point.y && point.y >= 315) {
 		//向左箭頭
 		if (selected_level == 1) {
-			selected_level = 10;
+			selected_level = 17;
 		}
 		else {
 			selected_level--;
@@ -62,7 +62,7 @@ void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
 	}
 	else if (1305 >= point.x && point.x >= 1215 && 438 >= point.y && point.y >= 315) {
 		//向右箭頭
-		if (selected_level == 10) {
+		if (selected_level == 17) {
 			selected_level = 1;
 		}
 		else {
